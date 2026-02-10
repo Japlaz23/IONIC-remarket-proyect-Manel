@@ -1,0 +1,111 @@
+/* Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* Colores principales de Remarket */
+:root {
+  --remarket-green: #1a7f34;
+  --remarket-dark: #0f5223;
+  --remarket-light: #e8f5e9;
+  --text-primary: #333;
+  --text-secondary: #999;
+  --border-color: #e0e0e0;
+  --bg-light: #f5f5f5;
+}
+
+/* Botones */
+ion-button {
+  --border-radius: 8px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  text-transform: none;
+  font-weight: 500;
+}
+
+ion-button[color='success'] {
+  --background: var(--remarket-green);
+  --background-hover: var(--remarket-dark);
+  --background-activated: var(--remarket-dark);
+}
+
+/* Cards */
+ion-card {
+  --border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: 12px 0;
+}
+
+/* Items */
+ion-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-start: 12px;
+  --inner-padding-end: 12px;
+  font-size: 1em;
+}
+
+/* Toolbar */
+ion-toolbar {
+  --background: #fff;
+  --border-color: var(--border-color);
+}
+
+/* Input */
+ion-input,
+ion-textarea,
+ion-select {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+/* Animaciones */
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+ion-item,
+ion-card {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  ion-toolbar {
+    --min-height: 48px;
+  }
+
+  ion-title {
+    font-size: 1.2em;
+  }
+}
