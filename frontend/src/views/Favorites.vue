@@ -1,13 +1,6 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button default-href="/"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Favoritos</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <app-header title="Favoritos"></app-header>
 
     <ion-content>
       <div v-if="favoriteProducts.length === 0" class="empty-state">
@@ -44,14 +37,10 @@
 </template>
 
 <script setup>
+import AppHeader from '../components/AppHeader.vue'
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
-  IonButtons,
-  IonBackButton,
   IonList,
   IonItem,
   IonItemSliding,

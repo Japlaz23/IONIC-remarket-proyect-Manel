@@ -1,13 +1,6 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button default-href="/"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Chat con vendedor</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <app-header title="Chat con vendedor"></app-header>
 
     <ion-content scroll-y="true">
       <div class="messages-container">
@@ -54,15 +47,11 @@
 </template>
 
 <script setup>
+import AppHeader from '../components/AppHeader.vue'
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonFooter,
-  IonButtons,
-  IonBackButton,
   IonItem,
   IonInput,
   IonButton,

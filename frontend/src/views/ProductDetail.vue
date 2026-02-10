@@ -1,18 +1,12 @@
 <template>
   <ion-page v-if="product">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button default-href="/"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Detalles del producto</ion-title>
-        <ion-buttons slot="end">
-          <ion-button @click="toggleFav">
-            <ion-icon :icon="product.isFavorite ? heart : heartOutline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+    <app-header title="Detalles del producto">
+      <template #buttons>
+        <ion-button @click="toggleFav">
+          <ion-icon :icon="product.isFavorite ? heart : heartOutline"></ion-icon>
+        </ion-button>
+      </template>
+    </app-header>
 
     <ion-content>
       <!-- Galería de imágenes -->
@@ -101,14 +95,10 @@
 </template>
 
 <script setup>
+import AppHeader from '../components/AppHeader.vue'
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
-  IonButtons,
-  IonBackButton,
   IonButton,
   IonIcon,
   IonCard,
@@ -122,7 +112,7 @@ import {
   IonFabButton,
 } from '@ionic/vue'
 import { heart, heartOutline, chatbubble } from 'ionicons/icons'
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProductStore } from '../stores/productStore'
 

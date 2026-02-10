@@ -1,13 +1,6 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button default-href="/"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Crear anuncio</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <app-header title="Crear anuncio"></app-header>
 
     <ion-content>
       <form @submit.prevent="submitSell">
@@ -112,14 +105,10 @@
 </template>
 
 <script setup>
+import AppHeader from '../components/AppHeader.vue'
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
-  IonButtons,
-  IonBackButton,
   IonCard,
   IonCardContent,
   IonCardHeader,

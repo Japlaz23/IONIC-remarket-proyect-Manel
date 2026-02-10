@@ -2,7 +2,9 @@
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start" v-if="showBackButton">
-        <ion-back-button default-href="/"></ion-back-button>
+        <ion-button @click="goBack">
+          <ion-icon :icon="arrowBack" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-buttons>
       <ion-title>{{ title }}</ion-title>
       <ion-buttons slot="end">
@@ -13,7 +15,11 @@
 </template>
 
 <script setup>
-import { IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton } from '@ionic/vue'
+import { useRouter } from 'vue-router'
+import { IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon } from '@ionic/vue'
+import { arrowBack } from 'ionicons/icons'
+
+const router = useRouter()
 
 defineProps({
   title: {
@@ -25,6 +31,10 @@ defineProps({
     default: true,
   },
 })
+
+const goBack = () => {
+  router.back()
+}
 </script>
 
 <style scoped>

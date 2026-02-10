@@ -30,6 +30,15 @@
     <ion-content class="bg-gray-50">
       <!-- Filtros por categoría con Tailwind -->
       <div class="sticky top-0 z-10 bg-white shadow-sm">
+          <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button @click="goToProfile" class="hover:bg-gray-100 rounded-lg transition">
+        <ion-icon :icon="personCircle" class="text-2xl text-gray-700"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Menu Button</ion-title>
+  </ion-toolbar>
+
         <ion-segment v-model="store.selectedCategory" @ionChange="updateCategory" class="p-2">
           <ion-segment-button value="" class="font-semibold">
             <ion-label>Todos</ion-label>
