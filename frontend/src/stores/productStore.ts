@@ -1,8 +1,24 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+
+interface Product {
+  id: number
+  title: string
+  price: number
+  image: string
+  category: string
+  seller: string
+  sellerId: number
+  condition: string
+  location: string
+  createdAt: Date
+  isFavorite: boolean
+  description: string
+  images: string[]
+}
 
 export const useProductStore = defineStore('product', () => {
-  const products = ref([
+  const products = ref<Product[]>([
     {
       id: 1,
       title: 'iPhone 13 Pro',
@@ -15,7 +31,7 @@ export const useProductStore = defineStore('product', () => {
       location: 'Madrid',
       createdAt: new Date('2024-01-15'),
       isFavorite: false,
-      description: 'iPhone 13 Pro en excelente estado, sin rayaduras en pantalla',
+      description: 'iPhone 13 Pro en excelente estado',
       images: ['https://via.placeholder.com/300'],
     },
     {
@@ -30,31 +46,16 @@ export const useProductStore = defineStore('product', () => {
       location: 'Barcelona',
       createdAt: new Date('2024-01-10'),
       isFavorite: false,
-      description: 'MacBook Air M2 sin usar aún, con garantía',
-      images: ['https://via.placeholder.com/300'],
-    },
-    {
-      id: 3,
-      title: 'Bicicleta de montaña',
-      price: 150,
-      image: 'https://via.placeholder.com/300',
-      category: 'Deportes',
-      seller: 'Carlos López',
-      sellerId: 3,
-      condition: 'Usado - Muy bien',
-      location: 'Valencia',
-      createdAt: new Date('2024-01-08'),
-      isFavorite: false,
-      description: 'Bicicleta Specialized, poco uso, perfecta para empezar',
+      description: 'MacBook Air M2 sin usar',
       images: ['https://via.placeholder.com/300'],
     },
   ])
 
-  const favorites = ref([])
-  const searchQuery = ref('')
-  const selectedCategory = ref('')
+  const favorites = ref<number[]>([])
+  const searchQuery = ref<string>('')
+  const selectedCategory = ref<string>('')
 
-  const filteredProducts = () => {
+  const filteredProducts = computed(() => {
     return products.value.filter((product) => {
       const matchesSearch = product.title
         .toLowerCase()
@@ -63,13 +64,13 @@ export const useProductStore = defineStore('product', () => {
         !selectedCategory.value || product.category === selectedCategory.value
       return matchesSearch && matchesCategory
     })
+  })
+
+  const getProductById = (id: string | number): Product | undefined => {
+    return products.value.find((p) => p.id === Number(id))
   }
 
-  const getProductById = (id) => {
-    return products.value.find((p) => p.id === parseInt(id))
-  }
-
-  const toggleFavorite = (productId) => {
+  const toggleFavorite = (productId: number): void => {
     const product = products.value.find((p) => p.id === productId)
     if (product) {
       product.isFavorite = !product.isFavorite
@@ -81,7 +82,7 @@ export const useProductStore = defineStore('product', () => {
     }
   }
 
-  const addProduct = (newProduct) => {
+  const addProduct = (newProduct: Omit<Product, 'id' | 'isFavorite' | 'createdAt'>): void => {
     const id = Math.max(...products.value.map((p) => p.id), 0) + 1
     products.value.push({
       id,

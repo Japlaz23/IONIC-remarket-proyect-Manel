@@ -1,7 +1,7 @@
 <template>
   <ion-page>
-    <ion-content class="login-content" :fullscreen="true">
-      <div class="login-container">
+    <ion-content class="register-content" :fullscreen="true">
+      <div class="register-container">
         <!-- Fondo animado -->
         <div class="animated-background">
           <div class="shape shape-1"></div>
@@ -12,7 +12,7 @@
         </div>
 
         <!-- Contenedor de dos columnas -->
-        <div class="login-wrapper">
+        <div class="register-wrapper">
           <!-- Sección visual (solo desktop) -->
           <div class="visual-section">
             <div class="visual-content">
@@ -20,50 +20,50 @@
                 <div class="brand-logo">
                   <ion-icon :icon="storefrontOutline" class="brand-icon"></ion-icon>
                 </div>
-                <h2 class="visual-title">Remarket</h2>
-                <p class="visual-tagline">Tu marketplace de confianza</p>
+                <h2 class="visual-title">Únete a Remarket</h2>
+                <p class="visual-tagline">Compra y vende con seguridad</p>
               </div>
 
               <div class="visual-features">
                 <div class="visual-feature">
                   <div class="feature-icon-box">
-                    <ion-icon :icon="cartOutline" class="feature-big-icon"></ion-icon>
+                    <ion-icon :icon="checkmarkCircleOutline" class="feature-big-icon"></ion-icon>
                   </div>
-                  <h3 class="feature-title">Compra fácil</h3>
-                  <p class="feature-desc">Miles de productos de segunda mano</p>
+                  <h3 class="feature-title">Registro rápido</h3>
+                  <p class="feature-desc">Crea tu cuenta en menos de 2 minutos</p>
                 </div>
 
                 <div class="visual-feature">
                   <div class="feature-icon-box">
-                    <ion-icon :icon="pricetagOutline" class="feature-big-icon"></ion-icon>
+                    <ion-icon :icon="giftOutline" class="feature-big-icon"></ion-icon>
                   </div>
-                  <h3 class="feature-title">Vende rápido</h3>
-                  <p class="feature-desc">Publica tus productos en minutos</p>
+                  <h3 class="feature-title">100% Gratuito</h3>
+                  <p class="feature-desc">Sin costos ocultos ni comisiones</p>
                 </div>
 
                 <div class="visual-feature">
                   <div class="feature-icon-box">
-                    <ion-icon :icon="shieldCheckmarkOutline" class="feature-big-icon"></ion-icon>
+                    <ion-icon :icon="starOutline" class="feature-big-icon"></ion-icon>
                   </div>
-                  <h3 class="feature-title">100% Seguro</h3>
-                  <p class="feature-desc">Transacciones protegidas</p>
+                  <h3 class="feature-title">Beneficios exclusivos</h3>
+                  <p class="feature-desc">Acceso a ofertas especiales</p>
                 </div>
               </div>
 
               <div class="stats-section">
                 <div class="stat-item">
                   <div class="stat-number">10K+</div>
-                  <div class="stat-label">Productos</div>
-                </div>
-                <div class="stat-divider"></div>
-                <div class="stat-item">
-                  <div class="stat-number">5K+</div>
                   <div class="stat-label">Usuarios</div>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat-item">
-                  <div class="stat-number">98%</div>
-                  <div class="stat-label">Satisfacción</div>
+                  <div class="stat-number">50K+</div>
+                  <div class="stat-label">Productos</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                  <div class="stat-number">4.8★</div>
+                  <div class="stat-label">Valoración</div>
                 </div>
               </div>
             </div>
@@ -71,31 +71,45 @@
 
           <!-- Sección del formulario -->
           <div class="form-section-wrapper">
-            <div class="login-box">
+            <div class="register-box">
               <!-- Logo y título (solo móvil) -->
               <div class="header-section mobile-only">
                 <div class="logo-container">
                   <ion-icon :icon="storefrontOutline" class="logo-icon"></ion-icon>
                 </div>
-                <h1 class="title">Remarket</h1>
-                <p class="subtitle">Compra y vende de forma fácil</p>
+                <h1 class="title">Crear cuenta</h1>
+                <p class="subtitle">Únete a nuestra comunidad</p>
               </div>
 
               <!-- Título desktop -->
               <div class="header-section desktop-only">
-                <h1 class="title">Bienvenido</h1>
-                <p class="subtitle">Inicia sesión para continuar</p>
+                <h1 class="title">Crear cuenta</h1>
+                <p class="subtitle">Completa tus datos para comenzar</p>
               </div>
 
               <!-- Formulario -->
-              <form @submit.prevent="handleLogin" class="form-section">
+              <form @submit.prevent="handleRegister" class="form-section">
+                <!-- Nombre completo -->
+                <div class="input-group">
+                  <div class="input-icon">
+                    <ion-icon :icon="personOutline"></ion-icon>
+                  </div>
+                  <input
+                    v-model="formData.fullName"
+                    type="text"
+                    placeholder="Nombre completo"
+                    class="custom-input"
+                    required
+                  />
+                </div>
+
                 <!-- Email -->
                 <div class="input-group">
                   <div class="input-icon">
                     <ion-icon :icon="mailOutline"></ion-icon>
                   </div>
                   <input
-                    v-model="email"
+                    v-model="formData.email"
                     type="email"
                     placeholder="Email"
                     class="custom-input"
@@ -109,7 +123,7 @@
                     <ion-icon :icon="lockClosedOutline"></ion-icon>
                   </div>
                   <input
-                    v-model="password"
+                    v-model="formData.password"
                     type="password"
                     placeholder="Contraseña"
                     class="custom-input"
@@ -117,56 +131,67 @@
                   />
                 </div>
 
-                <!-- Forgot password -->
-                <div class="forgot-link">
-                  <a @click="goToRestore">¿Olvidaste tu contraseña?</a>
+                <!-- Confirm Password -->
+                <div class="input-group">
+                  <div class="input-icon">
+                    <ion-icon :icon="lockClosedOutline"></ion-icon>
+                  </div>
+                  <input
+                    v-model="formData.confirmPassword"
+                    type="password"
+                    placeholder="Confirmar contraseña"
+                    class="custom-input"
+                    required
+                  />
                 </div>
 
-                <!-- Login button -->
-                <button type="submit" class="login-button">
-                  <span>Iniciar Sesión</span>
+                <!-- Terms -->
+                <div class="terms-checkbox">
+                  <ion-checkbox v-model="formData.acceptTerms" class="checkbox"></ion-checkbox>
+                  <label class="terms-label">
+                    Acepto los <a href="#" class="link">términos y condiciones</a>
+                  </label>
+                </div>
+
+                <!-- Register button -->
+                <button type="submit" class="register-button" :disabled="!formData.acceptTerms">
+                  <span>Crear cuenta</span>
                   <ion-icon :icon="arrowForward" class="button-icon"></ion-icon>
                 </button>
 
                 <!-- Divider -->
                 <div class="divider">
-                  <span>o continúa con</span>
+                  <span>o regístrate con</span>
                 </div>
 
-                <!-- Social and Guest buttons -->
+                <!-- Social button -->
                 <div class="social-buttons">
                   <!-- Google button -->
-                  <button type="button" @click="handleGoogleLogin" class="google-button">
+                  <button type="button" @click="handleGoogleRegister" class="google-button">
                     <ion-icon :icon="logoGoogle" class="google-icon"></ion-icon>
                     <span class="button-text">Google</span>
                   </button>
-
-                  <!-- Guest button -->
-                  <button type="button" @click="goHome" class="guest-button">
-                    <ion-icon :icon="personOutline"></ion-icon>
-                    <span class="button-text">Invitado</span>
-                  </button>
                 </div>
 
-                <!-- Register link -->
-                <div class="register-link">
-                  <p>¿No tienes cuenta? <a @click="goToRegister">Crear cuenta</a></p>
+                <!-- Login link -->
+                <div class="login-link">
+                  <p>¿Ya tienes cuenta? <a @click="goToLogin">Iniciar sesión</a></p>
                 </div>
               </form>
 
               <!-- Features (solo móvil) -->
               <div class="features mobile-only">
                 <div class="feature-item">
-                  <span class="feature-icon">🔒</span>
-                  <span class="feature-text">Seguro</span>
-                </div>
-                <div class="feature-item">
-                  <span class="feature-icon">⚡</span>
+                  <span class="feature-icon">✓</span>
                   <span class="feature-text">Rápido</span>
                 </div>
                 <div class="feature-item">
-                  <span class="feature-icon">💚</span>
-                  <span class="feature-text">Confiable</span>
+                  <span class="feature-icon">🆓</span>
+                  <span class="feature-text">Gratis</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">⭐</span>
+                  <span class="feature-text">Beneficios</span>
                 </div>
               </div>
             </div>
@@ -178,12 +203,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   IonPage,
   IonContent,
   IonIcon,
+  IonCheckbox,
   alertController,
   toastController,
 } from '@ionic/vue'
@@ -193,18 +219,38 @@ import {
   storefrontOutline,
   mailOutline,
   lockClosedOutline,
-  cartOutline,
-  pricetagOutline,
-  shieldCheckmarkOutline,
+  checkmarkCircleOutline,
+  giftOutline,
+  starOutline,
   logoGoogle,
 } from 'ionicons/icons'
 
-const email = ref<string>('')
-const password = ref<string>('')
 const router = useRouter()
 
-const handleLogin = async () => {
-  if (!email.value || !password.value) {
+interface FormDataType {
+  fullName: string
+  email: string
+  password: string
+  confirmPassword: string
+  acceptTerms: boolean
+}
+
+const formData = reactive<FormDataType>({
+  fullName: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  acceptTerms: false,
+})
+
+const handleRegister = async () => {
+  // Validar campos vacíos
+  if (
+    !formData.fullName ||
+    !formData.email ||
+    !formData.password ||
+    !formData.confirmPassword
+  ) {
     const toast = await toastController.create({
       message: 'Por favor completa todos los campos',
       duration: 2000,
@@ -215,8 +261,9 @@ const handleLogin = async () => {
     return
   }
 
+  // Validar email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(email.value)) {
+  if (!emailRegex.test(formData.email)) {
     const toast = await toastController.create({
       message: 'Por favor ingresa un email válido',
       duration: 2000,
@@ -227,17 +274,55 @@ const handleLogin = async () => {
     return
   }
 
+  // Validar longitud de contraseña
+  if (formData.password.length < 6) {
+    const toast = await toastController.create({
+      message: 'La contraseña debe tener al menos 6 caracteres',
+      duration: 2000,
+      position: 'top',
+      color: 'warning',
+    })
+    await toast.present()
+    return
+  }
+
+  // Validar que las contraseñas coincidan
+  if (formData.password !== formData.confirmPassword) {
+    const toast = await toastController.create({
+      message: 'Las contraseñas no coinciden',
+      duration: 2000,
+      position: 'top',
+      color: 'warning',
+    })
+    await toast.present()
+    return
+  }
+
+  // Validar términos y condiciones
+  if (!formData.acceptTerms) {
+    const toast = await toastController.create({
+      message: 'Debes aceptar los términos y condiciones',
+      duration: 2000,
+      position: 'top',
+      color: 'warning',
+    })
+    await toast.present()
+    return
+  }
+
+  // Registrar usuario
   const user = {
-    email: email.value,
-    name: email.value.split('@')[0],
-    loginDate: new Date().toISOString(),
+    fullName: formData.fullName,
+    email: formData.email,
+    name: formData.fullName.split(' ')[0],
+    registerDate: new Date().toISOString(),
   }
 
   localStorage.setItem('user', JSON.stringify(user))
 
   const toast = await toastController.create({
-    message: `¡Bienvenido ${user.name}!`,
-    duration: 2000,
+    message: `¡Bienvenido ${user.name}! Cuenta creada exitosamente`,
+    duration: 2500,
     position: 'top',
     color: 'success',
   })
@@ -246,22 +331,10 @@ const handleLogin = async () => {
   router.push('/')
 }
 
-const goHome = () => {
-  router.push('/')
-}
-
-const goToRestore = () => {
-  router.push('/restorepassword')
-}
-
-const goToRegister = () => {
-  router.push('/register')
-}
-
-const handleGoogleLogin = async () => {
+const handleGoogleRegister = async () => {
   const alert = await alertController.create({
-    header: '🔐 Iniciar sesión con Google',
-    message: 'Serás redirigido a la página de autenticación de Google para iniciar sesión de forma segura.',
+    header: '🔐 Registrarse con Google',
+    message: 'Serás redirigido a la página de autenticación de Google para crear tu cuenta de forma segura.',
     buttons: [
       {
         text: 'Cancelar',
@@ -272,7 +345,6 @@ const handleGoogleLogin = async () => {
         text: 'Continuar',
         cssClass: 'alert-button-confirm',
         handler: () => {
-          // Aquí iría la integración real con Google OAuth
           const toast = toastController.create({
             message: 'Redirigiendo a Google...',
             duration: 2000,
@@ -282,18 +354,18 @@ const handleGoogleLogin = async () => {
           })
           toast.then((t) => t.present())
           
-          // Simulación de login exitoso después de 2 segundos
           setTimeout(async () => {
             const user = {
               email: 'usuario@gmail.com',
-              name: 'Usuario Google',
-              loginDate: new Date().toISOString(),
+              fullName: 'Usuario Google',
+              name: 'Usuario',
+              registerDate: new Date().toISOString(),
               provider: 'google',
             }
             localStorage.setItem('user', JSON.stringify(user))
             
             const successToast = await toastController.create({
-              message: '¡Inicio de sesión exitoso con Google!',
+              message: '¡Registro exitoso con Google!',
               duration: 2000,
               position: 'top',
               color: 'success',
@@ -307,19 +379,24 @@ const handleGoogleLogin = async () => {
   })
   await alert.present()
 }
+
+
+const goToLogin = () => {
+  router.push('/login')
+}
 </script>
 
 <style scoped>
-.login-content {
+.register-content {
   --background: #f0f4f8;
 }
 
-.login-container {
+.register-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 12px;
   position: relative;
   overflow: hidden;
 }
@@ -460,9 +537,9 @@ const handleGoogleLogin = async () => {
 }
 
 /* Contenedor principal */
-.login-wrapper {
+.register-wrapper {
   width: 100%;
-  max-width: 420px;
+  max-width: 400px;
   display: flex;
   animation: slideUp 0.6s ease-out;
   position: relative;
@@ -490,12 +567,12 @@ const handleGoogleLogin = async () => {
   width: 100%;
 }
 
-.login-box {
+.register-box {
   width: 100%;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 32px 24px;
+  border-radius: 18px;
+  padding: 20px 18px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
@@ -511,15 +588,15 @@ const handleGoogleLogin = async () => {
 
 .header-section {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 16px;
 }
 
 .logo-container {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto 14px;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 10px;
   background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
-  border-radius: 18px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -527,20 +604,20 @@ const handleGoogleLogin = async () => {
 }
 
 .logo-icon {
-  font-size: 36px;
+  font-size: 30px;
   color: white;
 }
 
 .title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   color: #1a1a1a;
-  margin: 0 0 6px 0;
+  margin: 0 0 4px 0;
   letter-spacing: -0.5px;
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
   margin: 0;
   font-weight: 500;
@@ -549,7 +626,7 @@ const handleGoogleLogin = async () => {
 .form-section {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
 }
 
 .input-group {
@@ -558,21 +635,21 @@ const handleGoogleLogin = async () => {
 
 .input-icon {
   position: absolute;
-  left: 14px;
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: #999;
-  font-size: 18px;
+  font-size: 16px;
   pointer-events: none;
   transition: color 0.3s ease;
 }
 
 .custom-input {
   width: 100%;
-  padding: 13px 14px 13px 44px;
+  padding: 10px 10px 10px 38px;
   border: 2px solid #e5e5e5;
-  border-radius: 12px;
-  font-size: 15px;
+  border-radius: 11px;
+  font-size: 13.5px;
   color: #1a1a1a;
   background: #f8f8f8;
   transition: all 0.3s ease;
@@ -594,53 +671,71 @@ const handleGoogleLogin = async () => {
   color: #1a7f34;
 }
 
-.forgot-link {
-  text-align: right;
-  margin-top: -6px;
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 1px;
 }
 
-.forgot-link a {
-  font-size: 13px;
+.checkbox {
+  --size: 18px;
+  --checkbox-background-checked: #1a7f34;
+  --border-color-checked: #1a7f34;
+}
+
+.terms-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+.link {
   color: #1a7f34;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.3s ease;
 }
 
-.forgot-link a:hover {
-  color: #0f5223;
+.link:hover {
+  text-decoration: underline;
 }
 
-.login-button {
+.register-button {
   width: 100%;
-  padding: 15px;
+  padding: 11px;
   background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
+  border-radius: 11px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(26, 127, 52, 0.3);
-  margin-top: 6px;
+  margin-top: 2px;
 }
 
-.login-button:hover {
+.register-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.register-button:not(:disabled):hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(26, 127, 52, 0.4);
 }
 
 .button-icon {
-  font-size: 20px;
+  font-size: 18px;
   transition: transform 0.3s ease;
 }
 
-.login-button:hover .button-icon {
+.register-button:not(:disabled):hover .button-icon {
   transform: translateX(3px);
 }
 
@@ -648,7 +743,7 @@ const handleGoogleLogin = async () => {
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 20px 0 14px;
+  margin: 12px 0 10px;
 }
 
 .divider::before,
@@ -659,9 +754,9 @@ const handleGoogleLogin = async () => {
 }
 
 .divider span {
-  padding: 0 14px;
+  padding: 0 12px;
   color: #999;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -674,23 +769,23 @@ const handleGoogleLogin = async () => {
 
 .google-button {
   flex: 1;
-  padding: 13px 8px;
+  padding: 10px 8px;
   background: white;
   color: #444;
   border: 2px solid #e5e5e5;
-  border-radius: 12px;
-  font-size: 14px;
+  border-radius: 11px;
+  font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  min-height: 80px;
+  min-height: 64px;
 }
 
 .google-button::before {
@@ -717,60 +812,30 @@ const handleGoogleLogin = async () => {
 }
 
 .google-icon {
-  font-size: 24px;
+  font-size: 20px;
   color: #4285f4;
 }
 
-.guest-button {
-  flex: 1;
-  padding: 13px 8px;
-  background: white;
-  color: #666;
-  border: 2px solid #e5e5e5;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: all 0.3s ease;
-  min-height: 80px;
-}
-
-.guest-button:hover {
-  border-color: #ccc;
-  background: #f8f8f8;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.guest-button ion-icon {
-  font-size: 24px;
-}
-
 .button-text {
-  font-size: 13px;
+  font-size: 12px;
   white-space: nowrap;
 }
 
-.register-link {
+.login-link {
   text-align: center;
-  margin-top: 14px;
-  padding-top: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid #e5e5e5;
 }
 
-.register-link p {
+.login-link p {
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
   font-weight: 500;
 }
 
-.register-link a {
+.login-link a {
   color: #1a7f34;
   text-decoration: none;
   font-weight: 700;
@@ -778,7 +843,7 @@ const handleGoogleLogin = async () => {
   transition: color 0.3s ease;
 }
 
-.register-link a:hover {
+.login-link a:hover {
   color: #0f5223;
   text-decoration: underline;
 }
@@ -786,8 +851,8 @@ const handleGoogleLogin = async () => {
 .features {
   display: flex;
   justify-content: space-around;
-  margin-top: 20px;
-  padding-top: 20px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid #e5e5e5;
 }
 
@@ -795,15 +860,15 @@ const handleGoogleLogin = async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .feature-icon {
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .feature-text {
-  font-size: 12px;
+  font-size: 11px;
   color: #666;
   font-weight: 600;
 }
@@ -822,7 +887,7 @@ ion-alert .alert-button-cancel {
    ESTILOS DESKTOP (992px+)
    ========================= */
 @media (min-width: 992px) {
-  .login-container {
+  .register-container {
     padding: 40px;
   }
 
@@ -833,9 +898,9 @@ ion-alert .alert-button-cancel {
     height: 48px;
   }
 
-  .login-wrapper {
-    max-width: 1100px;
-    height: 800px;
+  .register-wrapper {
+    max-width: 1000px;
+    height: 680px;
     flex-direction: row;
     background: rgba(255, 255, 255, 0.98);
     border-radius: 24px;
@@ -849,7 +914,7 @@ ion-alert .alert-button-cancel {
     display: flex;
     flex: 1;
     background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
-    padding: 50px 40px;
+    padding: 40px 35px;
     color: white;
     position: relative;
     overflow: hidden;
@@ -880,12 +945,12 @@ ion-alert .alert-button-cancel {
   }
 
   .brand-logo {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 16px;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 14px;
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
+    border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -893,19 +958,19 @@ ion-alert .alert-button-cancel {
   }
 
   .brand-icon {
-    font-size: 44px;
+    font-size: 38px;
     color: white;
   }
 
   .visual-title {
-    font-size: 42px;
+    font-size: 36px;
     font-weight: 900;
-    margin: 0 0 8px 0;
+    margin: 0 0 6px 0;
     letter-spacing: -1px;
   }
 
   .visual-tagline {
-    font-size: 18px;
+    font-size: 16px;
     margin: 0;
     opacity: 0.9;
     font-weight: 500;
@@ -914,18 +979,18 @@ ion-alert .alert-button-cancel {
   .visual-features {
     display: flex;
     flex-direction: column;
-    gap: 28px;
-    margin: 30px 0;
+    gap: 20px;
+    margin: 24px 0;
   }
 
   .visual-feature {
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
+    gap: 16px;
+    padding: 16px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    border-radius: 16px;
+    border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
   }
@@ -936,10 +1001,10 @@ ion-alert .alert-button-cancel {
   }
 
   .feature-icon-box {
-    width: 60px;
-    height: 60px;
+    width: 54px;
+    height: 54px;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    border-radius: 11px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -947,18 +1012,18 @@ ion-alert .alert-button-cancel {
   }
 
   .feature-big-icon {
-    font-size: 32px;
+    font-size: 28px;
     color: white;
   }
 
   .feature-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
-    margin: 0 0 4px 0;
+    margin: 0 0 3px 0;
   }
 
   .feature-desc {
-    font-size: 14px;
+    font-size: 13px;
     margin: 0;
     opacity: 0.85;
   }
@@ -967,10 +1032,10 @@ ion-alert .alert-button-cancel {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 25px 20px;
+    padding: 20px 18px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    border-radius: 16px;
+    border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
@@ -979,39 +1044,39 @@ ion-alert .alert-button-cancel {
   }
 
   .stat-number {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 900;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
 
   .stat-label {
-    font-size: 13px;
+    font-size: 12px;
     opacity: 0.85;
     font-weight: 600;
   }
 
   .stat-divider {
     width: 1px;
-    height: 40px;
+    height: 36px;
     background: rgba(255, 255, 255, 0.3);
   }
 
   /* Sección formulario en desktop */
   .form-section-wrapper {
-    flex: 0 0 460px;
+    flex: 0 0 440px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px;
+    padding: 35px;
     background: white;
   }
 
-  .login-box {
+  .register-box {
     background: transparent;
     backdrop-filter: none;
     box-shadow: none;
     padding: 0;
-    max-width: 380px;
+    max-width: 360px;
   }
 
   .mobile-only {
@@ -1024,68 +1089,70 @@ ion-alert .alert-button-cancel {
 
   .header-section {
     text-align: left;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
 
   .title {
-    font-size: 36px;
+    font-size: 32px;
   }
 
   .subtitle {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .form-section {
-    gap: 18px;
+    gap: 12px;
   }
 
   .custom-input {
-    padding: 15px 18px 15px 52px;
-    font-size: 16px;
+    padding: 13px 16px 13px 48px;
+    font-size: 15px;
   }
 
   .input-icon {
-    left: 18px;
-    font-size: 22px;
+    left: 16px;
+    font-size: 20px;
   }
 
-  .login-button {
-    padding: 17px;
-    font-size: 17px;
+  .register-button {
+    padding: 14px;
+    font-size: 15.5px;
   }
 
   .google-button {
-    padding: 16px 10px;
-    font-size: 15px;
-    min-height: 90px;
+    padding: 13px 10px;
+    font-size: 14px;
+    min-height: 76px;
   }
 
   .google-icon {
-    font-size: 26px;
-  }
-
-  .guest-button {
-    padding: 16px 10px;
-    font-size: 15px;
-    min-height: 90px;
-  }
-
-  .guest-button ion-icon {
-    font-size: 26px;
+    font-size: 23px;
   }
 
   .button-text {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .divider {
-    margin: 24px 0 18px;
+    margin: 18px 0 14px;
+  }
+
+  .terms-label {
+    font-size: 13px;
+  }
+
+  .checkbox {
+    --size: 19px;
+  }
+
+  .button-icon {
+    font-size: 19px;
   }
 }
 
 /* Tablets */
 @media (min-width: 769px) and (max-width: 991px) {
-  .login-container {
+  .register-container {
     padding: 32px;
   }
 
@@ -1096,11 +1163,11 @@ ion-alert .alert-button-cancel {
     height: 44px;
   }
 
-  .login-wrapper {
+  .register-wrapper {
     max-width: 500px;
   }
 
-  .login-box {
+  .register-box {
     padding: 40px 32px;
     border-radius: 24px;
   }
@@ -1126,7 +1193,7 @@ ion-alert .alert-button-cancel {
 
 /* Móvil pequeño */
 @media (max-width: 375px) {
-  .login-container {
+  .register-container {
     padding: 12px;
   }
 
@@ -1137,38 +1204,36 @@ ion-alert .alert-button-cancel {
     height: 36px;
   }
 
-  .login-box {
-    padding: 28px 20px;
+  .register-box {
+    padding: 20px 16px;
     border-radius: 18px;
   }
 
   .logo-container {
-    width: 64px;
-    height: 64px;
+    width: 54px;
+    height: 54px;
   }
 
   .logo-icon {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .title {
-    font-size: 26px;
+    font-size: 23px;
   }
 
   .social-buttons {
     gap: 8px;
   }
 
-  .google-button,
-  .guest-button {
-    padding: 12px 6px;
-    min-height: 75px;
-    font-size: 13px;
+  .google-button {
+    padding: 10px 6px;
+    min-height: 65px;
+    font-size: 12px;
   }
 
-  .google-icon,
-  .guest-button ion-icon {
-    font-size: 22px;
+  .google-icon {
+    font-size: 20px;
   }
 
   .button-text {
