@@ -105,10 +105,7 @@
       <div v-if="store.filteredProducts.length === 0" class="empty-state">
         <p>No hay productos para mostrar</p>
       </div>
-      <div
-        v-else
-        class="grid products-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4"
-      >
+      <div v-else class="products-row">
         <ion-card
           v-for="product in store.filteredProducts"
           :key="product.id"
@@ -123,6 +120,9 @@
             <div class="product-meta">
               <span class="product-price">{{ product.price }}€</span>
               <span class="product-location">{{ product.location }}</span>
+            </div>
+            <div class="product-badges">
+              <span class="product-badge">Envio disponible</span>
             </div>
           </ion-card-content>
         </ion-card>
@@ -562,29 +562,82 @@ ion-segment-button {
 
 /* ==================== PRODUCT CARD STYLES ==================== */
 
-.products-grid {
-  width: 100%;
+.products-row {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.products-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.products-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.products-row::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
 }
 
 .product-card {
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 170px;
+  max-width: 180px;
+  scroll-snap-align: start;
 }
 
 .product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+:deep(.product-card ion-img) {
+  height: 130px;
+}
+
+:deep(.product-card ion-img::part(image)) {
+  object-fit: cover;
+}
+
+:deep(.product-card ion-card-header) {
+  padding: 8px 10px 2px;
+}
+
+:deep(.product-card ion-card-content) {
+  padding: 4px 10px 10px;
 }
 
 .product-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
+}
+
+.product-badges {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.product-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #7a1b5a;
+  background: #fde7f3;
+  padding: 2px 8px;
+  border-radius: 999px;
 }
 
 .product-price {
@@ -612,7 +665,8 @@ ion-segment-button {
 }
 
 .product-title {
-  min-height: 3.5rem;
+  min-height: 2.2rem;
+  font-size: 13px;
   display: flex;
   align-items: center;
 }
