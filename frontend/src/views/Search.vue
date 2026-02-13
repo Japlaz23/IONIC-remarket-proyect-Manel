@@ -2,21 +2,30 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button default-href="/tabs/home"></ion-back-button>
-        </ion-buttons>
-        <ion-title>Favoritos</ion-title>
+        <ion-title>Buscar</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
-      <div v-if="favoriteProducts.length === 0" style="padding: 40px; text-align: center">
-        <p>No tienes favoritos aún</p>
-        <ion-button @click="goHome">Volver</ion-button>
+      <div class="search-container">
+        <ion-searchbar
+          v-model="store.searchQuery"
+          placeholder="Buscar productos..."
+          :animated="true"
+        ></ion-searchbar>
+      </div>
+
+      <div v-if="store.filteredProducts.length === 0" class="empty-state">
+        <p>No hay resultados</p>
       </div>
 
       <ion-list v-else>
-        <ion-item v-for="product in favoriteProducts" :key="product.id" button @click="goToProduct(product.id)">
+        <ion-item
+          v-for="product in store.filteredProducts"
+          :key="product.id"
+          button
+          @click="goToProduct(product.id)"
+        >
           <ion-thumbnail slot="start">
             <img :src="product.image" :alt="product.title" />
           </ion-thumbnail>
@@ -31,7 +40,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   IonPage,
@@ -39,26 +47,30 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonButtons,
-  IonBackButton,
+  IonSearchbar,
   IonList,
   IonItem,
   IonLabel,
   IonThumbnail,
-  IonButton,
 } from '@ionic/vue'
 import { useProductStore } from '@/stores/productStore'
 
 const router = useRouter()
 const store = useProductStore()
 
-const favoriteProducts = computed(() => store.products.filter((p) => p.isFavorite))
-
 const goToProduct = (id: number) => {
   router.push(`/product/${id}`)
 }
-
-const goHome = () => {
-  router.push('/tabs/home')
-}
 </script>
+
+<style scoped>
+.search-container {
+  padding: 8px 12px 0;
+}
+
+.empty-state {
+  padding: 24px 16px;
+  text-align: center;
+  color: #888;
+}
+</style>

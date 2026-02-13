@@ -93,6 +93,40 @@
         </div>
       </div>
     </ion-header>
+
+    <ion-content>
+      <div v-if="store.filteredProducts.length === 0" class="empty-state">
+        <p>No hay productos para mostrar</p>
+      </div>
+      <div
+        v-else
+        class="grid products-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4"
+      >
+        <ion-card
+          v-for="product in store.filteredProducts"
+          :key="product.id"
+          class="product-card"
+          @click="goToProduct(product.id)"
+        >
+          <ion-img :src="product.image" :alt="product.title"></ion-img>
+          <ion-card-header>
+            <ion-card-title class="product-title line-clamp-2">{{ product.title }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="product-meta">
+              <span class="product-price">{{ product.price }}€</span>
+              <span class="product-location">{{ product.location }}</span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ion-content>
+
+    <ion-fab slot="fixed" horizontal="end" vertical="bottom">
+      <ion-fab-button @click="goToSell">
+        <ion-icon :icon="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
   </ion-page>
 </template>
 
@@ -109,6 +143,13 @@ import {
   IonMenu,
   IonContent,
   menuController,
+  IonFab,
+  IonFabButton,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonImg,
 } from '@ionic/vue'
 import {
   heart,
@@ -116,6 +157,7 @@ import {
   storefrontOutline,
   menuOutline,
   closeOutline,
+  add,
 } from 'ionicons/icons'
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'
@@ -159,18 +201,25 @@ const selectCategoryFromMenu = async (categoryId: string) => {
   await menuController.close()
 }
 
+const goToProduct = (id: number) => {
+  router.push(`/product/${id}`)
+}
+
 const goToLogin = () => {
   router.push('/login')
 }
 
 const goToProfileCustumer = () => {
-  router.push('/profilecustomer')
+  router.push('/tabs/profile')
 }
 
 const goToFavorites = () => {
-  router.push('/favorites')
+  router.push('/tabs/favorites')
 }
 
+const goToSell = () => {
+  router.push('/tabs/sell')
+}
 </script>
 
 <style scoped>
@@ -364,6 +413,46 @@ ion-segment-button {
 }
 
 /* ==================== PRODUCT CARD STYLES ==================== */
+
+.products-grid {
+  width: 100%;
+}
+
+.product-card {
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.product-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+}
+
+.product-price {
+  color: #1a7f34;
+  font-weight: 700;
+}
+
+.product-location {
+  color: #888;
+}
+
+.empty-state {
+  padding: 32px 16px;
+  text-align: center;
+  color: #888;
+}
 
 .line-clamp-2 {
   display: -webkit-box;
@@ -670,6 +759,26 @@ ion-segment-button {
 }
 
 @media (max-width: 424px) {
+  .header-content {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .logo-section {
+    order: 1;
+  }
+
+  .action-buttons {
+    order: 2;
+  }
+
+  .custom-searchbar {
+    order: 3;
+    flex: 1 1 100%;
+    width: 100%;
+    margin-top: 8px;
+  }
+
   .menu-button {
     --padding-start: 12px;
     --padding-end: 12px;
@@ -684,9 +793,28 @@ ion-segment-button {
     padding: 0 14px;
     font-size: 13px;
   }
+
+  .side-menu {
+    --width: 85vw;
+  }
+
+  ion-fab {
+    right: 12px;
+    bottom: 12px;
+  }
 }
 
 @media (min-width: 425px) and (max-width: 768px) {
+  .header-content {
+    flex-wrap: wrap;
+  }
+
+  .custom-searchbar {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-top: 8px;
+  }
+
   .menu-button {
     --padding-start: 14px;
     --padding-end: 14px;
@@ -697,5 +825,19 @@ ion-segment-button {
     padding: 0 16px;
     font-size: 13px;
   }
+
+  .side-menu {
+    --width: 320px;
+  }
 }
+/* ==================== FAB BUTTON STYLES ==================== */
+
+ion-fab-button {
+    --background: #b7f399;
+    --background-activated: #87d361;
+    --background-hover: #a3e681;
+    --border-radius: 15px;
+    --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+    --color: black;
+  }
 </style>
