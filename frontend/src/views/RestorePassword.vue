@@ -498,7 +498,7 @@ const goToLogin = () => {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  padding: 32px 24px;
+  padding: 24px 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
@@ -509,11 +509,11 @@ const goToLogin = () => {
 }
 
 .logo-container {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto 14px;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 12px;
   background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
-  border-radius: 18px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -521,15 +521,15 @@ const goToLogin = () => {
 }
 
 .logo-icon {
-  font-size: 36px;
+  font-size: 30px;
   color: white;
 }
 
 .title {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 800;
   color: #1a1a1a;
-  margin: 0 0 6px 0;
+  margin: 0 0 4px 0;
   letter-spacing: -0.5px;
 }
 
@@ -721,7 +721,8 @@ const goToLogin = () => {
   text-decoration: underline;
 }
 
-@media (min-width: 769px) {
+/* Tablets medianos */
+@media (min-width: 769px) and (max-width: 991px) {
   .restore-container {
     padding: 32px;
   }
@@ -738,30 +739,141 @@ const goToLogin = () => {
   }
 
   .restore-box {
-    padding: 40px 32px;
-    border-radius: 24px;
+    padding: 36px 30px;
+    border-radius: 22px;
   }
 
   .logo-container {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 16px;
+    width: 76px;
+    height: 76px;
+    margin-bottom: 14px;
   }
 
   .logo-icon {
-    font-size: 40px;
+    font-size: 38px;
   }
 
   .title {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .subtitle {
+    font-size: 14px;
+  }
+
+  .custom-input {
+    padding: 14px 14px 14px 44px;
     font-size: 15px;
   }
 }
 
-@media (max-width: 375px) {
+/* Tablets grandes */
+@media (min-width: 992px) {
+  .restore-container {
+    padding: 32px;
+  }
+
+  .back-button {
+    top: 24px;
+    left: 24px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .restore-wrapper {
+    max-width: 480px;
+  }
+
+  .restore-box {
+    padding: 36px 32px;
+    border-radius: 20px;
+  }
+
+  .logo-container {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 14px;
+  }
+
+  .logo-icon {
+    font-size: 36px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .header-section {
+    margin-bottom: 26px;
+  }
+
+  .custom-input {
+    padding: 14px 16px 14px 46px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+
+  .input-icon {
+    font-size: 18px;
+    left: 16px;
+  }
+
+  .restore-button {
+    padding: 15px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  .helper-text {
+    font-size: 12px;
+  }
+}
+
+/* Móvil grande */
+@media (min-width: 425px) and (max-width: 768px) {
+  .restore-container {
+    padding: 16px;
+  }
+
+  .restore-wrapper {
+    max-width: 100%;
+  }
+
+  .restore-box {
+    padding: 28px 22px;
+    border-radius: 18px;
+  }
+
+  .logo-container {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 12px;
+  }
+
+  .logo-icon {
+    font-size: 32px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .custom-input {
+    padding: 12px 13px 12px 42px;
+    font-size: 14px;
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 424px) {
   .restore-container {
     padding: 12px;
   }
@@ -774,21 +886,51 @@ const goToLogin = () => {
   }
 
   .restore-box {
-    padding: 28px 20px;
-    border-radius: 18px;
+    padding: 20px 16px;
+    border-radius: 16px;
   }
 
   .logo-container {
-    width: 64px;
-    height: 64px;
+    width: 54px;
+    height: 54px;
+    margin-bottom: 12px;
   }
 
   .logo-icon {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .title {
-    font-size: 26px;
+    font-size: 20px;
+    margin: 0 0 4px 0;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  .header-section {
+    margin-bottom: 20px;
+  }
+
+  .form-section {
+    gap: 12px;
+  }
+
+  .custom-input {
+    padding: 11px 12px 11px 40px;
+    font-size: 14px;
+    border-radius: 11px;
+  }
+
+  .restore-button {
+    padding: 13px;
+    font-size: 15px;
+    border-radius: 11px;
+  }
+
+  .helper-text {
+    font-size: 12px;
   }
 }
 </style>

@@ -572,7 +572,7 @@ const goToLogin = () => {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   border-radius: 18px;
-  padding: 20px 18px;
+  padding: 18px 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
@@ -592,11 +592,11 @@ const goToLogin = () => {
 }
 
 .logo-container {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   margin: 0 auto 10px;
   background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
-  border-radius: 14px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -604,15 +604,15 @@ const goToLogin = () => {
 }
 
 .logo-icon {
-  font-size: 30px;
+  font-size: 26px;
   color: white;
 }
 
 .title {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 800;
   color: #1a1a1a;
-  margin: 0 0 4px 0;
+  margin: 0 0 3px 0;
   letter-spacing: -0.5px;
 }
 
@@ -899,11 +899,11 @@ ion-alert .alert-button-cancel {
   }
 
   .register-wrapper {
-    max-width: 1000px;
-    height: 680px;
+    max-width: 900px;
+    height: 650px;
     flex-direction: row;
     background: rgba(255, 255, 255, 0.98);
-    border-radius: 24px;
+    border-radius: 22px;
     overflow: hidden;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.6);
@@ -914,7 +914,7 @@ ion-alert .alert-button-cancel {
     display: flex;
     flex: 1;
     background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
-    padding: 40px 35px;
+    padding: 40px 32px;
     color: white;
     position: relative;
     overflow: hidden;
@@ -945,12 +945,12 @@ ion-alert .alert-button-cancel {
   }
 
   .brand-logo {
-    width: 70px;
-    height: 70px;
-    margin: 0 auto 14px;
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 12px;
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
-    border-radius: 18px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -958,19 +958,19 @@ ion-alert .alert-button-cancel {
   }
 
   .brand-icon {
-    font-size: 38px;
+    font-size: 36px;
     color: white;
   }
 
   .visual-title {
-    font-size: 36px;
+    font-size: 30px;
     font-weight: 900;
-    margin: 0 0 6px 0;
+    margin: 0 0 5px 0;
     letter-spacing: -1px;
   }
 
   .visual-tagline {
-    font-size: 16px;
+    font-size: 14px;
     margin: 0;
     opacity: 0.9;
     font-weight: 500;
@@ -979,18 +979,18 @@ ion-alert .alert-button-cancel {
   .visual-features {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    margin: 24px 0;
+    gap: 16px;
+    margin: 20px 0;
   }
 
   .visual-feature {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px;
+    gap: 14px;
+    padding: 14px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    border-radius: 14px;
+    border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
   }
@@ -1001,10 +1001,10 @@ ion-alert .alert-button-cancel {
   }
 
   .feature-icon-box {
-    width: 54px;
-    height: 54px;
+    width: 44px;
+    height: 44px;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 11px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1012,18 +1012,18 @@ ion-alert .alert-button-cancel {
   }
 
   .feature-big-icon {
-    font-size: 28px;
+    font-size: 24px;
     color: white;
   }
 
   .feature-title {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
-    margin: 0 0 3px 0;
+    margin: 0 0 2px 0;
   }
 
   .feature-desc {
-    font-size: 13px;
+    font-size: 11px;
     margin: 0;
     opacity: 0.85;
   }
@@ -1032,10 +1032,10 @@ ion-alert .alert-button-cancel {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 20px 18px;
+    padding: 16px 12px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    border-radius: 14px;
+    border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
@@ -1044,30 +1044,30 @@ ion-alert .alert-button-cancel {
   }
 
   .stat-number {
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 900;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
   }
 
   .stat-label {
-    font-size: 12px;
+    font-size: 10px;
     opacity: 0.85;
     font-weight: 600;
   }
 
   .stat-divider {
     width: 1px;
-    height: 36px;
+    height: 30px;
     background: rgba(255, 255, 255, 0.3);
   }
 
   /* Sección formulario en desktop */
   .form-section-wrapper {
-    flex: 0 0 440px;
+    flex: 0 0 360px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 35px;
+    padding: 32px;
     background: white;
   }
 
@@ -1076,7 +1076,7 @@ ion-alert .alert-button-cancel {
     backdrop-filter: none;
     box-shadow: none;
     padding: 0;
-    max-width: 360px;
+    max-width: 300px;
   }
 
   .mobile-only {
@@ -1093,11 +1093,11 @@ ion-alert .alert-button-cancel {
   }
 
   .title {
-    font-size: 32px;
+    font-size: 26px;
   }
 
   .subtitle {
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .form-section {
@@ -1105,52 +1105,52 @@ ion-alert .alert-button-cancel {
   }
 
   .custom-input {
-    padding: 13px 16px 13px 48px;
-    font-size: 15px;
+    padding: 12px 14px 12px 44px;
+    font-size: 13px;
   }
 
   .input-icon {
-    left: 16px;
-    font-size: 20px;
+    left: 14px;
+    font-size: 16px;
   }
 
   .register-button {
-    padding: 14px;
-    font-size: 15.5px;
+    padding: 13px;
+    font-size: 14px;
   }
 
   .google-button {
-    padding: 13px 10px;
-    font-size: 14px;
-    min-height: 76px;
+    padding: 12px 8px;
+    font-size: 12px;
+    min-height: 72px;
   }
 
   .google-icon {
-    font-size: 23px;
+    font-size: 20px;
   }
 
   .button-text {
-    font-size: 13px;
+    font-size: 11px;
   }
 
   .divider {
-    margin: 18px 0 14px;
+    margin: 14px 0 12px;
   }
 
   .terms-label {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .checkbox {
-    --size: 19px;
+    --size: 18px;
   }
 
   .button-icon {
-    font-size: 19px;
+    font-size: 16px;
   }
 }
 
-/* Tablets */
+/* Tablets medianos */
 @media (min-width: 769px) and (max-width: 991px) {
   .register-container {
     padding: 32px;
@@ -1168,31 +1168,91 @@ ion-alert .alert-button-cancel {
   }
 
   .register-box {
-    padding: 40px 32px;
-    border-radius: 24px;
+    padding: 34px 28px;
+    border-radius: 20px;
   }
 
   .logo-container {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 16px;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 14px;
   }
 
   .logo-icon {
-    font-size: 40px;
+    font-size: 36px;
   }
 
   .title {
-    font-size: 32px;
+    font-size: 26px;
   }
 
   .subtitle {
-    font-size: 15px;
+    font-size: 14px;
+  }
+
+  .custom-input {
+    padding: 12px 14px 12px 42px;
+    font-size: 14px;
+  }
+
+  .google-button {
+    min-height: 75px;
+    font-size: 13px;
+  }
+}
+
+/* Móvil grande */
+@media (min-width: 425px) and (max-width: 768px) {
+  .register-container {
+    padding: 16px;
+  }
+
+  .register-wrapper {
+    max-width: 100%;
+  }
+
+  .register-box {
+    padding: 26px 20px;
+    border-radius: 18px;
+  }
+
+  .logo-container {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 12px;
+  }
+
+  .logo-icon {
+    font-size: 30px;
+  }
+
+  .title {
+    font-size: 22px;
+    margin: 0 0 3px 0;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .custom-input {
+    padding: 11px 12px 11px 40px;
+    font-size: 14px;
+  }
+
+  .google-button {
+    min-height: 72px;
+    font-size: 12px;
+    padding: 10px 6px;
+  }
+
+  .google-icon {
+    font-size: 18px;
   }
 }
 
 /* Móvil pequeño */
-@media (max-width: 375px) {
+@media (max-width: 424px) {
   .register-container {
     padding: 12px;
   }
@@ -1205,21 +1265,52 @@ ion-alert .alert-button-cancel {
   }
 
   .register-box {
-    padding: 20px 16px;
-    border-radius: 18px;
+    padding: 16px 12px;
+    border-radius: 16px;
   }
 
   .logo-container {
-    width: 54px;
-    height: 54px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
   }
 
   .logo-icon {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .title {
-    font-size: 23px;
+    font-size: 19px;
+    margin: 0 0 2px 0;
+  }
+
+  .subtitle {
+    font-size: 11px;
+  }
+
+  .header-section {
+    margin-bottom: 14px;
+  }
+
+  .form-section {
+    gap: 8px;
+  }
+
+  .custom-input {
+    padding: 10px 10px 10px 36px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  .input-icon {
+    font-size: 16px;
+    left: 12px;
+  }
+
+  .register-button {
+    padding: 11px;
+    font-size: 13px;
+    border-radius: 10px;
   }
 
   .social-buttons {
@@ -1229,15 +1320,24 @@ ion-alert .alert-button-cancel {
   .google-button {
     padding: 10px 6px;
     min-height: 65px;
-    font-size: 12px;
+    font-size: 11px;
+    border-radius: 10px;
   }
 
   .google-icon {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .button-text {
-    font-size: 12px;
+    font-size: 10px;
+  }
+
+  .terms-label {
+    font-size: 11px;
+  }
+
+  .divider {
+    margin: 8px 0 10px;
   }
 }
 </style>

@@ -495,7 +495,7 @@ const handleGoogleLogin = async () => {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  padding: 32px 24px;
+  padding: 24px 18px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
@@ -511,15 +511,15 @@ const handleGoogleLogin = async () => {
 
 .header-section {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .logo-container {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto 14px;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 12px;
   background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
-  border-radius: 18px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -527,20 +527,20 @@ const handleGoogleLogin = async () => {
 }
 
 .logo-icon {
-  font-size: 36px;
+  font-size: 30px;
   color: white;
 }
 
 .title {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 800;
   color: #1a1a1a;
-  margin: 0 0 6px 0;
+  margin: 0 0 4px 0;
   letter-spacing: -0.5px;
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
   margin: 0;
   font-weight: 500;
@@ -823,22 +823,22 @@ ion-alert .alert-button-cancel {
    ========================= */
 @media (min-width: 992px) {
   .login-container {
-    padding: 40px;
+    padding: 32px;
   }
 
   .back-button {
-    top: 32px;
-    left: 32px;
-    width: 48px;
-    height: 48px;
+    top: 24px;
+    left: 24px;
+    width: 44px;
+    height: 44px;
   }
 
   .login-wrapper {
-    max-width: 1100px;
-    height: 800px;
+    max-width: 900px;
+    height: 650px;
     flex-direction: row;
     background: rgba(255, 255, 255, 0.98);
-    border-radius: 24px;
+    border-radius: 22px;
     overflow: hidden;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.6);
@@ -849,7 +849,7 @@ ion-alert .alert-button-cancel {
     display: flex;
     flex: 1;
     background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
-    padding: 50px 40px;
+    padding: 40px 32px;
     color: white;
     position: relative;
     overflow: hidden;
@@ -880,12 +880,12 @@ ion-alert .alert-button-cancel {
   }
 
   .brand-logo {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 16px;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 14px;
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
+    border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -893,19 +893,19 @@ ion-alert .alert-button-cancel {
   }
 
   .brand-icon {
-    font-size: 44px;
+    font-size: 38px;
     color: white;
   }
 
   .visual-title {
-    font-size: 42px;
+    font-size: 32px;
     font-weight: 900;
-    margin: 0 0 8px 0;
+    margin: 0 0 6px 0;
     letter-spacing: -1px;
   }
 
   .visual-tagline {
-    font-size: 18px;
+    font-size: 15px;
     margin: 0;
     opacity: 0.9;
     font-weight: 500;
@@ -914,18 +914,18 @@ ion-alert .alert-button-cancel {
   .visual-features {
     display: flex;
     flex-direction: column;
-    gap: 28px;
-    margin: 30px 0;
+    gap: 18px;
+    margin: 24px 0;
   }
 
   .visual-feature {
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
+    gap: 16px;
+    padding: 16px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    border-radius: 16px;
+    border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
   }
@@ -936,10 +936,10 @@ ion-alert .alert-button-cancel {
   }
 
   .feature-icon-box {
-    width: 60px;
-    height: 60px;
+    width: 48px;
+    height: 48px;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -947,18 +947,18 @@ ion-alert .alert-button-cancel {
   }
 
   .feature-big-icon {
-    font-size: 32px;
+    font-size: 26px;
     color: white;
   }
 
   .feature-title {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
-    margin: 0 0 4px 0;
+    margin: 0 0 2px 0;
   }
 
   .feature-desc {
-    font-size: 14px;
+    font-size: 12px;
     margin: 0;
     opacity: 0.85;
   }
@@ -967,10 +967,10 @@ ion-alert .alert-button-cancel {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 25px 20px;
+    padding: 18px 14px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    border-radius: 16px;
+    border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
@@ -979,30 +979,30 @@ ion-alert .alert-button-cancel {
   }
 
   .stat-number {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 900;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
 
   .stat-label {
-    font-size: 13px;
+    font-size: 11px;
     opacity: 0.85;
     font-weight: 600;
   }
 
   .stat-divider {
     width: 1px;
-    height: 40px;
+    height: 34px;
     background: rgba(255, 255, 255, 0.3);
   }
 
   /* Sección formulario en desktop */
   .form-section-wrapper {
-    flex: 0 0 460px;
+    flex: 0 0 380px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px;
+    padding: 32px;
     background: white;
   }
 
@@ -1011,7 +1011,7 @@ ion-alert .alert-button-cancel {
     backdrop-filter: none;
     box-shadow: none;
     padding: 0;
-    max-width: 380px;
+    max-width: 320px;
   }
 
   .mobile-only {
@@ -1024,66 +1024,66 @@ ion-alert .alert-button-cancel {
 
   .header-section {
     text-align: left;
-    margin-bottom: 32px;
+    margin-bottom: 26px;
   }
 
   .title {
-    font-size: 36px;
+    font-size: 28px;
   }
 
   .subtitle {
-    font-size: 16px;
-  }
-
-  .form-section {
-    gap: 18px;
-  }
-
-  .custom-input {
-    padding: 15px 18px 15px 52px;
-    font-size: 16px;
-  }
-
-  .input-icon {
-    left: 18px;
-    font-size: 22px;
-  }
-
-  .login-button {
-    padding: 17px;
-    font-size: 17px;
-  }
-
-  .google-button {
-    padding: 16px 10px;
-    font-size: 15px;
-    min-height: 90px;
-  }
-
-  .google-icon {
-    font-size: 26px;
-  }
-
-  .guest-button {
-    padding: 16px 10px;
-    font-size: 15px;
-    min-height: 90px;
-  }
-
-  .guest-button ion-icon {
-    font-size: 26px;
-  }
-
-  .button-text {
     font-size: 14px;
   }
 
+  .form-section {
+    gap: 14px;
+  }
+
+  .custom-input {
+    padding: 13px 16px 13px 46px;
+    font-size: 14px;
+  }
+
+  .input-icon {
+    left: 16px;
+    font-size: 18px;
+  }
+
+  .login-button {
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  .google-button {
+    padding: 14px 10px;
+    font-size: 14px;
+    min-height: 80px;
+  }
+
+  .google-icon {
+    font-size: 22px;
+  }
+
+  .guest-button {
+    padding: 14px 10px;
+    font-size: 14px;
+    min-height: 80px;
+  }
+
+  .guest-button ion-icon {
+    font-size: 22px;
+  }
+
+  .button-text {
+    font-size: 13px;
+  }
+
   .divider {
-    margin: 24px 0 18px;
+    margin: 18px 0 14px;
   }
 }
 
-/* Tablets */
+/* Tablets medianos */
 @media (min-width: 769px) and (max-width: 991px) {
   .login-container {
     padding: 32px;
@@ -1101,31 +1101,97 @@ ion-alert .alert-button-cancel {
   }
 
   .login-box {
-    padding: 40px 32px;
-    border-radius: 24px;
+    padding: 36px 32px;
+    border-radius: 22px;
   }
 
   .logo-container {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 16px;
+    width: 76px;
+    height: 76px;
+    margin-bottom: 14px;
   }
 
   .logo-icon {
-    font-size: 40px;
+    font-size: 38px;
   }
 
   .title {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .subtitle {
+    font-size: 14px;
+  }
+
+  .custom-input {
+    padding: 14px 16px 14px 48px;
     font-size: 15px;
+  }
+
+  .google-button,
+  .guest-button {
+    min-height: 85px;
+    font-size: 14px;
+  }
+}
+
+/* Móvil grande */
+@media (min-width: 425px) and (max-width: 768px) {
+  .login-container {
+    padding: 16px;
+  }
+
+  .login-wrapper {
+    max-width: 100%;
+  }
+
+  .login-box {
+    padding: 28px 22px;
+    border-radius: 18px;
+  }
+
+  .logo-container {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 12px;
+  }
+
+  .logo-icon {
+    font-size: 32px;
+  }
+
+  .title {
+    font-size: 24px;
+    margin: 0 0 4px 0;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .header-section {
+    margin-bottom: 22px;
+  }
+
+  .custom-input {
+    padding: 12px 13px 12px 42px;
+    font-size: 14px;
+  }
+
+  .google-button,
+  .guest-button {
+    min-height: 78px;
+    font-size: 13px;
+  }
+
+  .google-icon,
+  .guest-button ion-icon {
+    font-size: 22px;
   }
 }
 
 /* Móvil pequeño */
-@media (max-width: 375px) {
+@media (max-width: 424px) {
   .login-container {
     padding: 12px;
   }
@@ -1138,21 +1204,47 @@ ion-alert .alert-button-cancel {
   }
 
   .login-box {
-    padding: 28px 20px;
-    border-radius: 18px;
+    padding: 20px 14px;
+    border-radius: 16px;
   }
 
   .logo-container {
-    width: 64px;
-    height: 64px;
+    width: 54px;
+    height: 54px;
+    margin-bottom: 10px;
   }
 
   .logo-icon {
-    font-size: 32px;
+    font-size: 26px;
   }
 
   .title {
-    font-size: 26px;
+    font-size: 20px;
+    margin: 0 0 3px 0;
+  }
+
+  .subtitle {
+    font-size: 11px;
+  }
+
+  .header-section {
+    margin-bottom: 16px;
+  }
+
+  .form-section {
+    gap: 10px;
+  }
+
+  .custom-input {
+    padding: 11px 12px 11px 38px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  .login-button {
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 10px;
   }
 
   .social-buttons {
@@ -1161,18 +1253,37 @@ ion-alert .alert-button-cancel {
 
   .google-button,
   .guest-button {
-    padding: 12px 6px;
-    min-height: 75px;
-    font-size: 13px;
+    padding: 10px 6px;
+    min-height: 70px;
+    font-size: 12px;
+    border-radius: 10px;
   }
 
   .google-icon,
   .guest-button ion-icon {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .button-text {
-    font-size: 12px;
+    font-size: 11px;
+  }
+
+  .features {
+    margin-top: 12px;
+    padding-top: 12px;
+    gap: 8px;
+  }
+
+  .feature-item {
+    gap: 3px;
+  }
+
+  .feature-icon {
+    font-size: 18px;
+  }
+
+  .feature-text {
+    font-size: 10px;
   }
 }
 </style>

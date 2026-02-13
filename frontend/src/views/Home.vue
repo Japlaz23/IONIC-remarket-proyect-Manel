@@ -7,7 +7,7 @@
           <ion-button v-if="!isLoggedIn" @click="goToLogin" class="hover:bg-gray-100 rounded-lg transition">
             <span class="text-sm font-semibold text-remarket-green">Login</span>
           </ion-button>
-          <ion-button v-if="isLoggedIn" @click="goToProfile" class="hover:bg-gray-100 rounded-lg transition">
+          <ion-button v-if="isLoggedIn" @click="goToProfileCustumer" class="hover:bg-gray-100 rounded-lg transition">
             <ion-icon :icon="personCircle" class="text-2xl text-gray-700"></ion-icon>
           </ion-button>
           <ion-button @click="goToFavorites" class="hover:bg-gray-100 rounded-lg transition">
@@ -183,8 +183,8 @@ const goToLogin = () => {
   router.push('/login')
 }
 
-const goToProfile = () => {
-  router.push('/profile')
+const goToProfileCustumer = () => {
+  router.push('/profilecustomer')
 }
 
 const goToFavorites = () => {
@@ -201,7 +201,7 @@ const updateCategory = (event: CustomEvent) => {
 </script>
 
 <style scoped>
-/* Estilos adicionales */
+/* Configuración de colores */
 ion-segment-button {
   --indicator-color: #1a7f34;
   --color-checked: #1a7f34;
@@ -211,6 +211,7 @@ ion-segment-button {
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -233,5 +234,61 @@ ion-segment-button {
 
 .grid > div {
   animation: fadeInUp 0.5s ease-out;
+}
+
+/* Responsive adjustments for different screen sizes */
+@media (max-width: 424px) {
+  ion-title {
+    font-size: 18px !important;
+  }
+
+  .grid {
+    gap: 12px !important;
+    padding: 8px !important;
+  }
+
+  .product-title {
+    min-height: 3rem;
+    font-size: 15px !important;
+  }
+
+  ion-fab-button {
+    width: 48px !important;
+    height: 48px !important;
+  }
+}
+
+@media (min-width: 425px) and (max-width: 768px) {
+  ion-title {
+    font-size: 20px !important;
+  }
+
+  .grid {
+    gap: 14px !important;
+  }
+
+  .product-title {
+    font-size: 16px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  ion-title {
+    font-size: 24px !important;
+  }
+
+  .grid {
+    gap: 16px !important;
+  }
+
+  .product-title {
+    min-height: 3.8rem;
+    font-size: 18px !important;
+  }
+
+  ion-fab-button {
+    width: 64px !important;
+    height: 64px !important;
+  }
 }
 </style>
