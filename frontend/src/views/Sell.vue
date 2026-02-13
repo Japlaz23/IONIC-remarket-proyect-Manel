@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+<<<<<<< HEAD
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -8,6 +9,9 @@
         <ion-title>Crear anuncio</ion-title>
       </ion-toolbar>
     </ion-header>
+=======
+    <app-header title="Crear anuncio"></app-header>
+>>>>>>> origin/Japhet
 
     <ion-content>
       <form @submit.prevent="submitSell">
@@ -48,17 +52,26 @@
   </ion-page>
 </template>
 
+<<<<<<< HEAD
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+=======
+<script setup>
+import AppHeader from '../components/AppHeader.vue'
+>>>>>>> origin/Japhet
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
+<<<<<<< HEAD
   IonButtons,
   IonBackButton,
+=======
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+>>>>>>> origin/Japhet
   IonItem,
   IonLabel,
   IonInput,

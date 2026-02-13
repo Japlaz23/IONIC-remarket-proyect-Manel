@@ -1,11 +1,10 @@
-import { createRouter, createWebHistory } from '@ionic/vue-router'
-import type { RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
 import Tabs from '@/views/Tabs.vue'
 import Home from '@/views/Home.vue'
-import Search from '@/views/Search.vue'
 import Login from '@/views/Login.vue'
 import Favorites from '@/views/Favorites.vue'
 import Sell from '@/views/Sell.vue'
+import Chat from '@/views/Chat.vue'
 import ProfileCustomer from '@/views/ProfileCostumer.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -25,7 +24,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'search',
         name: 'Search',
-        component: Search,
+        component: Home,
       },
       {
         path: 'favorites',
@@ -41,6 +40,11 @@ const routes: RouteRecordRaw[] = [
         path: 'profile',
         name: 'ProfileCustomer',
         component: ProfileCustomer,
+      },
+      {
+        path: 'chat',
+        name: 'Chat',
+        component: Chat,
       },
     ],
   },
@@ -78,17 +82,17 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/chat',
-    redirect: '/tabs/home',
+    redirect: '/tabs/chat',
   },
   {
     path: '/chat/:id',
-    name: 'ChatDetail',
+    name: 'Chat',
     component: () => import('@/views/Chat.vue'),
   },
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 })
 

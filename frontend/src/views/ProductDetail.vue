@@ -1,5 +1,6 @@
 <template>
   <ion-page v-if="product">
+<<<<<<< HEAD
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -8,6 +9,15 @@
         <ion-title>Producto</ion-title>
       </ion-toolbar>
     </ion-header>
+=======
+    <app-header title="Detalles del producto">
+      <template #buttons>
+        <ion-button @click="toggleFav">
+          <ion-icon :icon="product.isFavorite ? heart : heartOutline"></ion-icon>
+        </ion-button>
+      </template>
+    </app-header>
+>>>>>>> origin/Japhet
 
     <ion-content>
       <img :src="product.image" :alt="product.title" style="width: 100%; height: 300px; object-fit: cover" />
@@ -37,24 +47,38 @@
   </ion-page>
 </template>
 
+<<<<<<< HEAD
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+=======
+<script setup>
+import AppHeader from '../components/AppHeader.vue'
+>>>>>>> origin/Japhet
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
+<<<<<<< HEAD
   IonButtons,
   IonBackButton,
+=======
+  IonButton,
+  IonIcon,
+>>>>>>> origin/Japhet
   IonCard,
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
   IonButton,
 } from '@ionic/vue'
+<<<<<<< HEAD
 import { useProductStore } from '@/stores/productStore'
+=======
+import { heart, heartOutline, chatbubble } from 'ionicons/icons'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useProductStore } from '../stores/productStore'
+>>>>>>> origin/Japhet
 
 const route = useRoute()
 const router = useRouter()

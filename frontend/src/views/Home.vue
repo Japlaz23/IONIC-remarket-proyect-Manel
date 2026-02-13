@@ -94,9 +94,38 @@
       </div>
     </ion-header>
 
+<<<<<<< HEAD
     <ion-content>
       <div v-if="store.filteredProducts.length === 0" class="empty-state">
         <p>No hay productos para mostrar</p>
+=======
+    <ion-content class="bg-gray-50">
+      <!-- Filtros por categoría con Tailwind -->
+      <div class="sticky top-0 z-10 bg-white shadow-sm">
+          <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button @click="goToProfile" class="hover:bg-gray-100 rounded-lg transition">
+        <ion-icon :icon="personCircle" class="text-2xl text-gray-700"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Menu Button</ion-title>
+  </ion-toolbar>
+
+        <ion-segment v-model="store.selectedCategory" @ionChange="updateCategory" class="p-2">
+          <ion-segment-button value="" class="font-semibold">
+            <ion-label>Todos</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Electrónica" class="font-semibold">
+            <ion-label>Electrónica</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Deportes" class="font-semibold">
+            <ion-label>Deportes</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Moda" class="font-semibold">
+            <ion-label>Moda</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+>>>>>>> origin/Japhet
       </div>
       <div
         v-else

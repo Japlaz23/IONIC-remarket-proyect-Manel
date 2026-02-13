@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+<<<<<<< HEAD
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -8,6 +9,9 @@
         <ion-title>Favoritos</ion-title>
       </ion-toolbar>
     </ion-header>
+=======
+    <app-header title="Favoritos"></app-header>
+>>>>>>> origin/Japhet
 
     <ion-content>
       <div v-if="favoriteProducts.length === 0" style="padding: 40px; text-align: center">
@@ -30,17 +34,17 @@
   </ion-page>
 </template>
 
+<<<<<<< HEAD
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+=======
+<script setup>
+import AppHeader from '../components/AppHeader.vue'
+>>>>>>> origin/Japhet
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
-  IonButtons,
-  IonBackButton,
   IonList,
   IonItem,
   IonLabel,
