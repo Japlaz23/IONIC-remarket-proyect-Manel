@@ -173,20 +173,53 @@
           </div>
         </div>
       </div>
+
     </ion-content>
+
+    <ion-modal
+      :is-open="showGoogleModal"
+      css-class="google-auth-modal"
+      :show-backdrop="true"
+      :backdrop-dismiss="true"
+      @didDismiss="closeGoogleModal"
+    >
+      <div class="google-modal-surface">
+        <div class="google-modal-card">
+          <div class="google-modal-header">
+            <div class="google-modal-logo" aria-hidden="true">
+              <svg viewBox="0 0 48 48" class="google-g" aria-hidden="true">
+                <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.4l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.3l7.8 6.1C12.2 13.6 17.6 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.1 24.5c0-1.7-.2-3.4-.5-5H24v9.5h12.3c-.5 2.7-2.1 5.1-4.6 6.7l7.3 5.6c4.3-4 6.8-9.8 6.8-16.8z"/>
+                <path fill="#FBBC05" d="M10.4 28.7c-.6-1.7-1-3.4-1-5.2s.4-3.5 1-5.2l-7.8-6.1C1 15.4 0 19.1 0 23.5s1 8.1 2.6 11.3l7.8-6.1z"/>
+                <path fill="#34A853" d="M24 48c6.2 0 11.5-2 15.4-5.4l-7.3-5.6c-2 1.3-4.6 2.1-8.1 2.1-6.4 0-11.8-4.1-13.7-9.9l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="google-modal-title">Continuar con Google</h3>
+              <p class="google-modal-subtitle">
+                Seras redirigido a la pagina de autenticacion de Google para iniciar sesion.
+              </p>
+            </div>
+          </div>
+
+          <div class="google-modal-actions">
+            <ion-button fill="clear" class="google-cancel" @click="closeGoogleModal">
+              Cancelar
+            </ion-button>
+            <ion-button class="google-continue" @click="continueGoogleLogin">
+              Continuar
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </ion-modal>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import {
-  IonPage,
-  IonContent,
-  IonIcon,
-  alertController,
-  toastController,
-} from '@ionic/vue'
+import { IonPage, IonContent, IonIcon, IonButton, IonModal, toastController } from '@ionic/vue'
 import {
   arrowForward,
   personOutline,
@@ -243,11 +276,11 @@ const handleLogin = async () => {
   })
   await toast.present()
 
-  router.push('/')
+  router.push('/tabs/home')
 }
 
 const goHome = () => {
-  router.push('/')
+  router.push('/tabs/home')
 }
 
 const goToRestore = () => {
@@ -258,54 +291,46 @@ const goToRegister = () => {
   router.push('/register')
 }
 
-const handleGoogleLogin = async () => {
-  const alert = await alertController.create({
-    header: '🔐 Iniciar sesión con Google',
-    message: 'Serás redirigido a la página de autenticación de Google para iniciar sesión de forma segura.',
-    buttons: [
-      {
-        text: 'Cancelar',
-        role: 'cancel',
-        cssClass: 'alert-button-cancel',
-      },
-      {
-        text: 'Continuar',
-        cssClass: 'alert-button-confirm',
-        handler: () => {
-          // Aquí iría la integración real con Google OAuth
-          const toast = toastController.create({
-            message: 'Redirigiendo a Google...',
-            duration: 2000,
-            position: 'top',
-            color: 'primary',
-            icon: logoGoogle,
-          })
-          toast.then((t) => t.present())
-          
-          // Simulación de login exitoso después de 2 segundos
-          setTimeout(async () => {
-            const user = {
-              email: 'usuario@gmail.com',
-              name: 'Usuario Google',
-              loginDate: new Date().toISOString(),
-              provider: 'google',
-            }
-            localStorage.setItem('user', JSON.stringify(user))
-            
-            const successToast = await toastController.create({
-              message: '¡Inicio de sesión exitoso con Google!',
-              duration: 2000,
-              position: 'top',
-              color: 'success',
-            })
-            await successToast.present()
-            router.push('/')
-          }, 2000)
-        },
-      },
-    ],
+const showGoogleModal = ref(false)
+
+const handleGoogleLogin = () => {
+  showGoogleModal.value = true
+}
+
+const closeGoogleModal = () => {
+  showGoogleModal.value = false
+}
+
+const continueGoogleLogin = async () => {
+  closeGoogleModal()
+
+  const toast = await toastController.create({
+    message: 'Redirigiendo a Google...',
+    duration: 2000,
+    position: 'top',
+    color: 'primary',
+    icon: logoGoogle,
   })
-  await alert.present()
+  await toast.present()
+
+  setTimeout(async () => {
+    const user = {
+      email: 'usuario@gmail.com',
+      name: 'Usuario Google',
+      loginDate: new Date().toISOString(),
+      provider: 'google',
+    }
+    localStorage.setItem('user', JSON.stringify(user))
+
+    const successToast = await toastController.create({
+      message: '¡Inicio de sesión exitoso con Google!',
+      duration: 2000,
+      position: 'top',
+      color: 'success',
+    })
+    await successToast.present()
+    router.push('/tabs/home')
+  }, 2000)
 }
 </script>
 

@@ -1,5 +1,6 @@
 <template>
-  <ion-menu content-id="main-content" type="overlay" class="side-menu">
+  <ion-page>
+  <ion-menu content-id="home-content" type="overlay" class="side-menu">
     <ion-header>
       <ion-toolbar class="menu-header">
         <ion-title>Todas las categorias</ion-title>
@@ -24,8 +25,7 @@
     </ion-content>
   </ion-menu>
 
-  <ion-page id="main-content">
-    <ion-header class="header-container">
+  <ion-header class="header-container">
       <!-- Main Header -->
       <ion-toolbar class="main-toolbar">
         <div class="header-content">
@@ -94,38 +94,9 @@
       </div>
     </ion-header>
 
-<<<<<<< HEAD
-    <ion-content>
+    <ion-content id="home-content">
       <div v-if="store.filteredProducts.length === 0" class="empty-state">
         <p>No hay productos para mostrar</p>
-=======
-    <ion-content class="bg-gray-50">
-      <!-- Filtros por categoría con Tailwind -->
-      <div class="sticky top-0 z-10 bg-white shadow-sm">
-          <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button @click="goToProfile" class="hover:bg-gray-100 rounded-lg transition">
-        <ion-icon :icon="personCircle" class="text-2xl text-gray-700"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Menu Button</ion-title>
-  </ion-toolbar>
-
-        <ion-segment v-model="store.selectedCategory" @ionChange="updateCategory" class="p-2">
-          <ion-segment-button value="" class="font-semibold">
-            <ion-label>Todos</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="Electrónica" class="font-semibold">
-            <ion-label>Electrónica</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="Deportes" class="font-semibold">
-            <ion-label>Deportes</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="Moda" class="font-semibold">
-            <ion-label>Moda</ion-label>
-          </ion-segment-button>
-        </ion-segment>
->>>>>>> origin/Japhet
       </div>
       <div
         v-else
@@ -179,6 +150,8 @@ import {
   IonCardTitle,
   IonCardContent,
   IonImg,
+  alertController,
+  onIonViewWillEnter,
 } from '@ionic/vue'
 import {
   heart,
@@ -189,13 +162,17 @@ import {
   add,
 } from 'ionicons/icons'
 import { useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useProductStore } from '@/stores/productStore'
 
 const router = useRouter()
 const store = useProductStore()
 
-const isLoggedIn = computed(() => !!localStorage.getItem('user'))
+const isLoggedIn = ref(false)
+
+onIonViewWillEnter(() => {
+  isLoggedIn.value = !!localStorage.getItem('user')
+})
 
 const categories = [
   { id: 'electronics', name: 'Electrónica' },
@@ -239,11 +216,40 @@ const goToLogin = () => {
 }
 
 const goToProfileCustumer = () => {
+  if (!isLoggedIn.value) {
+    confirmLogin()
+    return
+  }
   router.push('/tabs/profile')
 }
 
 const goToFavorites = () => {
+  if (!isLoggedIn.value) {
+    confirmLogin()
+    return
+  }
   router.push('/tabs/favorites')
+}
+
+const confirmLogin = async () => {
+  const alert = await alertController.create({
+    header: 'Inicia sesion',
+    message: 'Necesitas iniciar sesion para continuar.',
+    cssClass: 'auth-alert',
+    buttons: [
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+      },
+      {
+        text: 'Continuar',
+        handler: () => {
+          router.push('/login')
+        },
+      },
+    ],
+  })
+  await alert.present()
 }
 
 const goToSell = () => {
@@ -277,6 +283,13 @@ const goToSell = () => {
   justify-content: space-between;
   width: 100%;
   gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .action-buttons .profile-btn,
+  .action-buttons .favorites-btn {
+    display: none;
+  }
 }
 
 /* Logo Section */
@@ -404,28 +417,28 @@ const goToSell = () => {
   --box-shadow: 0 4px 12px rgba(26, 127, 52, 0.12);
 }
 
-::v-deep .searchbar-input-container {
+:deep(.searchbar-input-container) {
   padding: 0 !important;
 }
 
-::v-deep .searchbar-search-icon {
+:deep(.searchbar-search-icon) {
   color: #1a7f34;
   left: 12px;
 }
 
-::v-deep .searchbar-input {
+:deep(.searchbar-input) {
   font-size: 15px;
   color: #333;
   font-family: inherit;
 }
 
-::v-deep .searchbar-clear-button {
+:deep(.searchbar-clear-button) {
   color: #999;
   margin-right: 8px;
   transition: color 0.2s ease;
 }
 
-::v-deep .searchbar-cancel-button {
+:deep(.searchbar-cancel-button) {
   color: #1a7f34;
   font-weight: 600;
   transition: color 0.2s ease;

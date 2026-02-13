@@ -1,4 +1,5 @@
-import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory } from '@ionic/vue-router'
+import { type RouteRecordRaw } from 'vue-router'
 import Tabs from '@/views/Tabs.vue'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
@@ -6,6 +7,7 @@ import Favorites from '@/views/Favorites.vue'
 import Sell from '@/views/Sell.vue'
 import Chat from '@/views/Chat.vue'
 import ProfileCustomer from '@/views/ProfileCostumer.vue'
+import Purchases from '@/views/Purchases.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -45,6 +47,11 @@ const routes: RouteRecordRaw[] = [
         path: 'chat',
         name: 'Chat',
         component: Chat,
+      },
+      {
+        path: 'purchases',
+        name: 'Purchases',
+        component: Purchases,
       },
     ],
   },
@@ -94,6 +101,25 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+})
+
+const requiresAuth = (path: string) => {
+  return (
+    path === '/tabs/favorites' ||
+    path === '/tabs/profile' ||
+    path === '/tabs/chat' ||
+    path === '/tabs/purchases' ||
+    path.startsWith('/chat')
+  )
+}
+
+router.beforeEach((to, _from, next) => {
+  const isLoggedIn = !!localStorage.getItem('user')
+  if (!isLoggedIn && requiresAuth(to.path)) {
+    next('/login')
+    return
+  }
+  next()
 })
 
 export default router

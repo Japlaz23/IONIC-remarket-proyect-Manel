@@ -23,7 +23,7 @@ export const useProductStore = defineStore('product', () => {
       id: 1,
       title: 'iPhone 13 Pro',
       price: 450,
-      image: 'https://via.placeholder.com/300',
+      image: '/placeholder.svg',
       category: 'Electrónica',
       seller: 'Juan Pérez',
       sellerId: 1,
@@ -32,13 +32,13 @@ export const useProductStore = defineStore('product', () => {
       createdAt: new Date('2024-01-15'),
       isFavorite: false,
       description: 'iPhone 13 Pro en excelente estado',
-      images: ['https://via.placeholder.com/300'],
+      images: ['/placeholder.svg'],
     },
     {
       id: 2,
       title: 'MacBook Air M2',
       price: 800,
-      image: 'https://via.placeholder.com/300',
+      image: '/placeholder.svg',
       category: 'Electrónica',
       seller: 'María García',
       sellerId: 2,
@@ -47,7 +47,7 @@ export const useProductStore = defineStore('product', () => {
       createdAt: new Date('2024-01-10'),
       isFavorite: false,
       description: 'MacBook Air M2 sin usar',
-      images: ['https://via.placeholder.com/300'],
+      images: ['/placeholder.svg'],
     },
   ])
 

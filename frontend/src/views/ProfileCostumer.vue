@@ -9,7 +9,7 @@
     <ion-content>
       <ion-card>
         <ion-card-content style="text-align: center">
-          <img src="https://via.placeholder.com/100" alt="Perfil" style="border-radius: 50%; width: 100px; height: 100px" />
+          <img src="/placeholder.svg" alt="Perfil" style="border-radius: 50%; width: 100px; height: 100px" />
           <h2>Usuario</h2>
           <p>⭐ 4.8 (24 transacciones)</p>
         </ion-card-content>
@@ -31,7 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import {
   IonPage,
   IonHeader,
@@ -43,16 +42,17 @@ import {
   IonList,
   IonItem,
   IonLabel,
+  useIonRouter,
 } from '@ionic/vue'
 
-const router = useRouter()
+const ionRouter = useIonRouter()
 
 const goHome = () => {
-  router.push('/')
+  ionRouter.push('/tabs/home')
 }
 
 const logout = () => {
   localStorage.removeItem('user')
-  router.push('/')
+  ionRouter.push('/login')
 }
 </script>

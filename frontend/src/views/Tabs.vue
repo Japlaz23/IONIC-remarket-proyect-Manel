@@ -1,39 +1,47 @@
 <template>
-  <ion-tabs>
-    <ion-router-outlet></ion-router-outlet>
+  <ion-page>
+    <ion-tabs>
+      <ion-router-outlet></ion-router-outlet>
 
-    <ion-tab-bar slot="bottom" class="mobile-tab-bar">
-      <ion-tab-button tab="home" href="/tabs/home">
-        <ion-icon :icon="homeOutline"></ion-icon>
-        <ion-label>Inicio</ion-label>
-      </ion-tab-button>
+      <ion-tab-bar slot="bottom" class="mobile-tab-bar">
+        <ion-tab-button tab="home" href="/tabs/home">
+          <ion-icon :icon="homeOutline"></ion-icon>
+          <ion-label>Inicio</ion-label>
+        </ion-tab-button>
 
-      <ion-tab-button tab="search" href="/tabs/search">
-        <ion-icon :icon="searchOutline"></ion-icon>
-        <ion-label>Buscar</ion-label>
-      </ion-tab-button>
+        <ion-tab-button tab="search" href="/tabs/search">
+          <ion-icon :icon="searchOutline"></ion-icon>
+          <ion-label>Buscar</ion-label>
+        </ion-tab-button>
 
-      <ion-tab-button tab="favorites" href="/tabs/favorites">
-        <ion-icon :icon="heartOutline"></ion-icon>
-        <ion-label>Favoritos</ion-label>
-        <ion-badge v-if="favoriteCount > 0" class="tab-badge">{{ favoriteCount }}</ion-badge>
-      </ion-tab-button>
+        <ion-tab-button tab="favorites" href="/tabs/favorites">
+          <ion-icon :icon="heartOutline"></ion-icon>
+          <ion-label>Favoritos</ion-label>
+          <ion-badge v-if="favoriteCount > 0" class="tab-badge">{{ favoriteCount }}</ion-badge>
+        </ion-tab-button>
 
-      <ion-tab-button tab="sell" href="/tabs/sell">
-        <ion-icon :icon="addCircleOutline"></ion-icon>
-        <ion-label>Vender</ion-label>
-      </ion-tab-button>
+        <ion-tab-button tab="purchases" href="/tabs/purchases">
+          <ion-icon :icon="cartOutline"></ion-icon>
+          <ion-label>Compras</ion-label>
+        </ion-tab-button>
 
-      <ion-tab-button tab="profile" href="/tabs/profile">
-        <ion-icon :icon="personCircleOutline"></ion-icon>
-        <ion-label>Perfil</ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
+        <ion-tab-button tab="sell" href="/tabs/sell">
+          <ion-icon :icon="addCircleOutline"></ion-icon>
+          <ion-label>Vender</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="profile" href="/tabs/profile">
+          <ion-icon :icon="personCircleOutline"></ion-icon>
+          <ion-label>Perfil</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-page>
 </template>
 
 <script setup lang="ts">
 import {
+  IonPage,
   IonTabs,
   IonRouterOutlet,
   IonTabBar,
@@ -48,6 +56,7 @@ import {
   heartOutline,
   addCircleOutline,
   personCircleOutline,
+  cartOutline,
 } from 'ionicons/icons'
 import { computed } from 'vue'
 import { useProductStore } from '@/stores/productStore'

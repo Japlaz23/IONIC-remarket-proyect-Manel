@@ -1,6 +1,5 @@
 <template>
   <ion-page>
-<<<<<<< HEAD
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -9,9 +8,6 @@
         <ion-title>Crear anuncio</ion-title>
       </ion-toolbar>
     </ion-header>
-=======
-    <app-header title="Crear anuncio"></app-header>
->>>>>>> origin/Japhet
 
     <ion-content>
       <form @submit.prevent="submitSell">
@@ -52,26 +48,17 @@
   </ion-page>
 </template>
 
-<<<<<<< HEAD
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-=======
-<script setup>
-import AppHeader from '../components/AppHeader.vue'
->>>>>>> origin/Japhet
 import {
   IonPage,
+  IonHeader,
+  IonToolbar,
   IonContent,
-<<<<<<< HEAD
   IonButtons,
   IonBackButton,
-=======
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
->>>>>>> origin/Japhet
+  IonTitle,
   IonItem,
   IonLabel,
   IonInput,
@@ -109,8 +96,8 @@ const submitSell = () => {
     category: formData.value.category,
     condition: 'Nuevo',
     location: formData.value.location,
-    image: 'https://via.placeholder.com/300',
-    images: ['https://via.placeholder.com/300'],
+    image: '/placeholder.svg',
+    images: ['/placeholder.svg'],
     seller: 'Tu nombre',
     sellerId: 0,
   })

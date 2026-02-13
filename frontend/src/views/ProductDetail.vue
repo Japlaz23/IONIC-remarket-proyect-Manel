@@ -1,6 +1,5 @@
 <template>
-  <ion-page v-if="product">
-<<<<<<< HEAD
+  <ion-page>
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -9,80 +8,73 @@
         <ion-title>Producto</ion-title>
       </ion-toolbar>
     </ion-header>
-=======
-    <app-header title="Detalles del producto">
-      <template #buttons>
-        <ion-button @click="toggleFav">
-          <ion-icon :icon="product.isFavorite ? heart : heartOutline"></ion-icon>
-        </ion-button>
-      </template>
-    </app-header>
->>>>>>> origin/Japhet
 
     <ion-content>
-      <img :src="product.image" :alt="product.title" style="width: 100%; height: 300px; object-fit: cover" />
+      <template v-if="product">
+        <img :src="product.image" :alt="product.title" style="width: 100%; height: 300px; object-fit: cover" />
 
-      <div style="padding: 16px">
-        <h1>{{ product.title }}</h1>
-        <p style="font-size: 24px; color: #1a7f34; font-weight: bold">{{ product.price }}€</p>
-        <p>{{ product.description }}</p>
+        <div style="padding: 16px">
+          <h1>{{ product.title }}</h1>
+          <p style="font-size: 24px; color: #1a7f34; font-weight: bold">{{ product.price }}€</p>
+          <p>{{ product.description }}</p>
 
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Información</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <p><strong>Estado:</strong> {{ product.condition }}</p>
-            <p><strong>Categoría:</strong> {{ product.category }}</p>
-            <p><strong>Ubicación:</strong> {{ product.location }}</p>
-            <p><strong>Vendedor:</strong> {{ product.seller }}</p>
-          </ion-card-content>
-        </ion-card>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Información</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p><strong>Estado:</strong> {{ product.condition }}</p>
+              <p><strong>Categoría:</strong> {{ product.category }}</p>
+              <p><strong>Ubicación:</strong> {{ product.location }}</p>
+              <p><strong>Vendedor:</strong> {{ product.seller }}</p>
+            </ion-card-content>
+          </ion-card>
 
-        <ion-button expand="block" color="success" @click="goToChat(product.id)">
-          Contactar vendedor
-        </ion-button>
+          <ion-button expand="block" color="primary" @click="buyProduct">
+            Comprar
+          </ion-button>
+          <ion-button expand="block" color="success" @click="goToChat(product.id)">
+            Contactar vendedor
+          </ion-button>
+        </div>
+      </template>
+      <div v-else style="padding: 24px; text-align: center; color: #666">
+        <p>Producto no encontrado.</p>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
-<<<<<<< HEAD
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-=======
-<script setup>
-import AppHeader from '../components/AppHeader.vue'
->>>>>>> origin/Japhet
 import {
   IonPage,
-  IonContent,
-<<<<<<< HEAD
+  IonHeader,
+  IonToolbar,
   IonButtons,
   IonBackButton,
-=======
-  IonButton,
-  IonIcon,
->>>>>>> origin/Japhet
+  IonTitle,
+  IonContent,
   IonCard,
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
   IonButton,
+  onIonViewWillEnter,
+  alertController,
 } from '@ionic/vue'
-<<<<<<< HEAD
 import { useProductStore } from '@/stores/productStore'
-=======
-import { heart, heartOutline, chatbubble } from 'ionicons/icons'
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useProductStore } from '../stores/productStore'
->>>>>>> origin/Japhet
 
 const route = useRoute()
 const router = useRouter()
 const store = useProductStore()
+
+const isLoggedIn = ref(false)
+
+onIonViewWillEnter(() => {
+  isLoggedIn.value = !!localStorage.getItem('user')
+})
 
 const product = computed(() => {
   const id = route.params.id
@@ -92,5 +84,34 @@ const product = computed(() => {
 
 const goToChat = (productId: number) => {
   router.push(`/chat/${productId}`)
+}
+
+const buyProduct = () => {
+  if (!isLoggedIn.value) {
+    confirmLogin()
+    return
+  }
+  router.push('/tabs/purchases')
+}
+
+const confirmLogin = async () => {
+  const alert = await alertController.create({
+    header: 'Inicia sesion',
+    message: 'Necesitas iniciar sesion para continuar con la compra.',
+    cssClass: 'auth-alert',
+    buttons: [
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+      },
+      {
+        text: 'Continuar',
+        handler: () => {
+          router.push('/login')
+        },
+      },
+    ],
+  })
+  await alert.present()
 }
 </script>
