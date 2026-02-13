@@ -54,6 +54,13 @@
             >
               <span>Iniciar sesión</span>
             </ion-button>
+            <ion-button
+              class="icon-btn purchases-btn"
+              title="Compras"
+              @click="goToPurchases"
+            >
+              <ion-icon :icon="cartOutline"></ion-icon>
+            </ion-button>
             <ion-button 
               v-if="isLoggedIn" 
               @click="goToProfileCustumer"
@@ -122,10 +129,27 @@
       </div>
     </ion-content>
 
-    <ion-fab slot="fixed" horizontal="end" vertical="bottom">
-      <ion-fab-button @click="goToSell">
-        <ion-icon :icon="add"></ion-icon>
+    <ion-fab
+      slot="fixed"
+      horizontal="end"
+      vertical="bottom"
+      class="chat-fab"
+      :activated="isChatFabOpen"
+    >
+      <ion-fab-button class="chat-fab-button" @click="toggleChatFab">
+        <ion-icon :icon="chevronForwardCircle"></ion-icon>
       </ion-fab-button>
+      <ion-fab-list side="start" class="chat-fab-list">
+        <ion-fab-button class="chat-fab-item" title="Publicar" @click="goToSellFromFab">
+          <ion-icon :icon="add"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button class="chat-fab-item" title="Soporte" @click="goToChatList('support')">
+          <ion-icon :icon="chatbubblesOutline"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button class="chat-fab-item" title="Vendedor" @click="goToChatList('seller')">
+          <ion-icon :icon="storefrontOutline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
     </ion-fab>
   </ion-page>
 </template>
@@ -145,6 +169,7 @@ import {
   menuController,
   IonFab,
   IonFabButton,
+  IonFabList,
   IonCard,
   IonCardHeader,
   IonCardTitle,
@@ -160,6 +185,9 @@ import {
   menuOutline,
   closeOutline,
   add,
+  cartOutline,
+  chatbubblesOutline,
+  chevronForwardCircle,
 } from 'ionicons/icons'
 import { useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
@@ -169,6 +197,7 @@ const router = useRouter()
 const store = useProductStore()
 
 const isLoggedIn = ref(false)
+const isChatFabOpen = ref(false)
 
 onIonViewWillEnter(() => {
   isLoggedIn.value = !!localStorage.getItem('user')
@@ -231,6 +260,14 @@ const goToFavorites = () => {
   router.push('/tabs/favorites')
 }
 
+const goToPurchases = () => {
+  if (!isLoggedIn.value) {
+    confirmLogin()
+    return
+  }
+  router.push('/tabs/purchases')
+}
+
 const confirmLogin = async () => {
   const alert = await alertController.create({
     header: 'Inicia sesion',
@@ -254,6 +291,28 @@ const confirmLogin = async () => {
 
 const goToSell = () => {
   router.push('/tabs/sell')
+}
+
+const goToSellFromFab = () => {
+  isChatFabOpen.value = false
+  goToSell()
+}
+
+const toggleChatFab = () => {
+  isChatFabOpen.value = !isChatFabOpen.value
+}
+
+const goToChatList = (type: 'support' | 'seller') => {
+  if (!isLoggedIn.value) {
+    confirmLogin()
+    return
+  }
+  isChatFabOpen.value = false
+  if (type === 'support') {
+    router.push('/tabs/chat')
+    return
+  }
+  router.push('/chat/1')
 }
 </script>
 
@@ -285,10 +344,57 @@ const goToSell = () => {
   gap: 16px;
 }
 
+.chat-fab {
+  display: none;
+  z-index: 1000;
+  margin-bottom: 16px;
+  margin-right: 16px;
+  align-items: center;
+  flex-direction: row;
+}
+
+.chat-fab-button {
+  --background: #1a7f34;
+  --color: #ffffff;
+  box-shadow: 0 10px 24px rgba(26, 127, 52, 0.35);
+}
+
+.chat-fab-list .chat-fab-item {
+  --background: #ffffff;
+  --color: #1a1a1a;
+  width: 44px;
+  height: 44px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.chat-fab-list {
+  position: static;
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin-right: 12px;
+}
+
+.chat-fab-list.fab-list-active {
+  display: flex;
+}
+
+.chat-fab-list .chat-fab-item ion-icon {
+  font-size: 20px;
+}
+
 @media (max-width: 768px) {
   .action-buttons .profile-btn,
-  .action-buttons .favorites-btn {
+  .action-buttons .favorites-btn,
+  .action-buttons .purchases-btn {
     display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .chat-fab {
+    display: block;
   }
 }
 
