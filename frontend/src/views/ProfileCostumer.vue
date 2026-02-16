@@ -2,6 +2,9 @@
   <ion-page>
     <ion-header>
       <ion-toolbar class="profile-toolbar">
+        <ion-buttons slot="start">
+          <ion-back-button default-href="/tabs/home"></ion-back-button>
+        </ion-buttons>
         <ion-title class="profile-title">Mi perfil</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -72,6 +75,8 @@ import {
   IonIcon,
   onIonViewWillEnter,
   useIonRouter,
+  IonBackButton,
+  IonButtons,
 } from '@ionic/vue'
 import { chevronForwardOutline } from 'ionicons/icons'
 import { computed, ref } from 'vue'

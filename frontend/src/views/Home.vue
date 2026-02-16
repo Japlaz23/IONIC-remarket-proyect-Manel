@@ -108,30 +108,60 @@
     </ion-header>
 
     <ion-content id="home-content">
-      <div v-if="store.filteredProducts.length === 0" class="empty-state">
+      <div v-if="categorySections.length === 0" class="empty-state">
         <p>No hay productos para mostrar</p>
       </div>
-      <div
-        v-else
-        class="grid products-grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4"
-      >
-        <ion-card
-          v-for="product in store.filteredProducts"
-          :key="product.id"
-          class="product-card"
-          @click="goToProduct(product.id)"
-        >
-          <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
-          <ion-card-header>
-            <ion-card-title class="product-title line-clamp-2">{{ product.title }}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <div class="product-meta">
-              <span class="product-price">{{ product.price }}€</span>
-              <span class="product-location">{{ product.location }}</span>
-            </div>
-          </ion-card-content>
-        </ion-card>
+      <div v-else class="market-sections">
+        <section v-for="section in categorySections" :key="section.id" class="category-section">
+          <div class="section-header">
+            <h2>{{ section.name }}</h2>
+            <span>{{ section.items.length }} productos</span>
+          </div>
+
+          <div v-if="isCarouselCategory(section.id)" class="product-carousel-row">
+            <ion-card
+              v-for="product in section.items"
+              :key="product.id"
+              class="product-card compact-card"
+              @click="goToProduct(product.id)"
+            >
+              <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+              <ion-card-header>
+                <ion-card-title class="product-title line-clamp-2">
+                  {{ product.title }}
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="product-meta">
+                  <span class="product-price">{{ product.price }}€</span>
+                  <span class="product-location">{{ product.location }}</span>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <div v-else class="product-grid compact-grid">
+            <ion-card
+              v-for="product in section.items"
+              :key="product.id"
+              class="product-card compact-card"
+              @click="goToProduct(product.id)"
+            >
+              <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+              <ion-card-header>
+                <ion-card-title class="product-title line-clamp-2">
+                  {{ product.title }}
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="product-meta">
+                  <span class="product-price">{{ product.price }}€</span>
+                  <span class="product-location">{{ product.location }}</span>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </section>
       </div>
     </ion-content>
 
@@ -211,13 +241,15 @@ onIonViewWillEnter(() => {
 })
 
 const categories = [
-  { id: 'electronics', name: 'Electrónica' },
-  { id: 'vehicles', name: 'Vehículos' },
-  { id: 'fashion', name: 'Moda' },
-  { id: 'home', name: 'Hogar' },
-  { id: 'sports', name: 'Deportes' },
-  { id: 'office', name: 'Oficina' },
+  { id: 'Electrónica', name: 'Electrónica' },
+  { id: 'Vehículos', name: 'Vehículos' },
+  { id: 'Moda', name: 'Moda' },
+  { id: 'Hogar', name: 'Hogar' },
+  { id: 'Deportes', name: 'Deportes' },
+  { id: 'Oficina', name: 'Oficina' },
 ]
+
+const carouselCategoryIds = new Set(['Electrónica', 'Vehículos'])
 
 const selectedCategory = computed({
   get: () => store.selectedCategory,
@@ -241,6 +273,20 @@ const closeCategoryMenu = async () => {
 const selectCategoryFromMenu = async (categoryId: string) => {
   selectedCategory.value = categoryId
   await menuController.close()
+}
+
+const categorySections = computed(() => {
+  return categories
+    .filter((category) => !store.selectedCategory || category.id === store.selectedCategory)
+    .map((category) => ({
+      ...category,
+      items: store.filteredProducts.filter((product) => product.category === category.id),
+    }))
+    .filter((section) => section.items.length > 0)
+})
+
+const isCarouselCategory = (categoryId: string) => {
+  return carouselCategoryIds.has(categoryId)
 }
 
 const goToProduct = (id: number) => {
@@ -603,6 +649,56 @@ ion-segment-button {
   width: 100%;
 }
 
+.market-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px;
+}
+
+.category-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #0f172a;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.section-header span {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.product-carousel-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+}
+
+.product-carousel-row::-webkit-scrollbar {
+  display: none;
+}
+
+.product-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .product-card {
   cursor: pointer;
   background: #ffffff;
@@ -611,6 +707,13 @@ ion-segment-button {
   overflow: hidden;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.compact-card {
+  flex: 0 0 180px;
+  scroll-snap-align: start;
 }
 
 .product-card:hover {
@@ -619,34 +722,36 @@ ion-segment-button {
 }
 
 .product-image {
-  height: 140px;
+  height: 120px;
   object-fit: cover;
   border-bottom: 1px solid #eef2f7;
 }
 
 .product-card ion-card-header {
-  padding: 10px 12px 4px;
+  padding: 12px 12px 6px;
 }
 
 .product-card ion-card-content {
-  padding: 6px 12px 12px;
+  padding: 0 12px 12px;
+  margin-top: auto;
 }
 
 .product-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
-  color: #666;
+  font-size: 12px;
+  color: #6b7280;
 }
 
 .product-price {
   color: #1a7f34;
   font-weight: 700;
+  font-size: 14px;
 }
 
 .product-location {
-  color: #888;
+  color: #94a3b8;
 }
 
 .empty-state {
@@ -665,10 +770,12 @@ ion-segment-button {
 }
 
 .product-title {
-  min-height: 3rem;
+  min-height: 2.6rem;
   display: flex;
   align-items: center;
   font-size: 15px !important;
+  line-height: 1.3;
+  color: #0f172a;
 }
 
 /* ==================== ANIMATIONS ==================== */
@@ -750,6 +857,10 @@ ion-segment-button {
     width: 48px !important;
     height: 48px !important;
   }
+
+  .market-sections {
+    padding: 12px;
+  }
 }
 
 @media (min-width: 425px) and (max-width: 768px) {
@@ -772,6 +883,10 @@ ion-segment-button {
 
   .product-title {
     font-size: 16px !important;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -827,6 +942,10 @@ ion-segment-button {
   ion-fab-button {
     width: 64px !important;
     height: 64px !important;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
