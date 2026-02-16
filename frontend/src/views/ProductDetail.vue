@@ -29,7 +29,7 @@
             </div>
             <div class="carousel-dots" aria-hidden="true">
               <span
-                v-for="(image, index) in galleryImages"
+                v-for="(_, index) in galleryImages"
                 :key="`dot-${product.id}-${index}`"
                 class="carousel-dot"
                 :class="{ active: index === activeSlide }"
@@ -61,7 +61,7 @@
             <ion-card class="seller-card">
               <ion-card-header>
               </ion-card-header>
-              <ion-card-content class="seller-content">
+              <ion-card-content class="seller-content" style="padding: 20px;">
                 <img class="seller-avatar" src="/placeholder.svg" alt="Perfil del vendedor" />
                 <div class="seller-meta">
                   <h3 class="seller-name">{{ product.seller }}</h3>
@@ -179,7 +179,7 @@
         </div>
         <div class="zoom-dots" aria-hidden="true">
           <span
-            v-for="(image, index) in galleryImages"
+            v-for="(_, index) in galleryImages"
             :key="`zoom-dot-${product?.id ?? 'x'}-${index}`"
             class="zoom-dot"
             :class="{ active: index === zoomActiveSlide }"
