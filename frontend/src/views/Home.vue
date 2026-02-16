@@ -37,12 +37,11 @@
             <ion-title class="brand-title">ReMarket</ion-title>
           </div>
 
-          <!-- Search Bar Toolbar -->
           <ion-searchbar
-          v-model="store.searchQuery"
-          placeholder="Buscar productos..."
-          class="custom-searchbar"
-          :animated="true"
+            v-model="store.searchQuery"
+            placeholder="Buscar productos..."
+            class="custom-searchbar desktop-searchbar"
+            :animated="true"
           ></ion-searchbar>
 
           <!-- Action Buttons -->
@@ -60,6 +59,13 @@
               @click="goToPurchases"
             >
               <ion-icon :icon="cartOutline"></ion-icon>
+            </ion-button>
+            <ion-button
+              class="icon-btn search-btn"
+              title="Buscar"
+              @click="goToSearch"
+            >
+              <ion-icon :icon="searchOutline"></ion-icon>
             </ion-button>
             <ion-button 
               v-if="isLoggedIn" 
@@ -107,7 +113,7 @@
       </div>
       <div
         v-else
-        class="grid products-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4"
+        class="grid products-grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4"
       >
         <ion-card
           v-for="product in store.filteredProducts"
@@ -115,7 +121,7 @@
           class="product-card"
           @click="goToProduct(product.id)"
         >
-          <ion-img :src="product.image" :alt="product.title"></ion-img>
+          <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
           <ion-card-header>
             <ion-card-title class="product-title line-clamp-2">{{ product.title }}</ion-card-title>
           </ion-card-header>
@@ -131,7 +137,7 @@
 
     <ion-fab
       slot="fixed"
-      horizontal="end"
+      horizontal="start"
       vertical="bottom"
       class="chat-fab"
       :activated="isChatFabOpen"
@@ -186,6 +192,7 @@ import {
   closeOutline,
   add,
   cartOutline,
+  searchOutline,
   chatbubblesOutline,
   chevronForwardCircle,
 } from 'ionicons/icons'
@@ -266,6 +273,10 @@ const goToPurchases = () => {
     return
   }
   router.push('/tabs/purchases')
+}
+
+const goToSearch = () => {
+  router.push('/tabs/search')
 }
 
 const confirmLogin = async () => {
@@ -387,7 +398,16 @@ const goToChatList = (type: 'support' | 'seller') => {
 @media (max-width: 768px) {
   .action-buttons .profile-btn,
   .action-buttons .favorites-btn,
-  .action-buttons .purchases-btn {
+  .action-buttons .purchases-btn,
+  .action-buttons .login-btn {
+    display: none;
+  }
+
+  .action-buttons .search-btn {
+    display: flex;
+  }
+
+  .desktop-searchbar {
     display: none;
   }
 }
@@ -395,6 +415,14 @@ const goToChatList = (type: 'support' | 'seller') => {
 @media (min-width: 769px) {
   .chat-fab {
     display: block;
+  }
+
+  .desktop-searchbar {
+    display: block;
+  }
+
+  .action-buttons .search-btn {
+    display: none;
   }
 }
 
@@ -500,6 +528,10 @@ const goToChatList = (type: 'support' | 'seller') => {
   transform: scale(0.98);
 }
 
+.search-btn {
+  display: none;
+}
+
 
 /* ==================== SEARCHBAR STYLES ==================== */
 
@@ -516,6 +548,11 @@ const goToChatList = (type: 'support' | 'seller') => {
   border: 1.5px solid #e0e0e0;
   transition: border-color 0.3s ease, box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+}
+
+.desktop-searchbar {
+  flex: 1;
+  max-width: 520px;
 }
 
 .custom-searchbar:focus-within {
@@ -568,22 +605,38 @@ ion-segment-button {
 
 .product-card {
   cursor: pointer;
-  border-radius: 12px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e6ebf2;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+}
+
+.product-image {
+  height: 140px;
+  object-fit: cover;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.product-card ion-card-header {
+  padding: 10px 12px 4px;
+}
+
+.product-card ion-card-content {
+  padding: 6px 12px 12px;
 }
 
 .product-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
 }
 
@@ -612,9 +665,10 @@ ion-segment-button {
 }
 
 .product-title {
-  min-height: 3.5rem;
+  min-height: 3rem;
   display: flex;
   align-items: center;
+  font-size: 15px !important;
 }
 
 /* ==================== ANIMATIONS ==================== */

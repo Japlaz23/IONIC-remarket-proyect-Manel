@@ -2,6 +2,9 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-back-button default-href="/tabs/home"></ion-back-button>
+          </ion-buttons>
         <ion-title>Mis compras</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -17,7 +20,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/vue'
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonBackButton, IonButtons } from '@ionic/vue'
 
 const router = useRouter()
 
