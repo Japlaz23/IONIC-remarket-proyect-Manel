@@ -5,7 +5,7 @@
 
       <ion-tab-bar slot="bottom" class="mobile-tab-bar" :style="tabBarStyle">
         <div class="tab-indicator" aria-hidden="true"></div>
-        <ion-tab-button tab="home" href="/tabs/home">
+        <ion-tab-button tab="home" href="/tabs/home" @click="handleHomeTabClick">
           <ion-icon :icon="homeOutline"></ion-icon>
           <ion-label>Inicio</ion-label>
         </ion-tab-button>
@@ -111,6 +111,10 @@ const tabTransition = (_: HTMLElement, opts: { direction?: 'forward' | 'back'; e
     .fromTo('opacity', 1, 0.6)
 
   return createAnimation().addAnimation([enteringAnimation, leavingAnimation])
+}
+
+const handleHomeTabClick = () => {
+  store.selectedCategory = ''
 }
 </script>
 
