@@ -19,8 +19,8 @@
           </h2>
 
           <ion-item class="settings-item">
-            <ion-label position="floating">Nombre completo</ion-label>
-            <ion-input v-model="profile.fullName" placeholder="Juan Pérez"></ion-input>
+            <ion-label position="floating" style="padding-bottom: 2px;">Nombre completo</ion-label>
+            <ion-input v-model="profile.fullName" placeholder="Juan Pérez" style="padding-top: 30px;"></ion-input>
           </ion-item>
 
           <ion-item class="settings-item">
