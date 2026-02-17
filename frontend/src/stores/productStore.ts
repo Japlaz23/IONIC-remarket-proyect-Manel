@@ -15,6 +15,7 @@ interface Product {
   isFavorite: boolean
   description: string
   images: string[]
+  brand?: string
 }
 
 export const useProductStore = defineStore('product', () => {
@@ -33,6 +34,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'iPhone 13 Pro en excelente estado',
       images: ['/product-1a.svg', '/product-1b.svg', '/product-1c.svg'],
+      brand: 'apple',
     },
     {
       id: 2,
@@ -48,6 +50,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'MacBook Air M2 sin usar',
       images: ['/product-2a.svg', '/product-2b.svg', '/product-2c.svg'],
+      brand: 'apple',
     },
     {
       id: 3,
@@ -63,6 +66,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Galaxy S22 con caja y cargador.',
       images: ['/placeholder.svg'],
+      brand: 'samsung',
     },
     {
       id: 4,
@@ -93,6 +97,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Cancelacion de ruido y estuche.',
       images: ['/placeholder.svg'],
+      brand: 'sony',
     },
     {
       id: 6,
@@ -108,6 +113,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'ITV al dia, 120.000 km.',
       images: ['/placeholder.svg'],
+      brand: 'seat',
     },
     {
       id: 7,
@@ -198,6 +204,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Talla 42, con caja.',
       images: ['/placeholder.svg'],
+      brand: 'nike',
     },
     {
       id: 13,

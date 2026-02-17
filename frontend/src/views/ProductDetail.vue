@@ -217,10 +217,12 @@ import {
   alertController,
 } from '@ionic/vue'
 import { useProductStore } from '@/stores/productStore'
+import { useChatStore } from '@/stores/chatStore'
 
 const route = useRoute()
 const router = useRouter()
 const store = useProductStore()
+const chatStore = useChatStore()
 
 const isLoggedIn = ref(false)
 
@@ -255,7 +257,18 @@ const reviews = [
 ]
 
 const goToChat = (productId: number) => {
-  router.push(`/chat/${productId}`)
+  if (!product.value) return
+  
+  // Crear o obtener el chat con el vendedor del producto
+  const chat = chatStore.createOrGetChat(
+    product.value.sellerId,
+    product.value.seller,
+    product.value.id,
+    product.value.title,
+    product.value.image
+  )
+  
+  router.push(`/chat/${chat.id}`)
 }
 
 const carouselRef = ref<HTMLElement | null>(null)

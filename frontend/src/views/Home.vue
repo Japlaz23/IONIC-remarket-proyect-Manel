@@ -25,6 +25,95 @@
     </ion-content>
   </ion-menu>
 
+  <!-- Menu de filtro -->
+  <ion-menu
+    v-if="showFiltersLayout"
+    menu-id="filters-menu"
+    side="end"
+    content-id="home-content"
+    type="overlay"
+    class="filters-menu"
+  >
+    <ion-header>
+      <ion-toolbar class="menu-header">
+        <ion-title>Filtros</ion-title>
+        <ion-buttons slot="end">
+          <ion-button class="menu-close" @click="closeFiltersMenu">
+            <ion-icon :icon="closeOutline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="menu-content">
+      <div class="filters-card">
+        <div class="filters-group">
+          <div class="filters-label">Precio</div>
+          <div class="filters-row">
+            <ion-input
+              v-model="filters.minPrice"
+              type="number"
+              inputmode="decimal"
+              placeholder="Min"
+              class="filters-input"
+            ></ion-input>
+            <ion-input
+              v-model="filters.maxPrice"
+              type="number"
+              inputmode="decimal"
+              placeholder="Max"
+              class="filters-input"
+            ></ion-input>
+          </div>
+        </div>
+
+        <div class="filters-group">
+          <div class="filters-label">Condicion</div>
+          <ion-select v-model="filters.condition" interface="popover" class="filters-select">
+            <ion-select-option value="all">Todas</ion-select-option>
+            <ion-select-option value="Nuevo">Nuevo</ion-select-option>
+            <ion-select-option value="Usado">Usado</ion-select-option>
+          </ion-select>
+        </div>
+
+        <div class="filters-group">
+          <div class="filters-label">Ubicacion</div>
+          <ion-input
+            v-model="filters.location"
+            placeholder="Ciudad"
+            class="filters-input"
+          ></ion-input>
+        </div>
+
+        <div class="filters-group">
+          <div class="filters-label">Ordenar</div>
+          <ion-select v-model="filters.sort" interface="popover" class="filters-select">
+            <ion-select-option value="recent">Mas reciente</ion-select-option>
+            <ion-select-option value="price-asc">Precio mas bajo</ion-select-option>
+            <ion-select-option value="price-desc">Precio mas alto</ion-select-option>
+          </ion-select>
+        </div>
+
+        <div class="filters-group" v-if="availableBrands.length > 0">
+          <div class="filters-label">Marca</div>
+          <ion-select v-model="filters.brand" interface="popover" class="filters-select">
+            <ion-select-option
+              v-for="brand in availableBrands"
+              :key="brand.value"
+              :value="brand.value"
+            >
+              {{ brand.label }}
+            </ion-select-option>
+          </ion-select>
+        </div>
+
+        <div class="filters-actions">
+          <ion-button fill="clear" size="small" @click="resetFilters">Limpiar</ion-button>
+          <ion-button size="small" @click="closeFiltersMenu">Ver resultados</ion-button>
+        </div>
+      </div>
+    </ion-content>
+  </ion-menu>
+
   <ion-header class="header-container">
       <!-- Main Header -->
       <ion-toolbar class="main-toolbar">
@@ -106,13 +195,13 @@
         </div>
       </div>
     </ion-header>
-
+      <!-- Contenido Carrusell + grid-->
     <ion-content id="home-content">
       <div v-if="!hasContent" class="empty-state">
         <p>No hay productos para mostrar</p>
       </div>
       <div v-else class="market-sections">
-        <template v-if="!selectedCategory">
+        <template v-if="!showFiltersLayout">
           <section v-for="section in carouselSections" :key="section.id" class="category-section">
             <div class="section-header">
               <h2>{{ section.name }}</h2>
@@ -218,34 +307,114 @@
         </template>
 
         <template v-else>
-          <section v-for="section in categorySections" :key="section.id" class="category-section">
-            <div class="section-header">
-              <h2>{{ section.name }}</h2>
-              <span>{{ section.items.length }} productos</span>
-            </div>
-
-            <div class="product-grid compact-grid">
-              <ion-card
-                v-for="product in section.items"
-                :key="product.id"
-                class="product-card compact-card"
-                @click="goToProduct(product.id)"
-              >
-                <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
-                <ion-card-header>
-                  <ion-card-title class="product-title line-clamp-2">
-                    {{ product.title }}
-                  </ion-card-title>
-                </ion-card-header>
-                <ion-card-content>
-                  <div class="product-meta">
-                    <span class="product-price">{{ product.price }}€</span>
-                    <span class="product-location">{{ product.location }}</span>
+          <div class="category-layout">
+            <aside class="filters-panel">
+              <div class="filters-card">
+                <div class="filters-title">Filtros</div>
+                <div class="filters-group">
+                  <div class="filters-label">Precio</div>
+                  <div class="filters-row">
+                    <ion-input
+                      v-model="filters.minPrice"
+                      type="number"
+                      inputmode="decimal"
+                      placeholder="Min"
+                      class="filters-input"
+                    ></ion-input>
+                    <ion-input
+                      v-model="filters.maxPrice"
+                      type="number"
+                      inputmode="decimal"
+                      placeholder="Max"
+                      class="filters-input"
+                    ></ion-input>
                   </div>
-                </ion-card-content>
-              </ion-card>
+                </div>
+
+                <div class="filters-group">
+                  <div class="filters-label">Condicion</div>
+                  <ion-select v-model="filters.condition" interface="popover" class="filters-select">
+                    <ion-select-option value="all">Todas</ion-select-option>
+                    <ion-select-option value="Nuevo">Nuevo</ion-select-option>
+                    <ion-select-option value="Usado">Usado</ion-select-option>
+                  </ion-select>
+                </div>
+
+                <div class="filters-group">
+                  <div class="filters-label">Ubicacion</div>
+                  <ion-input
+                    v-model="filters.location"
+                    placeholder="Ciudad"
+                    class="filters-input"
+                  ></ion-input>
+                </div>
+
+                <div class="filters-group">
+                  <div class="filters-label">Ordenar</div>
+                  <ion-select v-model="filters.sort" interface="popover" class="filters-select">
+                    <ion-select-option value="recent">Mas reciente</ion-select-option>
+                    <ion-select-option value="price-asc">Precio mas bajo</ion-select-option>
+                    <ion-select-option value="price-desc">Precio mas alto</ion-select-option>
+                  </ion-select>
+                </div>
+
+                <div class="filters-group" v-if="availableBrands.length > 0">
+                  <div class="filters-label">Marca</div>
+                  <ion-select v-model="filters.brand" interface="popover" class="filters-select">
+                    <ion-select-option
+                      v-for="brand in availableBrands"
+                      :key="brand.value"
+                      :value="brand.value"
+                    >
+                      {{ brand.label }}
+                    </ion-select-option>
+                  </ion-select>
+                </div>
+
+                <div class="filters-actions">
+                  <ion-button fill="clear" size="small" @click="resetFilters">Limpiar</ion-button>
+                </div>
+              </div>
+            </aside>
+
+            <div class="category-products">
+              <div class="mobile-filters-bar">
+                <ion-button class="filters-button" @click="openFiltersMenu">
+                  <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
+                  Filtros
+                </ion-button>
+              </div>
+
+              <section v-for="section in categorySections" :key="section.id" class="category-section">
+                <div class="section-header">
+                  <h2>{{ section.name }}</h2>
+                  <span>{{ section.items.length }} productos</span>
+                </div>
+
+                <div class="product-grid compact-grid">
+                  <ion-card
+                    v-for="product in section.items"
+                    :key="product.id"
+                    class="product-card compact-card"
+                    @click="goToProduct(product.id)"
+                  >
+                    <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                    <ion-card-header>
+                      <ion-card-title class="product-title line-clamp-2">
+                        {{ product.title }}
+                      </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <div class="product-meta">
+                        <span class="product-price">{{ product.price }}€</span>
+                        <span class="product-location">{{ product.location }}</span>
+                      </div>
+                    </ion-card-content>
+                  </ion-card>
+                </div>
+              </section>
             </div>
-          </section>
+          </div>
         </template>
       </div>
 
@@ -270,15 +439,17 @@
     >
       <ion-fab-button class="chat-fab-button" @click="toggleChatFab">
         <ion-icon :icon="chevronForwardCircle"></ion-icon>
+        <ion-badge v-if="unreadCount > 0" class="fab-badge">{{ unreadCount }}</ion-badge>
       </ion-fab-button>
       <ion-fab-list side="end" class="chat-fab-list">
         <ion-fab-button class="chat-fab-item" title="Publicar" @click="goToSellFromFab">
           <ion-icon :icon="add"></ion-icon>
         </ion-fab-button>
-        <ion-fab-button class="chat-fab-item" title="Soporte" @click="goToChatList('support')">
+        <ion-fab-button class="chat-fab-item chat-item" title="Vendedor" @click="goToChatList('seller')">
           <ion-icon :icon="chatbubblesOutline"></ion-icon>
+          <ion-badge v-if="unreadCount > 0" class="fab-list-badge">{{ unreadCount }}</ion-badge>
         </ion-fab-button>
-        <ion-fab-button class="chat-fab-item" title="Vendedor" @click="goToChatList('seller')">
+        <ion-fab-button class="chat-fab-item" title="Mensajes" @click="goToChatList('support')">
           <ion-icon :icon="storefrontOutline"></ion-icon>
         </ion-fab-button>
       </ion-fab-list>
@@ -298,6 +469,9 @@ import {
   IonButtons,
   IonMenu,
   IonContent,
+  IonInput,
+  IonSelect,
+  IonSelectOption,
   menuController,
   IonFab,
   IonFabButton,
@@ -309,6 +483,7 @@ import {
   IonImg,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonBadge,
   alertController,
   onIonViewWillEnter,
 } from '@ionic/vue'
@@ -326,16 +501,20 @@ import {
   chevronForwardCircle,
   chevronBackOutline,
   chevronForwardOutline,
+  funnelOutline,
 } from 'ionicons/icons'
 import { useRouter } from 'vue-router'
 import { computed, ref, reactive, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useProductStore } from '@/stores/productStore'
+import { useChatStore } from '@/stores/chatStore'
 
 const router = useRouter()
 const store = useProductStore()
+const chatStore = useChatStore()
 
 const isLoggedIn = ref(false)
 const isChatFabOpen = ref(false)
+const unreadCount = computed(() => chatStore.totalUnread)
 
 interface CarouselState {
   index: number
@@ -352,6 +531,15 @@ const infiniteScrollRef = ref<HTMLElement | null>(null)
 
 const itemsPerPage = 8
 const visibleCount = ref(itemsPerPage)
+
+const filters = reactive({
+  minPrice: '',
+  maxPrice: '',
+  condition: 'all',
+  location: '',
+  sort: 'recent',
+  brand: 'all',
+})
 
 onIonViewWillEnter(() => {
   isLoggedIn.value = !!localStorage.getItem('user')
@@ -372,11 +560,63 @@ const categories = [
 
 const carouselCategoryIds = new Set(['Electrónica', 'Vehículos'])
 
+const brandsByCategory: Record<string, Array<{ value: string; label: string }>> = {
+  'Electrónica': [
+    { value: 'all', label: 'Todas' },
+    { value: 'apple', label: 'Apple' },
+    { value: 'samsung', label: 'Samsung' },
+    { value: 'xiaomi', label: 'Xiaomi' },
+    { value: 'huawei', label: 'Huawei' },
+    { value: 'msi', label: 'MSI' },
+    { value: 'sony', label: 'Sony' },
+    { value: 'lg', label: 'LG' },
+  ],
+  'Moda': [
+    { value: 'all', label: 'Todas' },
+    { value: 'adidas', label: 'Adidas' },
+    { value: 'zara', label: 'Zara' },
+    { value: 'nike', label: 'Nike' },
+    { value: 'h&m', label: 'H&M' },
+    { value: 'gucci', label: 'Gucci' },
+    { value: 'prada', label: 'Prada' },
+  ],
+  'Vehículos': [
+    { value: 'all', label: 'Todas' },
+    { value: 'mazda', label: 'Mazda' },
+    { value: 'seat', label: 'Seat' },
+    { value: 'toyota', label: 'Toyota' },
+    { value: 'bmw', label: 'BMW' },
+    { value: 'audi', label: 'Audi' },
+    { value: 'mercedes', label: 'Mercedes' },
+  ],
+  'Hogar': [
+    { value: 'all', label: 'Todas' },
+    { value: 'ikea', label: 'IKEA' },
+    { value: 'philips', label: 'Philips' },
+    { value: 'dyson', label: 'Dyson' },
+    { value: 'bosch', label: 'Bosch' },
+  ],
+  'Deportes': [
+    { value: 'all', label: 'Todas' },
+    { value: 'adidas', label: 'Adidas' },
+    { value: 'nike', label: 'Nike' },
+    { value: 'puma', label: 'Puma' },
+    { value: 'decathlon', label: 'Decathlon' },
+  ],
+}
+
 const selectedCategory = computed({
   get: () => store.selectedCategory,
   set: (value) => {
     store.selectedCategory = value
   },
+})
+
+const availableBrands = computed(() => {
+  if (!selectedCategory.value || !brandsByCategory[selectedCategory.value]) {
+    return []
+  }
+  return brandsByCategory[selectedCategory.value]
 })
 
 const selectCategory = (categoryId: string) => {
@@ -396,31 +636,100 @@ const selectCategoryFromMenu = async (categoryId: string) => {
   await menuController.close()
 }
 
-const visibleProducts = computed(() => store.filteredProducts.slice(0, visibleCount.value))
+const openFiltersMenu = async () => {
+  await menuController.open('filters-menu')
+}
+
+const closeFiltersMenu = async () => {
+  await menuController.close('filters-menu')
+}
+
+const resetFilters = () => {
+  filters.minPrice = ''
+  filters.maxPrice = ''
+  filters.condition = 'all'
+  filters.location = ''
+  filters.sort = 'recent'
+  filters.brand = 'all'
+}
+
+const filteredProducts = computed(() => {
+  let list = [...store.filteredProducts]
+
+  const minPrice = Number.parseFloat(filters.minPrice)
+  if (!Number.isNaN(minPrice)) {
+    list = list.filter((product) => product.price >= minPrice)
+  }
+
+  const maxPrice = Number.parseFloat(filters.maxPrice)
+  if (!Number.isNaN(maxPrice)) {
+    list = list.filter((product) => product.price <= maxPrice)
+  }
+
+  if (filters.condition !== 'all') {
+    list = list.filter((product) => product.condition.startsWith(filters.condition))
+  }
+
+  const locationQuery = filters.location.trim().toLowerCase()
+  if (locationQuery) {
+    list = list.filter((product) => product.location.toLowerCase().includes(locationQuery))
+  }
+
+  if (filters.brand !== 'all') {
+    list = list.filter((product) => product.brand?.toLowerCase() === filters.brand.toLowerCase())
+  }
+
+  if (filters.sort === 'price-asc') {
+    list.sort((a, b) => a.price - b.price)
+  } else if (filters.sort === 'price-desc') {
+    list.sort((a, b) => b.price - a.price)
+  } else {
+    list.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+  }
+
+  return list
+})
+
+const visibleProducts = computed(() => filteredProducts.value.slice(0, visibleCount.value))
 const nonCarouselProducts = computed(() =>
-  store.filteredProducts.filter((product) => !carouselCategoryIds.has(product.category)),
+  filteredProducts.value.filter((product) => !carouselCategoryIds.has(product.category)),
 )
 const visibleNonCarouselProducts = computed(() =>
   nonCarouselProducts.value.slice(0, visibleCount.value),
 )
 
+const showFiltersLayout = computed(() => {
+  return !!(store.selectedCategory || store.searchQuery.trim())
+})
+
 const carouselSections = computed(() => {
-  if (store.selectedCategory) {
+  if (showFiltersLayout.value) {
     return []
   }
   return categories
     .filter((category) => carouselCategoryIds.has(category.id))
     .map((category) => ({
       ...category,
-      items: store.filteredProducts.filter((product) => product.category === category.id),
+      items: filteredProducts.value.filter((product) => product.category === category.id),
     }))
     .filter((section) => section.items.length > 0)
 })
 
 const categorySections = computed(() => {
-  if (!store.selectedCategory) {
+  if (!showFiltersLayout.value) {
     return []
   }
+  
+  // Si hay búsqueda activa, mostrar todos los resultados en una sola sección
+  if (store.searchQuery.trim() && !store.selectedCategory) {
+    return [{
+      id: 'search-results',
+      name: 'Resultados de búsqueda',
+      items: visibleProducts.value,
+    }].filter((section) => section.items.length > 0)
+  }
+  
+  // Si hay categoría seleccionada, mostrar solo esa categoría
   return categories
     .filter((category) => category.id === store.selectedCategory)
     .map((category) => ({
@@ -431,25 +740,20 @@ const categorySections = computed(() => {
 })
 
 const hasMore = computed(() => {
-  if (store.selectedCategory) {
-    return visibleCount.value < store.filteredProducts.length
+  if (showFiltersLayout.value) {
+    return visibleCount.value < filteredProducts.value.length
   }
   return visibleCount.value < nonCarouselProducts.value.length
 })
 
 const hasContent = computed(() => {
-  if (store.selectedCategory) {
+  if (showFiltersLayout.value) {
     return categorySections.value.length > 0
   }
   return carouselSections.value.length > 0 || visibleNonCarouselProducts.value.length > 0
 })
 
-const isCarouselCategory = (categoryId: string) => {
-  if (store.selectedCategory) {
-    return false
-  }
-  return carouselCategoryIds.has(categoryId)
-}
+
 
 const getClonesCount = (itemsCount: number) => {
   if (itemsCount <= 1) {
@@ -582,7 +886,7 @@ const nextSlide = (sectionId: string, itemsCount: number) => {
   }
   const state = getCarouselState(sectionId, itemsCount)
   state.isTransitioning = true
-  state.index += 1
+  state.index += 2
 }
 
 const prevSlide = (sectionId: string, itemsCount: number) => {
@@ -591,7 +895,7 @@ const prevSlide = (sectionId: string, itemsCount: number) => {
   }
   const state = getCarouselState(sectionId, itemsCount)
   state.isTransitioning = true
-  state.index -= 1
+  state.index -= 2
 }
 
 const goToSlide = (sectionId: string, targetIndex: number, itemsCount: number) => {
@@ -648,8 +952,8 @@ const onCarouselTouchEnd = (sectionId: string, itemsCount: number) => {
 }
 
 const ionInfinite = async (event: CustomEvent) => {
-  if (visibleCount.value < store.filteredProducts.length) {
-    visibleCount.value = Math.min(visibleCount.value + itemsPerPage, store.filteredProducts.length)
+  if (visibleCount.value < filteredProducts.value.length) {
+    visibleCount.value = Math.min(visibleCount.value + itemsPerPage, filteredProducts.value.length)
   }
 
   await nextTick()
@@ -774,7 +1078,17 @@ watch(
 )
 
 watch(
-  () => store.filteredProducts,
+  () => [
+    store.filteredProducts,
+    store.selectedCategory,
+    store.searchQuery,
+    filters.minPrice,
+    filters.maxPrice,
+    filters.condition,
+    filters.location,
+    filters.sort,
+    filters.brand,
+  ],
   () => {
     resetVisibleCount()
   },
@@ -830,6 +1144,26 @@ onBeforeUnmount(() => {
   --background: #1a7f34;
   --color: #ffffff;
   box-shadow: 0 10px 24px rgba(26, 127, 52, 0.35);
+  position: relative;
+}
+
+.fab-badge {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  background: var(--ion-color-danger);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
 .chat-fab-list .chat-fab-item {
@@ -838,6 +1172,27 @@ onBeforeUnmount(() => {
   width: 44px;
   height: 44px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.fab-list-badge {
+  position: absolute;
+  top: 3px;
+  right: 1px;
+  background: var(--ion-color-danger);
+  color: white;
+  border-radius: 12px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  border: 2px solid white;
+  z-index: 10;
 }
 
 .chat-fab-list {
@@ -1096,6 +1451,93 @@ ion-segment-button {
   font-size: 12px;
   color: #64748b;
   font-weight: 600;
+}
+
+.category-layout {
+  display: block;
+}
+
+.category-products {
+  flex: 1;
+}
+
+.filters-panel {
+  display: none;
+}
+
+.filters-card {
+  background: #ffffff;
+  border: 1px solid #e6ebf2;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.filters-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #0f172a;
+}
+
+.filters-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.filters-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.filters-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.filters-input {
+  --background: #f8fafc;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.filters-select {
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.filters-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mobile-filters-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.filters-button {
+  --background: #ffffff;
+  --color: #1a1a1a;
+  --border-radius: 999px;
+  --box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
 }
 
 .product-carousel {
@@ -1369,7 +1811,26 @@ ion-segment-button {
   }
 
   .product-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 992px) {
+  .category-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  .filters-panel {
+    display: block;
+    width: 260px;
+    position: sticky;
+    top: 120px;
+  }
+
+  .mobile-filters-bar {
+    display: none;
   }
 }
 
@@ -1485,6 +1946,10 @@ ion-segment-button {
 
 .side-menu {
   --width: 280px;
+}
+
+.filters-menu {
+  --width: 300px;
 }
 
 .menu-header {

@@ -10,10 +10,6 @@
           <ion-label>Inicio</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="search" href="/tabs/search">
-          <ion-icon :icon="searchOutline"></ion-icon>
-          <ion-label>Buscar</ion-label>
-        </ion-tab-button>
 
         <ion-tab-button tab="favorites" href="/tabs/favorites">
           <ion-icon :icon="heartOutline"></ion-icon>
@@ -21,15 +17,23 @@
           <ion-badge v-if="favoriteCount > 0" class="tab-badge">{{ favoriteCount }}</ion-badge>
         </ion-tab-button>
 
+        <ion-tab-button tab="sell" href="/tabs/sell">
+          <ion-icon :icon="addCircleOutline"></ion-icon>
+          <ion-label>Vender</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="chat" href="/tabs/chat">
+          <ion-icon :icon="chatbubblesOutline"></ion-icon>
+          <ion-label>Chat</ion-label>
+          <ion-badge v-if="unreadCount > 0" class="tab-badge">{{ unreadCount }}</ion-badge>
+        </ion-tab-button>
+
         <ion-tab-button tab="purchases" href="/tabs/purchases">
           <ion-icon :icon="cartOutline"></ion-icon>
           <ion-label>Compras</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="sell" href="/tabs/sell">
-          <ion-icon :icon="addCircleOutline"></ion-icon>
-          <ion-label>Vender</ion-label>
-        </ion-tab-button>
+
 
         <ion-tab-button tab="profile" href="/tabs/profile">
           <ion-icon :icon="personCircleOutline"></ion-icon>
@@ -54,26 +58,29 @@ import {
 } from '@ionic/vue'
 import {
   homeOutline,
-  searchOutline,
   heartOutline,
   addCircleOutline,
   personCircleOutline,
   cartOutline,
+  chatbubblesOutline,
 } from 'ionicons/icons'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProductStore } from '@/stores/productStore'
+import { useChatStore } from '@/stores/chatStore'
 
 const store = useProductStore()
+const chatStore = useChatStore()
 const favoriteCount = computed(() => store.favorites.length)
+const unreadCount = computed(() => chatStore.totalUnread)
 const route = useRoute()
 
 const tabOrder = [
   '/tabs/home',
-  '/tabs/search',
   '/tabs/favorites',
-  '/tabs/purchases',
   '/tabs/sell',
+  '/tabs/chat',
+  '/tabs/purchases',
   '/tabs/profile',
 ]
 
