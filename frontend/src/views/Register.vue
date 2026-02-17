@@ -18,7 +18,7 @@
             <div class="visual-content">
               <div class="visual-header">
                 <div class="brand-logo">
-                  <ion-icon :icon="storefrontOutline" class="brand-icon"></ion-icon>
+                  <img src="/logo.png" alt="ReMarket Logo" class="brand-image">
                 </div>
                 <h2 class="visual-title">Únete a Remarket</h2>
                 <p class="visual-tagline">Compra y vende con seguridad</p>

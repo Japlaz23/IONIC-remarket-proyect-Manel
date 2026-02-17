@@ -2,12 +2,15 @@ import { createRouter, createWebHashHistory } from '@ionic/vue-router'
 import { type RouteRecordRaw } from 'vue-router'
 import Tabs from '@/views/Tabs.vue'
 import Home from '@/views/Home.vue'
+import Search from '@/views/Search.vue'
 import Login from '@/views/Login.vue'
 import Favorites from '@/views/Favorites.vue'
 import Sell from '@/views/Sell.vue'
 import Chat from '@/views/Chat.vue'
 import ProfileCustomer from '@/views/ProfileCostumer.vue'
 import Purchases from '@/views/Purchases.vue'
+import Sales from '@/views/Sales.vue'
+import Settings from '@/views/Settings.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -15,7 +18,7 @@ const routes: RouteRecordRaw[] = [
     redirect: '/tabs/home',
   },
   {
-    path: '/tabs/',
+    path: '/tabs',
     component: Tabs,
     children: [
       {
@@ -26,7 +29,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'search',
         name: 'Search',
-        component: Home,
+        component: Search,
       },
       {
         path: 'favorites',
@@ -45,7 +48,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'chat',
-        name: 'Chat',
+        name: 'ChatTab',
         component: Chat,
       },
       {
@@ -93,8 +96,27 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/chat/:id',
-    name: 'Chat',
-    component: () => import('@/views/Chat.vue'),
+    name: 'ChatThread',
+    component: () => import('@/views/ChatConversation.vue'),
+  },
+  {
+    path: '/sales',
+    name: 'Sales',
+    component: Sales,
+  },
+  {
+    path: '/purchases',
+    name: 'PurchasesPage',
+    component: Purchases,
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings,
+  },
+  {
+    path: '/profile',
+    redirect: '/tabs/profile',
   },
 ]
 
@@ -109,11 +131,21 @@ const requiresAuth = (path: string) => {
     path === '/tabs/profile' ||
     path === '/tabs/chat' ||
     path === '/tabs/purchases' ||
+    path === '/sales' ||
+    path === '/purchases' ||
+    path === '/settings' ||
+    path === '/profile' ||
     path.startsWith('/chat')
   )
 }
 
 router.beforeEach((to, _from, next) => {
+  if (typeof document !== 'undefined') {
+    const activeElement = document.activeElement
+    if (activeElement instanceof HTMLElement) {
+      activeElement.blur()
+    }
+  }
   const isLoggedIn = !!localStorage.getItem('user')
   if (!isLoggedIn && requiresAuth(to.path)) {
     next('/login')
