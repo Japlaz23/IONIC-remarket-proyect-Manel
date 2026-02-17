@@ -11,6 +11,7 @@ import ProfileCustomer from '@/views/ProfileCostumer.vue'
 import Purchases from '@/views/Purchases.vue'
 import Sales from '@/views/Sales.vue'
 import Settings from '@/views/Settings.vue'
+import PaymentCheck from '@/views/PaymentCheck.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -79,6 +80,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/ProductDetail.vue'),
   },
   {
+    path: '/payment',
+    name: 'PaymentCheck',
+    component: PaymentCheck,
+  },
+  {
     path: '/sell',
     redirect: '/tabs/sell',
   },
@@ -135,6 +141,7 @@ const requiresAuth = (path: string) => {
     path === '/purchases' ||
     path === '/settings' ||
     path === '/profile' ||
+    path === '/payment' ||
     path.startsWith('/chat')
   )
 }

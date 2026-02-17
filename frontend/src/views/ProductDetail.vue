@@ -161,17 +161,21 @@
             </ion-card>
 
             <div class="product-actions">
-              <ion-button expand="block" color="primary" class="primary-action" @click="buyProduct">
-                Comprar
-              </ion-button>
-              <ion-button
+              <div class="primary-action-wrapper">
+                <ion-button expand="block" color="primary" class="primary-action" @click="buyProduct">
+                  <ion-icon slot="start" :icon="cartOutline"></ion-icon>
+                  Comprar
+                </ion-button>
+                <ion-button
                 expand="block"
                 color="success"
                 class="secondary-action"
                 @click="goToChat()"
-              >
-                Contactar vendedor
-              </ion-button>
+                >
+                  Contactar vendedor
+                </ion-button>
+              </div>
+
             </div>
           </div>
         </template>
@@ -311,7 +315,7 @@ import {
   alertController,
   toastController,
 } from '@ionic/vue'
-import { chatbubbleEllipsesOutline, addOutline, heart, heartOutline } from 'ionicons/icons'
+import { chatbubbleEllipsesOutline, addOutline, heart, heartOutline, cartOutline } from 'ionicons/icons'
 import { useProductStore } from '@/stores/productStore'
 import { useChatStore } from '@/stores/chatStore'
 import { useReviewStore } from '@/stores/reviewStore'
@@ -738,7 +742,11 @@ const buyProduct = () => {
     confirmLogin()
     return
   }
-  router.push('/tabs/purchases')
+  const productPrice = product.value?.price || 0
+  router.push({
+    path: '/payment',
+    query: { total: productPrice.toString() }
+  })
 }
 
 const confirmLogin = async () => {
@@ -1159,14 +1167,45 @@ const confirmLogin = async () => {
   margin-top: 16px;
 }
 
+.primary-action-wrapper {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
 .primary-action {
   --border-radius: 14px;
+  --background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
   font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.primary-action:hover,
+.primary-action:active {
+  --background: linear-gradient(135deg, #0f5223 0%, #082a1a 100%);
+  box-shadow: 0 8px 16px rgba(26, 127, 52, 0.3);
+}
+
+.price-badge {
+  background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(26, 127, 52, 0.2);
 }
 
 .secondary-action {
   --border-radius: 14px;
   font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .empty-state {

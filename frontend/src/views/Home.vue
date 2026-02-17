@@ -1487,6 +1487,12 @@ ion-segment-button {
   transition: color 0.3s ease;
 }
 
+/* ==================== ION-CONTENT STYLES ==================== */
+
+#home-content {
+  --background: #e8e8e8;
+}
+
 /* ==================== PRODUCT CARD STYLES ==================== */
 
 .products-grid {
