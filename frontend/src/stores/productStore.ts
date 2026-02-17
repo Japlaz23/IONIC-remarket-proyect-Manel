@@ -476,6 +476,21 @@ export const useProductStore = defineStore('product', () => {
       description: 'Incluye toner extra.',
       images: ['/placeholder.svg'],
     },
+    {
+      id: 31,
+      title: 'Guitarra acustica',
+      price: 150,
+      image: '/placeholder.svg',
+      category: 'Musica',
+      seller: 'Manuel Herrera',
+      sellerId: 31,
+      condition: 'Usado - Buen estado',
+      location: 'Cordoba',
+      createdAt: new Date('2024-02-04'),
+      isFavorite: false,
+      description: 'Yamaha F310, con funda.',
+      images: ['/placeholder.svg'],
+    }
   ])
 
   const favorites = ref<number[]>([])

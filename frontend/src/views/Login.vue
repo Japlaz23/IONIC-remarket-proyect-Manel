@@ -20,7 +20,7 @@
                 <div class="brand-logo">
                   <img src="/logo.png" alt="ReMarket Logo" class="brand-image">
                 </div>
-                <h2 class="visual-title">Remarket</h2>
+                <h2 class="visual-title">ReMarket</h2>
                 <p class="visual-tagline">Tu marketplace de confianza</p>
               </div>
 
@@ -52,12 +52,12 @@
 
               <div class="stats-section">
                 <div class="stat-item">
-                  <div class="stat-number">10K+</div>
+                  <div class="stat-number">50K+</div>
                   <div class="stat-label">Productos</div>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat-item">
-                  <div class="stat-number">5K+</div>
+                  <div class="stat-number">10K+</div>
                   <div class="stat-label">Usuarios</div>
                 </div>
                 <div class="stat-divider"></div>

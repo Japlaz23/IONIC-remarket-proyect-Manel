@@ -171,8 +171,11 @@
             <ion-label>Idioma</ion-label>
             <ion-select v-model="settings.language" slot="end">
               <ion-select-option value="es">Español</ion-select-option>
-              <ion-select-option value="en">English</ion-select-option>
-              <ion-select-option value="fr">Français</ion-select-option>
+              <ion-select-option value="en">Ingles</ion-select-option>
+              <ion-select-option value="fr">Francés</ion-select-option>
+              <ion-select-option value="de">Alemán</ion-select-option>
+              <ion-select-option value="it">Italiano</ion-select-option>
+              <ion-select-option value="pt">Portugués</ion-select-option>
             </ion-select>
           </ion-item>
         </div>
