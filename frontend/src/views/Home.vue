@@ -121,7 +121,7 @@
           <!-- Logo Section -->
           <div class="logo-section" @click="goToHomeWithCarousel">
             <div class="logo-icon-box">
-              <ion-icon :icon="storefrontOutline" class="logo-icon"></ion-icon>
+              <img src="/logo.png" alt="ReMarket Logo" class="logo-image">
             </div>
             <ion-title class="brand-title">ReMarket</ion-title>
           </div>
@@ -1326,18 +1326,19 @@ onBeforeUnmount(() => {
 .logo-icon-box {
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(26, 127, 52, 0.2);
+  overflow: hidden;
   flex-shrink: 0;
 }
 
-.logo-icon {
-  font-size: 28px;
-  color: white;
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .brand-title {

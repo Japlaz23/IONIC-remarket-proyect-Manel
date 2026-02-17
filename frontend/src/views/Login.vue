@@ -18,7 +18,7 @@
             <div class="visual-content">
               <div class="visual-header">
                 <div class="brand-logo">
-                  <ion-icon :icon="storefrontOutline" class="brand-icon"></ion-icon>
+                  <img src="/logo.png" alt="ReMarket Logo" class="brand-image">
                 </div>
                 <h2 class="visual-title">Remarket</h2>
                 <p class="visual-tagline">Tu marketplace de confianza</p>
@@ -75,7 +75,7 @@
               <!-- Logo y título (solo móvil) -->
               <div class="header-section mobile-only">
                 <div class="logo-container">
-                  <ion-icon :icon="storefrontOutline" class="logo-icon"></ion-icon>
+                  <img src="/logo.png" alt="ReMarket Logo" class="logo-image">
                 </div>
                 <h1 class="title">Remarket</h1>
                 <p class="subtitle">Compra y vende de forma fácil</p>
@@ -223,7 +223,6 @@ import { IonPage, IonContent, IonIcon, IonButton, IonModal, toastController } fr
 import {
   arrowForward,
   personOutline,
-  storefrontOutline,
   mailOutline,
   lockClosedOutline,
   cartOutline,
@@ -543,17 +542,19 @@ const continueGoogleLogin = async () => {
   width: 60px;
   height: 60px;
   margin: 0 auto 12px;
-  background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 8px 20px rgba(26, 127, 52, 0.3);
+  overflow: hidden;
 }
 
-.logo-icon {
-  font-size: 30px;
-  color: white;
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .title {
@@ -915,22 +916,14 @@ ion-alert .alert-button-cancel {
     align-items: center;
     justify-content: center;
     border: 2px solid rgba(255, 255, 255, 0.3);
-  }
+  overflow: hidden;
+}
 
-  .brand-icon {
-    font-size: 38px;
-    color: white;
-  }
-
-  .visual-title {
-    font-size: 32px;
-    font-weight: 900;
-    margin: 0 0 6px 0;
-    letter-spacing: -1px;
-  }
-
-  .visual-tagline {
-    font-size: 15px;
+.brand-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
     margin: 0;
     opacity: 0.9;
     font-weight: 500;
