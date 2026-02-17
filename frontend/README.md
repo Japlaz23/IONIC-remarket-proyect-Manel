@@ -24,8 +24,11 @@ npm install
 ## 🏃 Ejecutar el proyecto
 
 ```bash
-# Modo desarrollo (http://localhost:5173)
-npm ionic serve
+# Modo desarrollo con Vite (http://localhost:5173)
+npm run dev
+
+# O usando Ionic CLI
+ionic serve
 
 # Build para producción
 npm run build
@@ -314,7 +317,8 @@ import Home from '@/views/Home.vue'
 
 | Comando              | Descripción                                |
 |----------------------|--------------------------------------------|
-| `npm run dev`        | Inicia servidor de desarrollo             |
+| `npm run dev`        | Inicia servidor de desarrollo (Vite)      |
+| `ionic serve`        | Inicia servidor con Ionic CLI            |
 | `npm run build`      | Compila para producción                   |
 | `npm run preview`    | Preview del build                         |
 | `npm run type-check` | Verifica tipos TypeScript                 |
