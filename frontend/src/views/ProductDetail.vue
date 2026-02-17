@@ -6,6 +6,11 @@
           <ion-back-button default-href="/tabs/home"></ion-back-button>
         </ion-buttons>
         <ion-title>Producto</ion-title>
+        <ion-buttons slot="end">
+          <ion-button @click="toggleFavorite">
+            <ion-icon slot="icon-only" :icon="isFav ? heart : heartOutline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
@@ -67,6 +72,15 @@
                   <h3 class="seller-name">{{ product.seller }}</h3>
                   <p class="seller-rating">★★★★★ 4.8 · 24 ventas</p>
                   <p class="seller-location">{{ product.location }}</p>
+                  <ion-button
+                    size="small"
+                    color="success"
+                    class="contact-seller-btn"
+                    @click="goToChat()"
+                  >
+                    <ion-icon slot="start" :icon="chatbubbleEllipsesOutline"></ion-icon>
+                    Contactar
+                  </ion-button>
                 </div>
               </ion-card-content>
             </ion-card>
@@ -114,14 +128,32 @@
             </ion-card>
 
             <ion-card class="reviews-card">
-              <ion-card-header>
-                <ion-card-title style="padding: 20px;">Valoraciones recientes</ion-card-title>
+              <ion-card-header class="reviews-card-header">
+                <div class="reviews-header">
+                  <ion-card-title>Valoraciones del vendedor</ion-card-title>
+                  <ion-button 
+                    size="small" 
+                    fill="outline" 
+                    color="primary"
+                    class="add-review-btn"
+                    @click="openReviewModal"
+                  >
+                    <ion-icon slot="start" :icon="addOutline"></ion-icon>
+                    Escribir valoración
+                  </ion-button>
+                </div>
               </ion-card-header>
               <ion-card-content class="reviews-list">
-                <div v-for="review in reviews" :key="review.id" class="review-item">
+                <div v-if="productReviews.length === 0" class="no-reviews">
+                  <p>Aún no hay valoraciones para este vendedor.</p>
+                </div>
+                <div v-for="review in productReviews" :key="review.id" class="review-item">
                   <div class="review-header">
-                    <span class="review-author">{{ review.author }}</span>
-                    <span class="review-stars">{{ review.stars }}</span>
+                    <div>
+                      <span class="review-author">{{ review.author }}</span>
+                      <span class="review-date">{{ formatReviewDate(review.date) }}</span>
+                    </div>
+                    <span class="review-stars">{{ reviewStore.ratingToStars(review.rating) }}</span>
                   </div>
                   <p class="review-text">{{ review.text }}</p>
                 </div>
@@ -136,7 +168,7 @@
                 expand="block"
                 color="success"
                 class="secondary-action"
-                @click="goToChat(product.id)"
+                @click="goToChat()"
               >
                 Contactar vendedor
               </ion-button>
@@ -193,6 +225,66 @@
         </button>
       </div>
     </ion-modal>
+
+    <ion-modal
+      :is-open="showReviewModal"
+      css-class="review-modal"
+      :backdrop-dismiss="true"
+      @didDismiss="closeReviewModal"
+    >
+      <ion-page>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Escribir valoración</ion-title>
+            <ion-buttons slot="end">
+              <ion-button @click="closeReviewModal">Cerrar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="review-modal-content">
+          <div class="review-form">
+            <div class="rating-section">
+              <label class="rating-label">Tu valoración</label>
+              <div class="star-rating">
+                <button
+                  v-for="star in 5"
+                  :key="star"
+                  type="button"
+                  class="star-button"
+                  :class="{ active: star <= newReviewRating }"
+                  @click="setRating(star)"
+                >
+                  {{ star <= newReviewRating ? '★' : '☆' }}
+                </button>
+              </div>
+            </div>
+
+            <div class="review-text-section">
+              <label class="review-label">Tu opinión</label>
+              <ion-textarea
+                v-model="newReviewText"
+                placeholder="Cuéntanos tu experiencia con este vendedor..."
+                :auto-grow="true"
+                :rows="4"
+                :maxlength="500"
+                class="review-textarea"
+              ></ion-textarea>
+              <p class="char-count">{{ newReviewText.length }}/500</p>
+            </div>
+
+            <ion-button
+              expand="block"
+              color="primary"
+              class="submit-review-btn"
+              :disabled="!canSubmitReview"
+              @click="submitReview"
+            >
+              Publicar valoración
+            </ion-button>
+          </div>
+        </ion-content>
+      </ion-page>
+    </ion-modal>
   </ion-page>
 </template>
 
@@ -212,28 +304,43 @@ import {
   IonCardTitle,
   IonCardContent,
   IonButton,
+  IonIcon,
   IonModal,
+  IonTextarea,
   onIonViewWillEnter,
   alertController,
+  toastController,
 } from '@ionic/vue'
+import { chatbubbleEllipsesOutline, addOutline, heart, heartOutline } from 'ionicons/icons'
 import { useProductStore } from '@/stores/productStore'
 import { useChatStore } from '@/stores/chatStore'
+import { useReviewStore } from '@/stores/reviewStore'
+import { useFavoriteStore } from '@/stores/favoriteStore'
 
 const route = useRoute()
 const router = useRouter()
 const store = useProductStore()
 const chatStore = useChatStore()
+const reviewStore = useReviewStore()
+const favoriteStore = useFavoriteStore()
 
 const isLoggedIn = ref(false)
+const currentUserId = ref(1) // ID del usuario actual (simulado)
 
 onIonViewWillEnter(() => {
   isLoggedIn.value = !!localStorage.getItem('user')
+  favoriteStore.loadFavorites()
 })
 
 const product = computed(() => {
   const id = route.params.id
   const idValue = Array.isArray(id) ? id[0] : id
   return store.getProductById(idValue)
+})
+
+const isFav = computed(() => {
+  if (!product.value) return false
+  return favoriteStore.isFavorite(product.value.id)
 })
 
 const galleryImages = computed(() => {
@@ -250,13 +357,104 @@ const mapUrl = computed(() => {
   return `https://www.google.com/maps?q=${query}&z=13&output=embed`
 })
 
-const reviews = [
-  { id: 1, author: 'Carla', stars: '★★★★★', text: 'Entrega rapida y producto en buen estado.' },
-  { id: 2, author: 'Miguel', stars: '★★★★☆', text: 'Buen trato y comunicacion.' },
-  { id: 3, author: 'Laura', stars: '★★★★★', text: 'Recomendado, todo perfecto.' },
-]
+// Reviews dinámicas del vendedor del producto
+const productReviews = computed(() => {
+  if (!product.value) return []
+  return reviewStore.getReviewsBySeller(product.value.sellerId)
+})
 
-const goToChat = (productId: number) => {
+// Modal de valoración
+const showReviewModal = ref(false)
+const newReviewRating = ref(0)
+const newReviewText = ref('')
+
+const canSubmitReview = computed(() => {
+  return newReviewRating.value > 0 && newReviewText.value.trim().length >= 10
+})
+
+const openReviewModal = () => {
+  if (!isLoggedIn.value) {
+    confirmLogin()
+    return
+  }
+  
+  if (!product.value) return
+  
+  // Verificar si el usuario ya ha valorado a este vendedor
+  const hasReviewed = reviewStore.hasUserReviewedProduct(
+    product.value.id,
+    currentUserId.value
+  )
+  
+  if (hasReviewed) {
+    showAlreadyReviewedAlert()
+    return
+  }
+  
+  showReviewModal.value = true
+}
+
+const closeReviewModal = () => {
+  showReviewModal.value = false
+  newReviewRating.value = 0
+  newReviewText.value = ''
+}
+
+const setRating = (rating: number) => {
+  newReviewRating.value = rating
+}
+
+const submitReview = async () => {
+  if (!product.value || !canSubmitReview.value) return
+  
+  const userName = localStorage.getItem('userName') || 'Usuario'
+  
+  reviewStore.addReview(
+    product.value.id,
+    product.value.sellerId,
+    userName,
+    currentUserId.value,
+    newReviewRating.value,
+    newReviewText.value
+  )
+  
+  closeReviewModal()
+  
+  const toast = await toastController.create({
+    message: 'Valoración publicada con éxito',
+    duration: 2000,
+    position: 'bottom',
+    color: 'success',
+  })
+  await toast.present()
+}
+
+const showAlreadyReviewedAlert = async () => {
+  const alert = await alertController.create({
+    header: 'Valoración existente',
+    message: 'Ya has valorado a este vendedor.',
+    buttons: ['OK'],
+  })
+  await alert.present()
+}
+
+const formatReviewDate = (date: Date) => {
+  const now = new Date()
+  const diff = now.getTime() - new Date(date).getTime()
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  
+  if (days === 0) return 'Hoy'
+  if (days === 1) return 'Ayer'
+  if (days < 7) return `Hace ${days} días`
+  if (days < 30) return `Hace ${Math.floor(days / 7)} semanas`
+  
+  return new Date(date).toLocaleDateString('es-ES', {
+    day: 'numeric',
+    month: 'short',
+  })
+}
+
+const goToChat = () => {
   if (!product.value) return
   
   // Crear o obtener el chat con el vendedor del producto
@@ -269,6 +467,21 @@ const goToChat = (productId: number) => {
   )
   
   router.push(`/chat/${chat.id}`)
+}
+
+const toggleFavorite = async () => {
+  if (!product.value) return
+  
+  favoriteStore.toggleFavorite(product.value.id)
+  
+  const message = isFav.value ? 'Añadido a favoritos' : 'Eliminado de favoritos'
+  const toast = await toastController.create({
+    message,
+    duration: 1500,
+    position: 'bottom',
+    color: 'success',
+  })
+  await toast.present()
 }
 
 const carouselRef = ref<HTMLElement | null>(null)
@@ -776,9 +989,21 @@ const confirmLogin = async () => {
   font-size: 12px;
 }
 
+.contact-seller-btn {
+  margin-top: 12px;
+  --border-radius: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  height: 36px;
+}
+
 .reviews-list {
   display: grid;
   gap: 12px;
+}
+
+.reviews-card-header {
+  padding: 20px;
 }
 
 .review-item {
@@ -788,11 +1013,41 @@ const confirmLogin = async () => {
   border: 1px solid #e5e7eb;
 }
 
+.reviews-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.add-review-btn {
+  --border-radius: 12px;
+  font-weight: 600;
+}
+
+.no-reviews {
+  padding: 20px;
+  text-align: center;
+  color: #64748b;
+}
+
+.no-reviews p {
+  margin: 0;
+}
+
 .review-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 6px;
+}
+
+.review-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .review-author {
@@ -801,9 +1056,14 @@ const confirmLogin = async () => {
   font-size: 13px;
 }
 
+.review-date {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
 .review-stars {
   color: #f59e0b;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .review-text {
@@ -811,6 +1071,86 @@ const confirmLogin = async () => {
   color: #475569;
   font-size: 13px;
   line-height: 1.5;
+}
+
+/* Review Modal Styles */
+.review-modal-content {
+  --background: #f8fafc;
+}
+
+.review-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.rating-section {
+  margin-bottom: 24px;
+}
+
+.rating-label,
+.review-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.star-rating {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 16px 0;
+}
+
+.star-button {
+  background: none;
+  border: none;
+  font-size: 36px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 200ms ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.star-button.active {
+  color: #f59e0b;
+  transform: scale(1.1);
+}
+
+.star-button:hover {
+  transform: scale(1.15);
+}
+
+.review-text-section {
+  margin-bottom: 24px;
+}
+
+.review-textarea {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 8px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 4px 0 0 0;
+}
+
+.submit-review-btn {
+  --border-radius: 14px;
+  font-weight: 600;
+  margin-top: 8px;
 }
 
 .product-actions {
@@ -875,6 +1215,15 @@ const confirmLogin = async () => {
   .seller-content {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .reviews-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .add-review-btn {
+    width: 100%;
   }
 
   .carousel-control {

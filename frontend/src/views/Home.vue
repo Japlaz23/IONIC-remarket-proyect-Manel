@@ -237,7 +237,17 @@
                     class="product-card compact-card carousel-slide"
                     @click="goToProduct(product.id)"
                   >
-                    <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                    <div class="product-image-container">
+                      <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                      <button 
+                        type="button"
+                        class="favorite-btn"
+                        :class="{ active: isFavoriteProduct(product.id) }"
+                        @click="toggleProductFavorite($event, product.id)"
+                      >
+                        <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
+                      </button>
+                    </div>
                     <ion-card-header>
                       <ion-card-title class="product-title line-clamp-2">
                         {{ product.title }}
@@ -247,6 +257,11 @@
                       <div class="product-meta">
                         <span class="product-price">{{ product.price }}€</span>
                         <span class="product-location">{{ product.location }}</span>
+                      </div>
+                      <div v-if="getSellerRating(product.sellerId)" class="product-rating">
+                        <span class="rating-stars">{{ getSellerRating(product.sellerId)?.stars }}</span>
+                        <span class="rating-value">{{ getSellerRating(product.sellerId)?.value.toFixed(1) }}</span>
+                        <span class="rating-count">({{ getSellerRating(product.sellerId)?.count }})</span>
                       </div>
                     </ion-card-content>
                   </ion-card>
@@ -289,7 +304,17 @@
                 class="product-card compact-card"
                 @click="goToProduct(product.id)"
               >
-                <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                <div class="product-image-container">
+                  <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                  <button 
+                    type="button"
+                    class="favorite-btn"
+                    :class="{ active: isFavoriteProduct(product.id) }"
+                    @click="toggleProductFavorite($event, product.id)"
+                  >
+                    <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
+                  </button>
+                </div>
                 <ion-card-header>
                   <ion-card-title class="product-title line-clamp-2">
                     {{ product.title }}
@@ -299,6 +324,11 @@
                   <div class="product-meta">
                     <span class="product-price">{{ product.price }}€</span>
                     <span class="product-location">{{ product.location }}</span>
+                  </div>
+                  <div v-if="getSellerRating(product.sellerId)" class="product-rating">
+                    <span class="rating-stars">{{ getSellerRating(product.sellerId)?.stars }}</span>
+                    <span class="rating-value">{{ getSellerRating(product.sellerId)?.value.toFixed(1) }}</span>
+                    <span class="rating-count">({{ getSellerRating(product.sellerId)?.count }})</span>
                   </div>
                 </ion-card-content>
               </ion-card>
@@ -398,7 +428,17 @@
                     class="product-card compact-card"
                     @click="goToProduct(product.id)"
                   >
-                    <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                    <div class="product-image-container">
+                      <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                      <button 
+                        type="button"
+                        class="favorite-btn"
+                        :class="{ active: isFavoriteProduct(product.id) }"
+                        @click="toggleProductFavorite($event, product.id)"
+                      >
+                        <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
+                      </button>
+                    </div>
                     <ion-card-header>
                       <ion-card-title class="product-title line-clamp-2">
                         {{ product.title }}
@@ -408,6 +448,11 @@
                       <div class="product-meta">
                         <span class="product-price">{{ product.price }}€</span>
                         <span class="product-location">{{ product.location }}</span>
+                      </div>
+                      <div v-if="getSellerRating(product.sellerId)" class="product-rating">
+                        <span class="rating-stars">{{ getSellerRating(product.sellerId)?.stars }}</span>
+                        <span class="rating-value">{{ getSellerRating(product.sellerId)?.value.toFixed(1) }}</span>
+                        <span class="rating-count">({{ getSellerRating(product.sellerId)?.count }})</span>
                       </div>
                     </ion-card-content>
                   </ion-card>
@@ -502,15 +547,20 @@ import {
   chevronBackOutline,
   chevronForwardOutline,
   funnelOutline,
+  heartOutline,
 } from 'ionicons/icons'
 import { useRouter } from 'vue-router'
 import { computed, ref, reactive, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useProductStore } from '@/stores/productStore'
 import { useChatStore } from '@/stores/chatStore'
+import { useReviewStore } from '@/stores/reviewStore'
+import { useFavoriteStore } from '@/stores/favoriteStore'
 
 const router = useRouter()
 const store = useProductStore()
 const chatStore = useChatStore()
+const reviewStore = useReviewStore()
+const favoriteStore = useFavoriteStore()
 
 const isLoggedIn = ref(false)
 const isChatFabOpen = ref(false)
@@ -980,6 +1030,27 @@ const goToHomeWithCarousel = () => {
 
 const goToProduct = (id: number) => {
   router.push(`/product/${id}`)
+}
+
+const getSellerRating = (sellerId: number) => {
+  const ratingStr = reviewStore.getSellerAverageRating(sellerId)
+  const rating = typeof ratingStr === 'string' ? parseFloat(ratingStr) : ratingStr
+  if (rating === 0) return null
+  return {
+    value: rating,
+    stars: reviewStore.ratingToStars(rating),
+    count: reviewStore.getReviewsBySeller(sellerId).length,
+  }
+}
+
+const toggleProductFavorite = (e: Event, productId: number) => {
+  e.stopPropagation()
+  favoriteStore.loadFavorites()
+  favoriteStore.toggleFavorite(productId)
+}
+
+const isFavoriteProduct = (productId: number) => {
+  return favoriteStore.isFavorite(productId)
 }
 
 const goToLogin = () => {
@@ -1652,6 +1723,45 @@ ion-segment-button {
   border-bottom: 1px solid #eef2f7;
 }
 
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 200ms ease;
+  z-index: 10;
+  padding: 0;
+  backdrop-filter: blur(4px);
+}
+
+.favorite-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  color: #fbbf24;
+}
+
+.favorite-btn.active {
+  color: #ef4444;
+  background: rgba(255, 255, 255, 1);
+}
+
+.favorite-btn ion-icon {
+  font-size: 18px;
+}
+
 .product-card ion-card-header {
   padding: 12px 12px 6px;
 }
@@ -1677,6 +1787,30 @@ ion-segment-button {
 
 .product-location {
   color: #94a3b8;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.rating-stars {
+  color: #f59e0b;
+  font-size: 13px;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.rating-count {
+  color: #94a3b8;
+  font-size: 11px;
 }
 
 .empty-state {
