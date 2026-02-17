@@ -36,18 +36,18 @@
         <ion-item class="profile-section">
           <ion-label>Cuenta</ion-label>
         </ion-item>
-        <ion-item class="profile-item" button @click="goHome">
+        <ion-item class="profile-item" button @click="goToSettings">
           <ion-label>Configuración</ion-label>
           <ion-icon :icon="chevronForwardOutline" slot="end"></ion-icon>
         </ion-item>
         <ion-item class="profile-section">
           <ion-label>Transacciones</ion-label>
         </ion-item>
-        <ion-item class="profile-item" button @click="goHome">
+        <ion-item class="profile-item" button @click="goToSales">
           <ion-label>Mis publicaciones</ion-label>
           <ion-icon :icon="chevronForwardOutline" slot="end"></ion-icon>
         </ion-item>
-        <ion-item class="profile-item" button @click="goHome">
+        <ion-item class="profile-item" button @click="goToPurchases">
           <ion-label>Mis compras</ion-label>
           <ion-icon :icon="chevronForwardOutline" slot="end"></ion-icon>
         </ion-item>
@@ -78,6 +78,7 @@ import {
   IonBackButton,
   IonButtons,
 } from '@ionic/vue'
+import { useRouter } from 'vue-router'
 import { chevronForwardOutline } from 'ionicons/icons'
 import { computed, ref } from 'vue'
 
@@ -92,6 +93,7 @@ type StoredUser = {
 }
 
 const ionRouter = useIonRouter()
+const router = useRouter()
 
 const profile = ref<StoredUser | null>(null)
 
@@ -155,6 +157,18 @@ const profileAvatar = computed(() => {
 
 const goHome = () => {
   ionRouter.push('/tabs/home')
+}
+
+const goToSettings = () => {
+  router.push('/settings')
+}
+
+const goToSales = () => {
+  router.push('/sales')
+}
+
+const goToPurchases = () => {
+  router.push('/purchases')
 }
 
 const logout = () => {

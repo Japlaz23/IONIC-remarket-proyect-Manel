@@ -9,6 +9,8 @@ import Sell from '@/views/Sell.vue'
 import Chat from '@/views/Chat.vue'
 import ProfileCustomer from '@/views/ProfileCostumer.vue'
 import Purchases from '@/views/Purchases.vue'
+import Sales from '@/views/Sales.vue'
+import Settings from '@/views/Settings.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -97,6 +99,25 @@ const routes: RouteRecordRaw[] = [
     name: 'ChatThread',
     component: () => import('@/views/ChatConversation.vue'),
   },
+  {
+    path: '/sales',
+    name: 'Sales',
+    component: Sales,
+  },
+  {
+    path: '/purchases',
+    name: 'PurchasesPage',
+    component: Purchases,
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings,
+  },
+  {
+    path: '/profile',
+    redirect: '/tabs/profile',
+  },
 ]
 
 const router = createRouter({
@@ -110,6 +131,10 @@ const requiresAuth = (path: string) => {
     path === '/tabs/profile' ||
     path === '/tabs/chat' ||
     path === '/tabs/purchases' ||
+    path === '/sales' ||
+    path === '/purchases' ||
+    path === '/settings' ||
+    path === '/profile' ||
     path.startsWith('/chat')
   )
 }

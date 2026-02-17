@@ -328,7 +328,7 @@ export const useProductStore = defineStore('product', () => {
     },
     {
       id: 21,
-      title: 'Bicicleta de montana',
+      title: 'Bicicleta de montaña',
       price: 420,
       image: '/placeholder.svg',
       category: 'Deportes',
