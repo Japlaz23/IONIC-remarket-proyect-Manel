@@ -18,8 +18,15 @@
       <div class="product-shell">
         <template v-if="product">
           <div class="product-hero-frame">
-            <div class="product-carousel" ref="carouselRef" @scroll="handleCarouselScroll">
-              <div
+            <Swiper
+              class="product-carousel"
+              :modules="[Navigation, Pagination]"
+              :slides-per-view="1"
+              :loop="galleryImages.length > 1"
+              :navigation="{ prevEl: '.product-prev', nextEl: '.product-next' }"
+              :pagination="{ el: '.product-pagination', clickable: true }"
+            >
+              <SwiperSlide
                 v-for="(image, index) in galleryImages"
                 :key="`${product.id}-${index}`"
                 class="product-slide"
@@ -28,22 +35,15 @@
                   :src="image"
                   :alt="product.title"
                   class="product-hero"
-                  @click="openZoom(image)"
+                  @click="openZoom(index)"
                 />
-              </div>
-            </div>
-            <div class="carousel-dots" aria-hidden="true">
-              <span
-                v-for="(_, index) in galleryImages"
-                :key="`dot-${product.id}-${index}`"
-                class="carousel-dot"
-                :class="{ active: index === activeSlide }"
-              ></span>
-            </div>
-            <button class="carousel-control prev" type="button" @click="scrollCarousel(-1)">
+              </SwiperSlide>
+            </Swiper>
+            <div v-if="galleryImages.length > 1" class="carousel-dots product-pagination" aria-hidden="true"></div>
+            <button class="carousel-control prev product-prev" type="button" :disabled="galleryImages.length <= 1">
               Prev
             </button>
-            <button class="carousel-control next" type="button" @click="scrollCarousel(1)">
+            <button class="carousel-control next product-next" type="button" :disabled="galleryImages.length <= 1">
               Next
             </button>
             <div class="product-hero-gradient"></div>
@@ -193,38 +193,35 @@
     >
       <div class="zoom-surface">
         <button class="zoom-close" type="button" @click="closeZoom">Cerrar</button>
-        <div class="zoom-carousel" ref="zoomCarouselRef" @scroll="handleZoomCarouselScroll">
-          <div
+        <Swiper
+          class="zoom-carousel"
+          :modules="[Navigation, Pagination, Zoom]"
+          :slides-per-view="1"
+          :zoom="true"
+          :initial-slide="zoomInitialSlide"
+          :navigation="{ prevEl: '.zoom-prev', nextEl: '.zoom-next' }"
+          :pagination="{ el: '.zoom-pagination', clickable: true }"
+          @swiper="setZoomSwiper"
+        >
+          <SwiperSlide
             v-for="(image, index) in galleryImages"
             :key="`zoom-${product?.id ?? 'x'}-${index}`"
             class="zoom-slide"
           >
-            <img
-              :src="image"
-              alt="Vista ampliada"
-              class="zoom-image"
-              :style="{ transform: `translate(${zoomTranslate.x}px, ${zoomTranslate.y}px) scale(${zoomScale})` }"
-              @dblclick="toggleZoom"
-              @pointerdown="onZoomPointerDown"
-              @pointermove="onZoomPointerMove"
-              @pointerup="onZoomPointerUp"
-              @pointercancel="onZoomPointerUp"
-              @pointerleave="onZoomPointerUp"
-            />
-          </div>
-        </div>
-        <div class="zoom-dots" aria-hidden="true">
-          <span
-            v-for="(_, index) in galleryImages"
-            :key="`zoom-dot-${product?.id ?? 'x'}-${index}`"
-            class="zoom-dot"
-            :class="{ active: index === zoomActiveSlide }"
-          ></span>
-        </div>
-        <button class="zoom-control prev" type="button" @click="scrollZoomCarousel(-1)">
+            <div class="swiper-zoom-container">
+              <img
+                :src="image"
+                alt="Vista ampliada"
+                class="zoom-image"
+              />
+            </div>
+          </SwiperSlide>
+        </Swiper>
+        <div class="zoom-dots zoom-pagination" aria-hidden="true"></div>
+        <button class="zoom-control prev zoom-prev" type="button" :disabled="galleryImages.length <= 1">
           Prev
         </button>
-        <button class="zoom-control next" type="button" @click="scrollZoomCarousel(1)">
+        <button class="zoom-control next zoom-next" type="button" :disabled="galleryImages.length <= 1">
           Next
         </button>
       </div>
@@ -293,7 +290,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   IonPage,
@@ -312,14 +309,17 @@ import {
   IonModal,
   IonTextarea,
   onIonViewWillEnter,
-  alertController,
   toastController,
 } from '@ionic/vue'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Navigation, Pagination, Zoom } from 'swiper/modules'
+import type { Swiper as SwiperClass } from 'swiper'
 import { chatbubbleEllipsesOutline, addOutline, heart, heartOutline, cartOutline } from 'ionicons/icons'
 import { useProductStore } from '@/stores/productStore'
 import { useChatStore } from '@/stores/chatStore'
 import { useReviewStore } from '@/stores/reviewStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
+import Swal from 'sweetalert2'
 
 const route = useRoute()
 const router = useRouter()
@@ -434,12 +434,14 @@ const submitReview = async () => {
 }
 
 const showAlreadyReviewedAlert = async () => {
-  const alert = await alertController.create({
-    header: 'Valoración existente',
-    message: 'Ya has valorado a este vendedor.',
-    buttons: ['OK'],
+  await Swal.fire({
+    title: 'Valoración existente',
+    text: 'Ya has valorado a este vendedor.',
+    icon: 'info',
+    heightAuto: false,
+    scrollbarPadding: false,
+    confirmButtonText: 'OK',
   })
-  await alert.present()
 }
 
 const formatReviewDate = (date: Date) => {
@@ -488,254 +490,28 @@ const toggleFavorite = async () => {
   await toast.present()
 }
 
-const carouselRef = ref<HTMLElement | null>(null)
-const activeSlide = ref(0)
 const showZoom = ref(false)
-const zoomImage = ref('')
-const zoomScale = ref(1)
-const zoomTranslate = ref({ x: 0, y: 0 })
-const zoomCarouselRef = ref<HTMLElement | null>(null)
-const zoomActiveSlide = ref(0)
-const zoomPointers = new Map<number, { x: number; y: number }>()
-const zoomStateByIndex = new Map<number, { scale: number; translate: { x: number; y: number } }>()
-let pinchStartDistance = 0
-let pinchStartScale = 1
-let lastTapTime = 0
-let dragPointerId: number | null = null
-let dragStart = { x: 0, y: 0 }
-let dragStartTranslate = { x: 0, y: 0 }
+const zoomInitialSlide = ref(0)
+const zoomSwiper = ref<SwiperClass | null>(null)
 
-const updateActiveSlide = () => {
-  const carousel = carouselRef.value
-  if (!carousel) {
-    return
-  }
-  const width = carousel.clientWidth
-  if (!width) {
-    return
-  }
-  activeSlide.value = Math.round(carousel.scrollLeft / width)
+const setZoomSwiper = (swiper: SwiperClass) => {
+  zoomSwiper.value = swiper
 }
 
-const handleCarouselScroll = () => {
-  updateActiveSlide()
-}
-
-const scrollCarousel = (direction: number) => {
-  const carousel = carouselRef.value
-  if (!carousel) {
-    return
-  }
-  const width = carousel.clientWidth
-  carousel.scrollBy({ left: width * direction, behavior: 'smooth' })
-}
-
-const openZoom = (image: string) => {
-  zoomImage.value = image
+const openZoom = async (index: number) => {
+  zoomInitialSlide.value = Math.max(index, 0)
   showZoom.value = true
-  const index = galleryImages.value.findIndex((item) => item === image)
-  zoomActiveSlide.value = Math.max(index, 0)
+  await nextTick()
   requestAnimationFrame(() => {
-    const carousel = zoomCarouselRef.value
-    if (!carousel) {
-      return
-    }
-    const width = carousel.clientWidth
-    carousel.scrollTo({ left: width * zoomActiveSlide.value })
-    applyZoomState(zoomActiveSlide.value)
+    zoomSwiper.value?.slideTo(zoomInitialSlide.value, 0)
+    zoomSwiper.value?.zoom?.out()
   })
 }
 
 const closeZoom = () => {
-  saveZoomState(zoomActiveSlide.value)
   showZoom.value = false
-  zoomImage.value = ''
-  zoomScale.value = 1
-  zoomTranslate.value = { x: 0, y: 0 }
-  zoomPointers.clear()
-  pinchStartDistance = 0
-  pinchStartScale = 1
-  lastTapTime = 0
-  dragPointerId = null
+  zoomSwiper.value?.zoom?.out()
 }
-
-const getActiveZoomImage = () => {
-  const carousel = zoomCarouselRef.value
-  if (!carousel) {
-    return null
-  }
-  const images = carousel.querySelectorAll<HTMLImageElement>('.zoom-image')
-  return images[zoomActiveSlide.value] || null
-}
-
-const clampTranslate = (nextTranslate: { x: number; y: number }) => {
-  const carousel = zoomCarouselRef.value
-  const image = getActiveZoomImage()
-  if (!carousel || !image) {
-    return nextTranslate
-  }
-  const containerWidth = carousel.clientWidth
-  const containerHeight = carousel.clientHeight
-  const baseWidth = image.clientWidth
-  const baseHeight = image.clientHeight
-  const scaledWidth = baseWidth * zoomScale.value
-  const scaledHeight = baseHeight * zoomScale.value
-  const maxX = Math.max(0, (scaledWidth - containerWidth) / 2)
-  const maxY = Math.max(0, (scaledHeight - containerHeight) / 2)
-  return {
-    x: Math.min(maxX, Math.max(-maxX, nextTranslate.x)),
-    y: Math.min(maxY, Math.max(-maxY, nextTranslate.y)),
-  }
-}
-
-const saveZoomState = (index: number) => {
-  zoomStateByIndex.set(index, {
-    scale: zoomScale.value,
-    translate: { ...zoomTranslate.value },
-  })
-}
-
-const applyZoomState = (index: number) => {
-  const saved = zoomStateByIndex.get(index)
-  if (saved) {
-    zoomScale.value = saved.scale
-    zoomTranslate.value = clampTranslate(saved.translate)
-    return
-  }
-  zoomScale.value = 1
-  zoomTranslate.value = { x: 0, y: 0 }
-}
-
-const updateZoomActiveSlide = () => {
-  const carousel = zoomCarouselRef.value
-  if (!carousel) {
-    return
-  }
-  const width = carousel.clientWidth
-  if (!width) {
-    return
-  }
-  const nextIndex = Math.round(carousel.scrollLeft / width)
-  if (nextIndex !== zoomActiveSlide.value) {
-    saveZoomState(zoomActiveSlide.value)
-    zoomActiveSlide.value = nextIndex
-    requestAnimationFrame(() => {
-      applyZoomState(nextIndex)
-    })
-  }
-}
-
-const handleZoomCarouselScroll = () => {
-  updateZoomActiveSlide()
-}
-
-const scrollZoomCarousel = (direction: number) => {
-  const carousel = zoomCarouselRef.value
-  if (!carousel) {
-    return
-  }
-  const width = carousel.clientWidth
-  carousel.scrollBy({ left: width * direction, behavior: 'smooth' })
-}
-
-const getPinchDistance = () => {
-  const points = Array.from(zoomPointers.values())
-  if (points.length < 2) {
-    return 0
-  }
-  const [a, b] = points
-  const dx = a.x - b.x
-  const dy = a.y - b.y
-  return Math.hypot(dx, dy)
-}
-
-const onZoomPointerDown = (event: PointerEvent) => {
-  ;(event.target as HTMLElement).setPointerCapture(event.pointerId)
-  zoomPointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
-  if (zoomPointers.size === 2) {
-    pinchStartDistance = getPinchDistance()
-    pinchStartScale = zoomScale.value
-    dragPointerId = null
-    return
-  }
-
-  if (zoomPointers.size === 1 && zoomScale.value > 1) {
-    dragPointerId = event.pointerId
-    dragStart = { x: event.clientX, y: event.clientY }
-    dragStartTranslate = { ...zoomTranslate.value }
-  }
-}
-
-const onZoomPointerMove = (event: PointerEvent) => {
-  if (!zoomPointers.has(event.pointerId)) {
-    return
-  }
-  zoomPointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
-  if (zoomPointers.size === 2 && pinchStartDistance > 0) {
-    const distance = getPinchDistance()
-    const nextScale = (pinchStartScale * distance) / pinchStartDistance
-    zoomScale.value = Math.min(Math.max(nextScale, 1), 3)
-    if (zoomScale.value === 1) {
-      zoomTranslate.value = { x: 0, y: 0 }
-    }
-    zoomTranslate.value = clampTranslate(zoomTranslate.value)
-    return
-  }
-
-  if (dragPointerId === event.pointerId && zoomScale.value > 1) {
-    const dx = event.clientX - dragStart.x
-    const dy = event.clientY - dragStart.y
-    zoomTranslate.value = clampTranslate({
-      x: dragStartTranslate.x + dx,
-      y: dragStartTranslate.y + dy,
-    })
-  }
-}
-
-const onZoomPointerUp = (event: PointerEvent) => {
-  if (zoomPointers.has(event.pointerId)) {
-    zoomPointers.delete(event.pointerId)
-  }
-  if (zoomPointers.size < 2) {
-    pinchStartDistance = 0
-    pinchStartScale = zoomScale.value
-  }
-
-  if (dragPointerId === event.pointerId) {
-    dragPointerId = null
-  }
-
-  if (zoomPointers.size === 0 && event.pointerType === 'touch') {
-    const now = Date.now()
-    if (now - lastTapTime < 280) {
-      toggleZoom()
-      lastTapTime = 0
-    } else {
-      lastTapTime = now
-    }
-  }
-}
-
-const toggleZoom = () => {
-  if (zoomScale.value > 1) {
-    zoomScale.value = 1
-    zoomTranslate.value = { x: 0, y: 0 }
-    return
-  }
-  zoomScale.value = 2
-  zoomTranslate.value = clampTranslate({ x: 0, y: 0 })
-}
-
-onMounted(() => {
-  updateActiveSlide()
-  window.addEventListener('resize', updateActiveSlide)
-  window.addEventListener('resize', updateZoomActiveSlide)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateActiveSlide)
-  window.removeEventListener('resize', updateZoomActiveSlide)
-})
 
 const buyProduct = () => {
   if (!isLoggedIn.value) {
@@ -750,24 +526,21 @@ const buyProduct = () => {
 }
 
 const confirmLogin = async () => {
-  const alert = await alertController.create({
-    header: 'Inicia sesion',
-    message: 'Necesitas iniciar sesion para continuar con la compra.',
-    cssClass: 'auth-alert',
-    buttons: [
-      {
-        text: 'Cancelar',
-        role: 'cancel',
-      },
-      {
-        text: 'Continuar',
-        handler: () => {
-          router.push('/login')
-        },
-      },
-    ],
+  const result = await Swal.fire({
+    title: 'Inicia sesion',
+    text: 'Necesitas iniciar sesion para continuar con la compra.',
+    icon: 'info',
+    heightAuto: false,
+    scrollbarPadding: false,
+    showCancelButton: true,
+    confirmButtonText: 'Continuar',
+    cancelButtonText: 'Cancelar',
+    reverseButtons: true,
   })
-  await alert.present()
+
+  if (result.isConfirmed) {
+    router.push('/login')
+  }
 }
 </script>
 
@@ -788,27 +561,18 @@ const confirmLogin = async () => {
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
-  touch-action: pan-x;
 }
 
 .product-carousel {
+  width: 100%;
+}
+
+.product-carousel :deep(.swiper-wrapper) {
+  align-items: stretch;
+}
+
+.product-carousel :deep(.swiper-slide) {
   display: flex;
-  overflow-x: scroll;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
-  overscroll-behavior-x: contain;
-}
-
-.product-carousel::-webkit-scrollbar {
-  display: none;
-}
-
-.product-slide {
-  flex: 0 0 100%;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 .product-hero {
@@ -851,15 +615,16 @@ const confirmLogin = async () => {
   z-index: 2;
 }
 
-.carousel-dot {
+.carousel-dots :deep(.swiper-pagination-bullet) {
   width: 7px;
   height: 7px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
   transition: transform 200ms ease, background-color 200ms ease;
 }
 
-.carousel-dot.active {
+.carousel-dots :deep(.swiper-pagination-bullet-active) {
   background: #ffffff;
   transform: scale(1.2);
 }
@@ -1290,21 +1055,19 @@ const confirmLogin = async () => {
 .zoom-carousel {
   width: 100%;
   height: 100%;
+}
+
+.zoom-carousel :deep(.swiper-wrapper) {
+  align-items: center;
+}
+
+.zoom-carousel :deep(.swiper-slide) {
   display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+  align-items: center;
+  justify-content: center;
 }
 
-.zoom-carousel::-webkit-scrollbar {
-  display: none;
-}
-
-.zoom-slide {
-  flex: 0 0 100%;
-  scroll-snap-align: start;
+.zoom-carousel :deep(.swiper-zoom-container) {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1315,8 +1078,6 @@ const confirmLogin = async () => {
   max-height: 76vh;
   border-radius: 16px;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-  touch-action: none;
-  transition: transform 120ms ease;
 }
 
 .zoom-close {
@@ -1342,14 +1103,16 @@ const confirmLogin = async () => {
   z-index: 2;
 }
 
-.zoom-dot {
+.zoom-dots :deep(.swiper-pagination-bullet) {
   width: 7px;
   height: 7px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.4);
+  opacity: 1;
+  transition: transform 200ms ease, background-color 200ms ease;
 }
 
-.zoom-dot.active {
+.zoom-dots :deep(.swiper-pagination-bullet-active) {
   background: #ffffff;
   transform: scale(1.2);
 }

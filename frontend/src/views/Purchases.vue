@@ -257,6 +257,10 @@ const filterPurchases = () => {
 <style scoped>
 .purchases-content {
   --background: #f5f7fa;
+  --padding-top: 16px;
+  --padding-bottom: 18px;
+  --padding-start: 0;
+  --padding-end: 0;
 }
 
 .empty-state {
@@ -265,8 +269,8 @@ const filterPurchases = () => {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 60px 20px;
-  min-height: 60vh;
+  padding: 32px 16px;
+  min-height: 40vh;
 }
 
 .empty-icon {
@@ -293,11 +297,13 @@ const filterPurchases = () => {
 }
 
 .purchases-container {
-  padding: 16px;
+  padding: 12px 16px 20px;
+  max-width: 920px;
+  margin: 0 auto;
 }
 
 .filter-group {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .filter-group ion-segment {
@@ -307,13 +313,13 @@ const filterPurchases = () => {
 .purchases-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .purchase-card {
   background: white;
   border-radius: 12px;
-  padding: 16px;
+  padding: 12px 14px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
 }
@@ -326,8 +332,8 @@ const filterPurchases = () => {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
-  padding-bottom: 12px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
   border-bottom: 1px solid #e5e5e5;
 }
 
@@ -336,7 +342,7 @@ const filterPurchases = () => {
 }
 
 .purchase-product {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #1a1a1a;
   margin: 0 0 6px 0;
@@ -359,7 +365,7 @@ const filterPurchases = () => {
 }
 
 .price {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #1a7f34;
 }
@@ -368,11 +374,11 @@ const filterPurchases = () => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .status-pending {
@@ -392,9 +398,9 @@ const filterPurchases = () => {
 .purchase-details {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
-  margin-bottom: 12px;
-  padding: 12px;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
   background: #f8f8f8;
   border-radius: 8px;
 }
@@ -420,18 +426,23 @@ const filterPurchases = () => {
 
 .purchase-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
   align-items: center;
 }
 
 .purchase-actions ion-button {
   flex: 1;
-  min-width: 110px;
+  min-width: 96px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  font-size: 12px;
 }
 
 .review-badge {
-  padding: 6px 12px;
+  padding: 5px 10px;
   background: linear-gradient(135deg, #ffd700 0%, #ffc700 100%);
   border-radius: 8px;
   font-size: 12px;

@@ -41,99 +41,82 @@ export const useReviewStore = defineStore('review', () => {
       author: 'Laura',
       authorId: 203,
       rating: 5,
-      text: 'Recomendado, todo perfecto.',
-      date: new Date(2026, 1, 14),
-    },
-    {
-      id: '4',
-      productId: 2,
-      sellerId: 2,
-      author: 'Pedro',
-      authorId: 204,
-      rating: 5,
-      text: 'Excelente vendedor, muy recomendable.',
-      date: new Date(2026, 1, 8),
-    },
-    {
-      id: '5',
-      productId: 3,
-      sellerId: 3,
-      author: 'Ana',
-      authorId: 205,
-      rating: 4,
-      text: 'Buen producto, llegó como se describe.',
-      date: new Date(2026, 1, 9),
-    },
+// ...existing code...
+        // Reviews para todos los vendedores extra
+        ...Array.from({length: 10}, (_, i) => ({
+          id: `r-electronica-${i+1}`,
+          productId: 100 + i,
+          sellerId: 200 + i,
+          author: `Comprador Electronica ${i+1}`,
+          authorId: 1000 + i,
+          rating: 4 + (i % 2),
+          text: `Valoración electrónica ${i+1}`,
+          date: new Date(2026, 1, 10),
+        })),
+        ...Array.from({length: 10}, (_, i) => ({
+          id: `r-vehiculo-${i+1}`,
+          productId: 200 + i,
+          sellerId: 300 + i,
+          author: `Comprador Vehículo ${i+1}`,
+          authorId: 1100 + i,
+          rating: 3 + (i % 3),
+          text: `Valoración vehículo ${i+1}`,
+          date: new Date(2026, 1, 10),
+        })),
+        ...Array.from({length: 10}, (_, i) => ({
+          id: `r-moda-${i+1}`,
+          productId: 300 + i,
+          sellerId: 400 + i,
+          author: `Comprador Moda ${i+1}`,
+          authorId: 1200 + i,
+          rating: 4 + (i % 2),
+          text: `Valoración moda ${i+1}`,
+          date: new Date(2026, 1, 10),
+        })),
+        ...Array.from({length: 10}, (_, i) => ({
+          id: `r-hogar-${i+1}`,
+          productId: 400 + i,
+          sellerId: 500 + i,
+          author: `Comprador Hogar ${i+1}`,
+          authorId: 1300 + i,
+          rating: 3 + (i % 3),
+          text: `Valoración hogar ${i+1}`,
+          date: new Date(2026, 1, 10),
+        })),
+        ...Array.from({length: 10}, (_, i) => ({
+          id: `r-deportes-${i+1}`,
+          productId: 500 + i,
+          sellerId: 600 + i,
+          author: `Comprador Deportes ${i+1}`,
+          authorId: 1400 + i,
+          rating: 4 + (i % 2),
+          text: `Valoración deportes ${i+1}`,
+          date: new Date(2026, 1, 10),
+        })),
+        ...Array.from({length: 10}, (_, i) => ({
+          id: `r-oficina-${i+1}`,
+          productId: 600 + i,
+          sellerId: 700 + i,
+          author: `Comprador Oficina ${i+1}`,
+          authorId: 1500 + i,
+          rating: 3 + (i % 3),
+          text: `Valoración oficina ${i+1}`,
+          date: new Date(2026, 1, 10),
+        })),
+        ...Array.from({length: 10}, (_, i) => ({
+          id: `r-musica-${i+1}`,
+          productId: 700 + i,
+          sellerId: 800 + i,
+          author: `Comprador Música ${i+1}`,
+          authorId: 1600 + i,
+          rating: 4 + (i % 2),
+          text: `Valoración música ${i+1}`,
+          date: new Date(2026, 1, 10),
+        })),
+
   ])
 
-  // Obtener reviews por producto
-  const getReviewsByProduct = (productId: number) => {
-    return reviews.value.filter((review) => review.productId === productId)
-  }
-
-  // Obtener reviews por vendedor
-  const getReviewsBySeller = (sellerId: number) => {
-    return reviews.value.filter((review) => review.sellerId === sellerId)
-  }
-
-  // Calcular rating promedio de un vendedor
-  const getSellerAverageRating = (sellerId: number) => {
-    const sellerReviews = getReviewsBySeller(sellerId)
-    if (sellerReviews.length === 0) return 0
-    const sum = sellerReviews.reduce((acc, review) => acc + review.rating, 0)
-    return (sum / sellerReviews.length).toFixed(1)
-  }
-
-  // Calcular rating promedio de un producto
-  const getProductAverageRating = (productId: number) => {
-    const productReviews = getReviewsByProduct(productId)
-    if (productReviews.length === 0) return 0
-    const sum = productReviews.reduce((acc, review) => acc + review.rating, 0)
-    return (sum / productReviews.length).toFixed(1)
-  }
-
-  // Añadir una nueva review
-  const addReview = (
-    productId: number,
-    sellerId: number,
-    author: string,
-    authorId: number,
-    rating: number,
-    text: string
-  ) => {
-    const newReview: Review = {
-      id: `review-${Date.now()}`,
-      productId,
-      sellerId,
-      author,
-      authorId,
-      rating,
-      text,
-      date: new Date(),
-    }
-    reviews.value.unshift(newReview)
-    return newReview
-  }
-
-  // Verificar si un usuario ya ha valorado un producto
-  const hasUserReviewedProduct = (productId: number, userId: number) => {
-    return reviews.value.some(
-      (review) => review.productId === productId && review.authorId === userId
-    )
-  }
-
-  // Convertir rating numérico a estrellas
-  const ratingToStars = (rating: number): string => {
-    const fullStars = Math.floor(rating)
-    const hasHalfStar = rating % 1 >= 0.5
-    let stars = '★'.repeat(fullStars)
-    if (hasHalfStar) {
-      stars += '☆'
-    }
-    const emptyStars = 5 - Math.ceil(rating)
-    stars += '☆'.repeat(emptyStars)
-    return stars
-  }
+  // ...existing code...
 
   return {
     reviews,
