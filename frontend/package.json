@@ -12,6 +12,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@hennge/vue3-pagination": "^1.0.17",
     "@ionic/core": "^8.7.17",
     "@ionic/vue": "^8.7.17",
     "@ionic/vue-router": "^8.7.17",
@@ -19,8 +20,8 @@
     "ionicons": "^8.0.13",
     "lodash-es": "^4.17.23",
     "pinia": "^3.0.4",
-    "swiper": "^11.1.15",
     "sweetalert2": "^11.26.18",
+    "swiper": "^11.1.15",
     "vue": "^3.5.25",
     "vue-router": "^4.6.4"
   },

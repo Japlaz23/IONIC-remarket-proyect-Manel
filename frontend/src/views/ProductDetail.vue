@@ -410,20 +410,26 @@ const setRating = (rating: number) => {
 
 const submitReview = async () => {
   if (!product.value || !canSubmitReview.value) return
-  
+
   const userName = localStorage.getItem('userName') || 'Usuario'
-  
-  reviewStore.addReview(
-    product.value.id,
-    product.value.sellerId,
-    userName,
-    currentUserId.value,
-    newReviewRating.value,
-    newReviewText.value
-  )
-  
+
+  // Generate a unique id for the review (timestamp + random)
+  const id = Date.now() + Math.floor(Math.random() * 10000)
+  const date = new Date().toISOString()
+
+  reviewStore.addReview({
+    id,
+    date,
+    productId: product.value.id,
+    sellerId: product.value.sellerId,
+    author: userName,
+    authorId: currentUserId.value,
+    rating: newReviewRating.value,
+    text: newReviewText.value
+  })
+
   closeReviewModal()
-  
+
   const toast = await toastController.create({
     message: 'Valoración publicada con éxito',
     duration: 2000,

@@ -220,9 +220,51 @@
             <div class="section-header">
               <h2>Otros productos</h2>
               <span>{{ nonCarouselProducts.length }} productos</span>
-
-              
             </div>
+            <ion-grid class="other-products-grid custom-3-cols-grid">
+              <ion-row class="product-ion-row three-cols-row" justify-content="center">
+                <ion-col
+                  v-for="product in visibleNonCarouselProducts"
+                  :key="product.id"
+                  size="12" size-md="4"
+                  class="product-ion-col"
+                >
+                  <ion-card
+                    class="product-card compact-card separated-card"
+                    @click="goToProduct(product.id)"
+                  >
+                    <div class="product-image-container">
+                      <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                      <button 
+                        type="button"
+                        class="favorite-btn"
+                        :class="{ active: isFavoriteProduct(product.id) }"
+                        @click="toggleProductFavorite($event, product.id)"
+                      >
+                        <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
+                      </button>
+                    </div>
+                    <ion-card-header>
+                      <ion-card-title class="product-title line-clamp-2">
+                        {{ product.title }}
+                      </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <div class="product-meta">
+                        <span class="product-price">{{ product.price }}€</span>
+                        <span class="product-location">{{ product.location }}</span>
+                      </div>
+                      <div v-if="getSellerRating(product.sellerId)" class="product-rating">
+                        <span class="rating-stars">{{ getSellerRating(product.sellerId)?.stars }}</span>
+                        <span class="rating-value">{{ getSellerRating(product.sellerId)?.value.toFixed(1) }}</span>
+                        <span class="rating-count">({{ getSellerRating(product.sellerId)?.count }})</span>
+                      </div>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+                
+            </ion-grid>
 
 
           </section>
@@ -358,6 +400,15 @@
                       </ion-card>
                     </ion-col>
                   </ion-row>
+                  <div style="display: flex; justify-content: center; margin: 24px 0;">
+                    <Vue3Pagination
+                      :total="nonCarouselProducts.length"
+                      :per-page="itemsPerPage"
+                      v-model="currentPage"
+                      :max-pages-shown="5"
+                      :classes="{ wrapper: 'pagination-wrapper', item: 'pagination-item', active: 'pagination-active' }"
+                    />
+                  </div>
                 </ion-grid>
               </section>
             </div>
@@ -419,6 +470,9 @@ import {
   IonImg,
   IonBadge,
   onIonViewWillEnter,
+  IonGrid,
+  IonRow,
+  IonCol
 } from '@ionic/vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation, Pagination } from 'swiper/modules'
@@ -439,7 +493,7 @@ import {
   heartOutline,
 } from 'ionicons/icons'
 import { useRouter } from 'vue-router'
-import { computed, ref, reactive, watch, nextTick } from 'vue'
+import { computed, ref, reactive, watch } from 'vue'
 import { useProductStore } from '@/stores/productStore'
 import { useChatStore } from '@/stores/chatStore'
 import { useReviewStore } from '@/stores/reviewStore'
@@ -456,10 +510,8 @@ const isLoggedIn = ref(false)
 const isChatFabOpen = ref(false)
 const unreadCount = computed(() => chatStore.totalUnread)
 
-const infiniteScrollRef = ref<HTMLElement | null>(null)
 
-const itemsPerPage = 8
-const visibleCount = ref(itemsPerPage)
+
 
 const filters = reactive({
   minPrice: '',
@@ -616,12 +668,8 @@ const filteredProducts = computed(() => {
   return list
 })
 
-const visibleProducts = computed(() => filteredProducts.value.slice(0, visibleCount.value))
 const nonCarouselProducts = computed(() =>
   filteredProducts.value.filter((product) => !carouselCategoryIds.has(product.category)),
-)
-const visibleNonCarouselProducts = computed(() =>
-  nonCarouselProducts.value.slice(0, visibleCount.value),
 )
 
 const showFiltersLayout = computed(() => {
@@ -651,26 +699,19 @@ const categorySections = computed(() => {
     return [{
       id: 'search-results',
       name: 'Resultados de búsqueda',
-      items: visibleProducts.value,
+      items: nonCarouselProducts.value,
     }].filter((section) => section.items.length > 0)
   }
-  
   // Si hay categoría seleccionada, mostrar solo esa categoría
   return categories
     .filter((category) => category.id === store.selectedCategory)
     .map((category) => ({
       ...category,
-      items: visibleProducts.value.filter((product) => product.category === category.id),
+      items: nonCarouselProducts.value.filter((product: any) => product.category === category.id),
     }))
     .filter((section) => section.items.length > 0)
 })
 
-const hasMore = computed(() => {
-  if (showFiltersLayout.value) {
-    return visibleCount.value < filteredProducts.value.length
-  }
-  return visibleCount.value < nonCarouselProducts.value.length
-})
 
 const hasContent = computed(() => {
   if (showFiltersLayout.value) {
@@ -678,6 +719,13 @@ const hasContent = computed(() => {
   }
   return carouselSections.value.length > 0 || visibleNonCarouselProducts.value.length > 0
 })
+
+// Computed para productos paginados del grid "Otros productos"
+const visibleNonCarouselProducts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return nonCarouselProducts.value.slice(start, end);
+});
 
 
 
@@ -688,14 +736,6 @@ const getCarouselKey = (value: string) =>
     .replace(/[^a-z0-9-_]/g, '')
 
 
-const resetVisibleCount = async () => {
-  visibleCount.value = itemsPerPage
-  await nextTick()
-  const target = infiniteScrollRef.value as HTMLIonInfiniteScrollElement | null
-  if (target) {
-    target.disabled = !hasMore.value
-  }
-}
 
 const goToHomeWithCarousel = () => {
   selectedCategory.value = ''
@@ -712,7 +752,7 @@ const getSellerRating = (sellerId: number) => {
   if (rating === 0) return null
   return {
     value: rating,
-    stars: reviewStore.ratingToStars(rating),
+    stars: reviewStore.ratingToStars(Number(rating)),
     count: reviewStore.getReviewsBySeller(sellerId).length,
   }
 }
@@ -803,6 +843,9 @@ const goToChatList = (type: 'support' | 'seller') => {
   router.push('/chat/1')
 }
 
+
+
+
 watch(
   () => [
     store.filteredProducts,
@@ -816,10 +859,14 @@ watch(
     filters.brand,
   ],
   () => {
-    resetVisibleCount()
+    currentPage.value = 1;
   },
-)
+);
+
+const itemsPerPage = 9
+const currentPage = ref(1)
 </script>
+
 
 <!-- ========== ESTILOS PRINCIPALES ========== -->
 <style scoped>
@@ -850,6 +897,7 @@ watch(
   gap: 16px;
 }
 
+/* FAB de chat y acciones rápidas */
 .chat-fab {
   display: none;
   z-index: 1000;
@@ -930,6 +978,7 @@ watch(
 .chat-fab-list .chat-fab-item ion-icon {
   font-size: 20px;
 }
+/* Estilos responsivos para mostrar/ocultar elementos en función del tamaño de pantalla */
 
 @media (max-width: 768px) {
   .action-buttons .profile-btn,
@@ -1056,7 +1105,7 @@ watch(
   background: #e8f5e9;
   color: #1a7f34 !important;
 }
-
+/* Estilos específicos para el botón de favoritos */
 .favorites-btn:hover {
   background: #ffe8e8;
   color: #ff4444 !important;
@@ -1065,7 +1114,7 @@ watch(
 .icon-btn:active {
   transform: scale(0.98);
 }
-
+/* Estilos específicos para el botón de búsqueda */
 .search-btn {
   display: none;
 }
@@ -1145,36 +1194,58 @@ ion-segment-button {
 }
 
 /* ==================== PRODUCT CARD STYLES ==================== */
-          .product-ion-grid {
-            max-width: 1100px;
-            margin: 0 auto 24px auto;
-          }
-          .product-ion-row {
-            justify-content: center;
-            --ion-grid-column-padding: 18px;
-            --ion-grid-row-padding: 18px;
-          }
-          .product-ion-col {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            margin-bottom: 0;
-          }
-          .product-card.compact-card {
-            margin-bottom: 0;
-          }
+.product-ion-grid {
+  max-width: 1100px;
+  margin: 0 auto 24px auto;
+}
+          
+.product-ion-row {
+  justify-content: center;
+  --ion-grid-column-padding: 18px;
+  --ion-grid-row-padding: 18px;
+}
+          
+.three-cols-row {
+  --ion-grid-column-padding: 48px;
+  --ion-grid-row-padding: 48px;
+}
+          
+.custom-3-cols-grid {
+  max-width: 1000px;
+  margin: 40px auto 40px auto;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+          
+.separated-card {
+  margin: 24px 16px 24px 16px;
+  box-shadow: 0 6px 24px rgba(15,23,42,0.10);
+}
 
-          /* Más separación para el grid de otros productos */
-          .other-products-grid {
-            max-width: 1000px;
-          }
-          .other-products-row {
-            --ion-grid-column-padding: 28px;
-            --ion-grid-row-padding: 32px;
-          }
-          .other-products-col {
-            margin-bottom: 0;
-          }
+.product-ion-col {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-bottom: 0;
+}
+
+.product-card.compact-card {
+  margin-bottom: 0;
+}
+
+/* Más separación para el grid de otros productos */
+.other-products-grid {
+  max-width: 1000px;
+}
+
+.other-products-row {
+  --ion-grid-column-padding: 28px;
+  --ion-grid-row-padding: 32px;
+}
+
+.other-products-col {
+  margin-bottom: 0;
+}
 
 .products-grid {
   width: 100%;
@@ -1482,9 +1553,11 @@ ion-segment-button {
   margin-top: 8px;
   font-size: 12px;
   color: #6b7280;
+}
 .always-visible {
   min-height: 20px;
 }
+
 
 .no-rating-stars {
   color: #d1d5db;
@@ -1972,4 +2045,49 @@ ion-fab-button {
 .product-card.compact-card {
   margin-bottom: 0;
 }
+/* ========== PAGINACIÓN ESTILO HORIZONTAL ========== */
+.pagination-bar {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+  overflow-x: auto;
+  width: 100%;
+}
+.pagination-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Forzar horizontal en el wrapper del paginador */
+::v-deep(.pagination-wrapper) {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.pagination-item {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 15px;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.pagination-item:hover {
+  background: #e8f5e9;
+  color: #1a7f34;
+}
+.pagination-active {
+  background: #1a7f34;
+  color: #fff;
+  border-color: #1a7f34;
+}
+
 </style>

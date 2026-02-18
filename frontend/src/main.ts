@@ -19,14 +19,18 @@ import 'swiper/css/zoom'
 import 'sweetalert2/dist/sweetalert2.min.css'
 import './assets/styles/main.css'
 
+
 import App from './App.vue'
 import router from './router'
+import Vue3Pagination from '@hennge/vue3-pagination';
 
 const app = createApp(App)
+
 
 app.use(createPinia())
 app.use(IonicVue)
 app.use(router)
+app.component('Vue3Pagination', Vue3Pagination)
 
 router.isReady().then(() => {
 	app.mount('#app')
