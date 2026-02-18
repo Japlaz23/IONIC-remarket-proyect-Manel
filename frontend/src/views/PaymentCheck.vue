@@ -303,7 +303,7 @@ onMounted(() => {
 /* ==================== CONTENT STYLES ==================== */
 
 .payment-content {
-  --background: #f5f5f5;
+  --background: #ffffff;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -327,8 +327,9 @@ onMounted(() => {
   max-width: 600px;
 }
 
+
 .summary-title {
-  color: #ffffff !important;
+  color: #111 !important;
   font-size: 16px !important;
   font-weight: 700 !important;
 }
@@ -356,13 +357,15 @@ onMounted(() => {
   font-size: 14px;
 }
 
+
 .detail-label {
-  color: #ffffff;
+  color: #111;
   font-weight: 500;
 }
 
+
 .detail-value {
-  color: #e8f5e9;
+  color: #111;
   font-weight: 600;
 }
 
@@ -379,12 +382,14 @@ onMounted(() => {
   padding-top: 8px;
 }
 
+
 .detail-label.bold {
-  color: #ffffff;
+  color: #111;
 }
 
+
 .detail-value.bold {
-  color: #ffffff;
+  color: #111;
 }
 
 .detail-value.large {
@@ -577,7 +582,9 @@ onMounted(() => {
 }
 
 .pay-btn {
-  flex: 1;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  flex: 2;
 }
 
 .pay-btn:disabled {
