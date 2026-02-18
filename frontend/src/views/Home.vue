@@ -2,7 +2,62 @@
 <template>
   <ion-page>
   <!-- ========== MENÚ LATERAL DE CATEGORÍAS ========== -->
-  <ion-menu content-id="home-content" type="overlay" class="side-menu">
+  <ion-menu content-id="home-content" menu-id="filters-menu" type="overlay" class="filters-menu">
+    <ion-header>
+      <ion-toolbar class="menu-header">
+        <ion-title>Filtros</ion-title>
+        <ion-buttons slot="end">
+          <ion-button class="menu-close" @click="closeCategoryMenu">
+            <ion-icon :icon="closeOutline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="menu-content">
+      <div class="filters-card">
+        <div class="filters-title">Filtros</div>
+        <div class="filters-group">
+          <div class="filters-label">Precio</div>
+          <div class="filters-row">
+            <ion-input v-model="filters.minPrice" type="number" inputmode="decimal" placeholder="Min" class="filters-input"></ion-input>
+            <ion-input v-model="filters.maxPrice" type="number" inputmode="decimal" placeholder="Max" class="filters-input"></ion-input>
+          </div>
+        </div>
+        <div class="filters-group">
+          <div class="filters-label">Condicion</div>
+          <ion-select v-model="filters.condition" interface="popover" class="filters-select">
+            <ion-select-option value="all">Todas</ion-select-option>
+            <ion-select-option value="Nuevo">Nuevo</ion-select-option>
+            <ion-select-option value="Usado">Usado</ion-select-option>
+          </ion-select>
+        </div>
+        <div class="filters-group">
+          <div class="filters-label">Ubicacion</div>
+          <ion-input v-model="filters.location" placeholder="Ciudad" class="filters-input"></ion-input>
+        </div>
+        <div class="filters-group">
+          <div class="filters-label">Ordenar</div>
+          <ion-select v-model="filters.sort" interface="popover" class="filters-select">
+            <ion-select-option value="recent">Mas reciente</ion-select-option>
+            <ion-select-option value="price-asc">Precio mas bajo</ion-select-option>
+            <ion-select-option value="price-desc">Precio mas alto</ion-select-option>
+          </ion-select>
+        </div>
+        <div class="filters-group" v-if="availableBrands.length > 0">
+          <div class="filters-label">Marca</div>
+          <ion-select v-model="filters.brand" interface="popover" class="filters-select">
+            <ion-select-option v-for="brand in availableBrands" :key="brand.value" :value="brand.value">
+              {{ brand.label }}
+            </ion-select-option>
+          </ion-select>
+        </div>
+        <div class="filters-actions">
+          <ion-button fill="clear" size="small" @click="resetFilters">Limpiar</ion-button>
+        </div>
+      </div>
+    </ion-content>
+  </ion-menu>
+  <ion-menu content-id="home-content" menu-id="categories-menu" type="overlay" class="side-menu">
     <ion-header>
       <ion-toolbar class="menu-header">
         <ion-title>Todas las categorias</ion-title>
@@ -92,7 +147,12 @@
 
       <!-- Menú horizontal de categorías -->
       <div class="categories-toolbar">
-        <div class="menu-wrapper">
+          <div class="menu-wrapper">          
+            <ion-button class="filters-button mobile-only" @click="openFiltersMenu">
+              <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
+              Filtros
+            </ion-button>
+          </div>
           <ion-button class="menu-button" @click="openCategoryMenu">
             <ion-icon :icon="menuOutline"></ion-icon>
             <span>Todas las categorías</span>
@@ -106,7 +166,7 @@
             :class="['category-item', { active: selectedCategory === category.id }]"
           >
             {{ category.name }}
-          </div>
+
         </div>
       </div>
     </ion-header>
@@ -358,16 +418,17 @@
                   <span>{{ section.items.length }} productos</span>
                 </div>
 
-                <ion-grid class="compact-grid product-ion-grid">
-                  <ion-row class="product-ion-row" justify-content="center">
+                <ion-grid class="other-products-grid custom-3-cols-grid">
+                  <ion-row class="product-ion-row three-cols-row" justify-content="center">
                     <ion-col
                       v-for="product in section.items"
                       :key="product.id"
-                      size="12" size-md="4"
+                      :size="section.items.length === 1 ? '12' : '6'"
+                      :size-md="section.items.length === 1 ? '12' : '4'"
                       class="product-ion-col"
                     >
                       <ion-card
-                        class="product-card compact-card"
+                        class="product-card compact-card separated-card"
                         @click="goToProduct(product.id)"
                       >
                         <div class="product-image-container">
@@ -400,15 +461,7 @@
                       </ion-card>
                     </ion-col>
                   </ion-row>
-                  <div style="display: flex; justify-content: center; margin: 24px 0;">
-                    <Vue3Pagination
-                      :total="nonCarouselProducts.length"
-                      :per-page="itemsPerPage"
-                      v-model="currentPage"
-                      :max-pages-shown="5"
-                      :classes="{ wrapper: 'pagination-wrapper', item: 'pagination-item', active: 'pagination-active' }"
-                    />
-                  </div>
+                  <!-- Paginación eliminada para pestañas -->
                 </ion-grid>
               </section>
             </div>
@@ -605,7 +658,7 @@ const selectCategory = (categoryId: string) => {
 }
 
 const openCategoryMenu = async () => {
-  await menuController.open()
+  await menuController.open('categories-menu')
 }
 
 const closeCategoryMenu = async () => {
@@ -707,7 +760,7 @@ const categorySections = computed(() => {
     .filter((category) => category.id === store.selectedCategory)
     .map((category) => ({
       ...category,
-      items: nonCarouselProducts.value.filter((product: any) => product.category === category.id),
+      items: filteredProducts.value.filter((product: any) => product.category === category.id),
     }))
     .filter((section) => section.items.length > 0)
 })
@@ -897,15 +950,7 @@ const currentPage = ref(1)
   gap: 16px;
 }
 
-/* FAB de chat y acciones rápidas */
-.chat-fab {
-  display: none;
-  z-index: 1000;
-  margin-bottom: 16px;
-  margin-right: 16px;
-  align-items: center;
-  flex-direction: row;
-}
+
 
 .chat-fab-button {
   --background: #1a7f34;
@@ -1229,9 +1274,35 @@ ion-segment-button {
   margin-bottom: 0;
 }
 
-.product-card.compact-card {
-  margin-bottom: 0;
+@media (max-width: 424px) {
+  .main-toolbar {
+    --min-height: 64px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+
+  .brand-title {
+    font-size: 20px !important;
+  }
+
+  .logo-icon-box {
+    width: 40px;
+    height: 40px;
+  }
+
+  .login-btn {
+    font-size: 12px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+  }
 }
+
+
 
 /* Más separación para el grid de otros productos */
 .other-products-grid {
@@ -1245,6 +1316,7 @@ ion-segment-button {
 
 .other-products-col {
   margin-bottom: 0;
+  min-height: 480px;
 }
 
 .products-grid {
@@ -1465,9 +1537,6 @@ ion-segment-button {
   flex-direction: column;
 }
 
-.compact-card {
-  flex: 0 0 180px;
-}
 
 .product-card:hover {
   transform: translateY(-3px);
@@ -1475,10 +1544,11 @@ ion-segment-button {
 }
 
 .product-image {
-  height: 120px;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* cuadrado perfecto */
   object-fit: cover;
-  border-bottom: 1px solid #eef2f7;
 }
+
 
 .product-image-container {
   position: relative;
@@ -2042,9 +2112,24 @@ ion-fab-button {
   align-items: stretch;
   margin-bottom: 0;
 }
-.product-card.compact-card {
-  margin-bottom: 0;
+.product-card {
+  cursor: pointer;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e6ebf2;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.15);
+}
+
 /* ========== PAGINACIÓN ESTILO HORIZONTAL ========== */
 .pagination-bar {
   display: flex;
@@ -2090,4 +2175,13 @@ ion-fab-button {
   border-color: #1a7f34;
 }
 
+.mobile-only {
+  display: none;
+}
+@media (max-width: 767px) {
+  .mobile-only {
+    display: inline-flex !important;
+    margin-left: 8px;
+  }
+}
 </style>
