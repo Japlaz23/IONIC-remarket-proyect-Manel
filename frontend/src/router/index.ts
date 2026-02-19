@@ -1,17 +1,17 @@
 import { createRouter, createWebHashHistory } from '@ionic/vue-router'
 import { type RouteRecordRaw } from 'vue-router'
-import Tabs from '@/views/Tabs.vue'
+import Tabs from '../../../frontend-refactor/src/views/Tabs.vue'
 import Home from '@/views/Home.vue'
-import Search from '@/views/Search.vue'
-import Login from '@/views/Login.vue'
-import Favorites from '@/views/Favorites.vue'
-import Sell from '@/views/Sell.vue'
+import Search from '../../../frontend-refactor/src/views/Search.vue'
+import Login from '../../../frontend-refactor/src/views/Login.vue'
+import Favorites from '../../../frontend-refactor/src/views/Favorites.vue'
+import Sell from '../../../frontend-refactor/src/views/Sell.vue'
 import Chat from '@/views/Chat.vue'
-import ProfileCustomer from '@/views/ProfileCostumer.vue'
-import Purchases from '@/views/Purchases.vue'
-import Sales from '@/views/Sales.vue'
-import Settings from '@/views/Settings.vue'
-import PaymentCheck from '@/views/PaymentCheck.vue'
+import ProfileCustomer from '../../../frontend-refactor/src/views/ProfileCostumer.vue'
+import Purchases from '../../../frontend-refactor/src/views/Purchases.vue'
+import Sales from '../../../frontend-refactor/src/views/Sales.vue'
+import Settings from '../../../frontend-refactor/src/views/Settings.vue'
+import PaymentCheck from '../../../frontend-refactor/src/views/PaymentCheck.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -67,17 +67,17 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/register',
     name: 'Register',
-    component: () => import('@/views/Register.vue'),
+    component: () => import('../../../frontend-refactor/src/views/Register.vue'),
   },
   {
     path: '/restorepassword',
     name: 'RestorePassword',
-    component: () => import('@/views/RestorePassword.vue'),
+    component: () => import('../../../frontend-refactor/src/views/RestorePassword.vue'),
   },
   {
     path: '/product/:id',
     name: 'ProductDetail',
-    component: () => import('@/views/ProductDetail.vue'),
+    component: () => import('../../../frontend-refactor/src/views/ProductDetail.vue'),
   },
   {
     path: '/payment',
@@ -103,7 +103,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/chat/:id',
     name: 'ChatThread',
-    component: () => import('@/views/ChatConversation.vue'),
+    component: () => import('../../../frontend-refactor/src/views/ChatConversation.vue'),
   },
   {
     path: '/sales',

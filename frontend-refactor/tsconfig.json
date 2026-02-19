@@ -17,5 +17,11 @@
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": [
+    "src/components/layout/CategoryTabs.vue",
+    "src/components/layout/SectionHeader.vue",
+    "src/views/Chat.vue",
+    "src/views/Login.vue"
+  ]
 }
