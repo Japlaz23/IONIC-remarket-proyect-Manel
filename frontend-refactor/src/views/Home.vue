@@ -2,9 +2,9 @@
 <template>
 	<ion-page>
 		<ion-header>
-			<div class="bg-green-600 py-4 flex items-center justify-left px-4">
-				<h1 class="text-white text-2xl font-bold">Bienvenido a Remarket</h1>
-			</div>
+			<ion-toolbar >
+				<h1 class="text-black text-2xl font-bold">Bienvenido a Remarket</h1>
+			</ion-toolbar>
 		</ion-header>
 		<ion-content :fullscreen="true" class="bg-white">
 			<div class="max-w-2xl mx-auto p-4">
