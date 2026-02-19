@@ -1,0 +1,7 @@
+{
+  "name": "frontend-refactor",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}

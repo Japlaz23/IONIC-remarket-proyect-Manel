@@ -147,26 +147,21 @@
 
       <!-- Menú horizontal de categorías -->
       <div class="categories-toolbar">
-          <div class="menu-wrapper">          
-            <ion-button class="filters-button mobile-only" @click="openFiltersMenu">
-              <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
-              Filtros
-            </ion-button>
-          </div>
+        <div class="header-queue">
           <ion-button class="menu-button" @click="openCategoryMenu">
             <ion-icon :icon="menuOutline"></ion-icon>
             <span>Todas las categorías</span>
           </ion-button>
-        </div>
-        <div class="categories-scroll">
-          <div
-            v-for="category in categories"
-            :key="category.id"
-            @click="selectCategory(category.id)"
-            :class="['category-item', { active: selectedCategory === category.id }]"
-          >
-            {{ category.name }}
-
+          <div class="categories-scroll">
+            <div
+              v-for="category in categories"
+              :key="category.id"
+              @click="selectCategory(category.id)"
+              :class="['category-item', { active: selectedCategory === category.id }]"
+            >
+              {{ category.name }}
+            </div>
+          </div>
         </div>
       </div>
     </ion-header>
@@ -923,6 +918,46 @@ const currentPage = ref(1)
 
 <!-- ========== ESTILOS PRINCIPALES ========== -->
 <style scoped>
+/* Header queue layout fix */
+.header-queue {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.categories-toolbar {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+}
+
+.filters-button {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.filters-button ion-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+.menu-button {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.menu-button ion-icon {
+  font-size: 20px;
+}
 /* ==================== HEADER STYLES ==================== */
 
 .header-container {
@@ -1095,10 +1130,10 @@ const currentPage = ref(1)
 /* Action Buttons */
 .action-buttons {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 0 0 auto;
+  align-items: stretch;
+  gap: 0;
 }
+
 
 .login-btn {
   --padding-start: 16px;
