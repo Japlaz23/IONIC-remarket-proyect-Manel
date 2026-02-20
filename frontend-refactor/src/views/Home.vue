@@ -321,4 +321,3 @@ ion-toolbar {
   --ion-color-base: transparent;
 }
 </style>
-
