@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#eef2ff"/>
+  <rect x="120" y="150" width="960" height="500" rx="40" fill="#1a7f34" opacity="0.1"/>
+  <text x="120" y="200" font-family="Arial, sans-serif" font-size="42" fill="#0f172a">MacBook Air M2</text>
+  <text x="120" y="260" font-family="Arial, sans-serif" font-size="22" fill="#64748b">Vista teclado</text>
+</svg>

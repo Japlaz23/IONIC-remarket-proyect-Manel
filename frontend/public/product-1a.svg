@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#e6f4ea"/>
+  <rect x="80" y="120" width="1040" height="560" rx="40" fill="#1a7f34" opacity="0.08"/>
+  <text x="90" y="160" font-family="Arial, sans-serif" font-size="42" fill="#0f172a">iPhone 13 Pro</text>
+  <text x="90" y="220" font-family="Arial, sans-serif" font-size="22" fill="#64748b">Vista frontal</text>
+</svg>
