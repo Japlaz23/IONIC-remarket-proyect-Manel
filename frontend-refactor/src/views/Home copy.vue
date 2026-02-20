@@ -152,18 +152,6 @@
           </template>
         </ion-slides>
       </section>
-
-      <!-- Prueba de stores: mostrar datos reactivos -->
-      <section class="w-full max-w-5xl mx-auto py-2 px-2">
-        <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
-          <h3 class="font-semibold text-green-900 mb-2">Debug Stores:</h3>
-          <div class="text-sm text-gray-700">
-            <div><b>Productos en store:</b> {{ productStore.products?.length ?? 0 }}</div>
-            <div><b>Favoritos en store:</b> {{ favoriteStore.favorites?.length ?? 0 }}</div>
-            <div><b>Chats en store:</b> {{ chatStore.chats?.length ?? 0 }}</div>
-          </div>
-        </div>
-      </section>
       <!-- Aquí va el resto del contenido principal de la página -->
     </ion-content>
   </ion-page>
@@ -248,23 +236,7 @@ const categories = [
   { id: 8, name: 'Automotriz' },
 ]
 
-
-import { ref, onMounted } from 'vue'
-import { useProductStore } from '../stores/productStore'
-import { useFavoriteStore } from '../stores/favoriteStore'
-import { useChatStore } from '../stores/chatStore'
-
-const productStore = useProductStore()
-const favoriteStore = useFavoriteStore()
-const chatStore = useChatStore()
-
-onMounted(() => {
-  // Si el store tiene método para cargar productos, invócalo
-  if (typeof productStore.fetchProducts === 'function') {
-    productStore.fetchProducts()
-  }
-  // Si los otros stores requieren carga, puedes hacer lo mismo aquí
-})
+import { ref } from 'vue'
 
 const filters = ref({
   priceRange: [0, 1000], // valor inicial: mínimo 0, máximo 1000
