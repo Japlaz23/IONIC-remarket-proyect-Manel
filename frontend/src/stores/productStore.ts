@@ -481,7 +481,7 @@ export const useProductStore = defineStore('product', () => {
       title: 'Guitarra acustica',
       price: 150,
       image: '/placeholder.svg',
-      category: 'Musica',
+      category: 'Música',
       seller: 'Manuel Herrera',
       sellerId: 31,
       condition: 'Usado - Buen estado',
