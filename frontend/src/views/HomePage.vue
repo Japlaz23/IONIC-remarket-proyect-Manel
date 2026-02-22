@@ -28,14 +28,25 @@
         </ion-content>
       </ion-menu>
 
+
       <!-- ===== MENU LATERAL (FILTROS) ===== -->
-      <FiltersMenu
-        :showFiltersLayout="showFiltersLayout"
-        :filters="filters"
-        :availableBrands="availableBrands"
-        @close="closeFiltersMenu"
-        @reset="resetFilters"
-      />
+      <ion-menu content-id="home-content" side="end" type="overlay" class="side-menu">
+        <ion-header>
+          <ion-toolbar class="bg-gradient-to-br from-white via-green-50 to-green-100 text-[#1a1a1a] border-b border-[#e8e8e8] rounded-t-xl shadow-md">
+            <div class="flex items-center justify-between w-full">
+              <ion-title class="text-lg font-bold tracking-tight">Filtros</ion-title>
+              <ion-buttons slot="end">
+                <ion-button class="px-2 text-gray-500 hover:bg-green-100 rounded-full transition" @click="closeFilterMenu">
+                  <ion-icon :icon="closeOutline"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </div>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="bg-gradient-to-br from-white via-green-50 to-green-100 rounded-b-xl shadow-lg">
+          <FiltersMenu />
+        </ion-content>
+      </ion-menu>
 
       <!-- ===== HEADER PRINCIPAL (TOPBAR) ===== -->
       <ion-header id="header-container" class="bg-white shadow-md z-10 border-b border-gray-200">  
@@ -109,6 +120,11 @@
       <ion-toolbar class="categories-toolbar bg-white border-b border-gray-200 px-0 py-0">
         <ion-buttons slot="start" class="menu-wrapper">
           <ion-button class="menu-button" @click="openCategoryMenu">
+                      <ion-button class="menu-button ml-2" @click="openFilterMenu">
+                        <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
+                        <span>Filtros</span>
+                      </ion-button>
+
             <ion-icon :icon="menuOutline" slot="start"></ion-icon>
             <span>Todas las categorías</span>
           </ion-button>
@@ -287,9 +303,9 @@ const isChatFabOpen = ref(false);
 function toggleChatFab() {
   isChatFabOpen.value = !isChatFabOpen.value;
 }
-import { useProductStore } from '../stores/productStore'
+import { useProductStore } from '@/stores/productStore'
 // import { useFavoriteStore } from '../stores/favoriteStore'
-import { useChatStore } from '../stores/chatStore'
+import { useChatStore } from '@/stores/chatStore'
 
 const productStore = useProductStore()
 // const favoriteStore = useFavoriteStore()
@@ -303,11 +319,7 @@ onMounted(() => {
   // Si los otros stores requieren carga, puedes hacer lo mismo aquí
 })
 
-const filters = ref({
-  priceRange: [0, 1000], // valor inicial: mínimo 0, máximo 1000
-  // ...otros filtros
-})
-import FiltersMenu from '../components/FiltersMenu.vue'
+import FiltersMenu from '@/components/menus/menuFilters.vue'
 
 // Estado para controlar el menú lateral de categorías
 //const categoryMenu = ref(null)
@@ -346,6 +358,22 @@ const unreadCount = computed(() => chatStore.unreadCount || 0);
 // Acción para FAB de publicar
 function goToSellFromFab() {
   router.push({ name: 'Sell' });
+}
+
+
+import { funnelOutline } from 'ionicons/icons'
+function openFilterMenu() {
+  const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]');
+  if (menu && typeof menu.open === 'function') {
+    menu.open();
+  }
+}
+
+function closeFilterMenu() {
+  const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]');
+  if (menu && typeof menu.close === 'function') {
+    menu.close();
+  }
 }
 </script>
 
