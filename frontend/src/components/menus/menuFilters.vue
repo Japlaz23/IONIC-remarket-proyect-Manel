@@ -10,15 +10,24 @@
 			</ion-select>
 		</ion-item>
 		<ion-item>
-			<ion-label>Precio máximo</ion-label>
+			<ion-label>Rango de precio</ion-label>
 			<ion-range
-			v-model.number="maxPrice"
-			:min="0"
-			:max="1000"
-			:step="10"
+				v-model="priceRange"
+				:min="0"
+				:max="1000"
+				:step="10"
+				dual-knobs
 			>
-				<ion-label slot="end">{{ maxPrice }}€</ion-label>
+				<ion-label slot="start">{{ priceRange[0] }}€</ion-label>
+				<ion-label slot="end">{{ priceRange[1] }}€</ion-label>
 			</ion-range>
+		</ion-item>
+		<ion-item>
+			<ion-label>Estado</ion-label>
+			<ion-select v-model="selectedCondition" placeholder="Selecciona estado">
+				<ion-select-option value="Nuevo">Nuevo</ion-select-option>
+				<ion-select-option value="Usado">Usado</ion-select-option>
+			</ion-select>
 		</ion-item>
 		<ion-item>
 			<ion-label>Solo disponibles</ion-label>
@@ -40,14 +49,10 @@ const categories = ref([
 	'Libros',
 ]);
 const selectedCategory = ref('');
-const maxPrice = ref(500);
+const priceRange = ref([0, 1000]);
+const selectedCondition = ref('');
 const onlyAvailable = ref(false);
 
-
-function applyFilters() {
-	// Aquí puedes emitir un evento o manejar los filtros
-	// Ejemplo: console.log(selectedCategory.value, maxPrice.value, onlyAvailable.value);
-}
 </script>
 
 <style scoped>
