@@ -323,10 +323,10 @@ function selectCategory(name) {
   selectedCategory.value = name
 }
 
-function openFilterMenu() {
-  const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]')
-  if (menu && typeof menu.open === 'function') menu.open()
-}
+// function openFilterMenu() {
+//   const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]')
+//   if (menu && typeof menu.open === 'function') menu.open()
+// }
 
 // Navegación
 function goToProductDetail(id) {
