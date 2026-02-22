@@ -11,7 +11,12 @@
 		</ion-item>
 		<ion-item>
 			<ion-label>Precio máximo</ion-label>
-			<ion-range v-model="maxPrice" :min="0" :max="1000" step="10">
+			<ion-range
+			v-model.number="maxPrice"
+			:min="0"
+			:max="1000"
+			:step="10"
+			>
 				<ion-label slot="end">{{ maxPrice }}€</ion-label>
 			</ion-range>
 		</ion-item>
@@ -37,6 +42,7 @@ const categories = ref([
 const selectedCategory = ref('');
 const maxPrice = ref(500);
 const onlyAvailable = ref(false);
+
 
 function applyFilters() {
 	// Aquí puedes emitir un evento o manejar los filtros
