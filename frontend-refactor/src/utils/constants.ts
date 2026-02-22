@@ -1,4 +1,4 @@
-export const CATEGORIES = [
+export const categories = [
   { id: 'Electrónica', name: 'Electrónica' },
   { id: 'Vehículos', name: 'Vehículos' },
   { id: 'Moda', name: 'Moda' },

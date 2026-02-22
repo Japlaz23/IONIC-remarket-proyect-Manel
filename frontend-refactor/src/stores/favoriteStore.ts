@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useProductStore } from './productStore'
+import { useProductStore } from './productStore.js'
 
 export const useFavoriteStore = defineStore('favorite', () => {
   const favoriteIds = ref<number[]>([])

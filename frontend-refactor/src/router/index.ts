@@ -3,6 +3,21 @@ import { RouteRecordRaw } from 'vue-router';
 
 const routes: Array<RouteRecordRaw> = [
   {
+    path: '/favorites',
+    name: 'Favorites',
+    component: () => import('../views/Favorites.vue')
+  },
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: () => import('../views/Cart.vue')
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('../views/Settings.vue')
+  },
+  {
     path: '/',
     redirect: '/home'
   },
@@ -26,11 +41,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'RestorePassword',
     component: () => import('../views/RestorePassword.vue')
   },
-  // {
-  //   path: '/product/:id',
-  //   name: 'ProductDetail',
-  //   component: () => import('../views/ProductDetail.vue')
-  // },
+  {
+    path: '/product/:id',
+    name: 'ProductDetail',
+    component: () => import('../views/ProductDetail.vue')
+  },
   // {
   //   path: '/favorites',
   //   name: 'Favorites',
@@ -81,11 +96,11 @@ const routes: Array<RouteRecordRaw> = [
   //   name: 'Settings',
   //   component: () => import('../views/Settings.vue')
   // },
-  // {
-  //   path: '/tabs',
-  //   name: 'Tabs',
-  //   component: () => import('../views/Tabs.vue')
-  // },
+  {
+    path: '/tabs',
+    name: 'Tabs',
+    component: () => import('../views/Tabs.vue')
+  },
 ]
 
 const router = createRouter({

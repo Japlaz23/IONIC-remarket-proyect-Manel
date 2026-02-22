@@ -1,30 +1,43 @@
+// Estado para categoría seleccionada
+const selectedCategory = ref(categories[0]?.id || null);
+function selectCategory(id) {
+  selectedCategory.value = id;
+}
+
+// Estado para contador de mensajes no leídos
+const unreadCount = computed(() => chatStore.unreadCount || 0);
+
+// Acción para FAB de publicar
+function goToSellFromFab() {
+  router.push({ name: 'Sell' });
+}
 <template>
   <ion-page>
     <!-- ==================== HEADER ==================== -->
       <!-- ===== MENU LATERAL (CATEGORÍAS) ===== -->
       <ion-menu content-id="home-content" type="overlay" class="side-menu">
-      <ion-header>
-        <ion-toolbar class="bg-white text-[#1a1a1a] border-b border-[#e8e8e8]">
-          <div class="flex items-center justify-between w-full">
-            <ion-title class="text-lg">Todas las categorías</ion-title>
-            <ion-buttons slot="end">
-              <ion-button class="px-2 text-gray-500" @click="closeCategoryMenu">
-                <ion-icon :icon="closeOutline"></ion-icon>
-              </ion-button>
-            </ion-buttons>
-          </div>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="bg-white">
-        <ion-list class="p-0 flex flex-col">
-          <ion-item
-            v-for="category in categories"
-            :key="category.id"
-            class="px-4 py-[14px] text-sm text-[#333] cursor-pointer border-b border-[#f0f0f0] transition-colors duration-200 hover:bg-gray-100/80">
-            <ion-label>{{ category.name }}</ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-content>
+        <ion-header>
+          <ion-toolbar class="bg-gradient-to-br from-white via-green-50 to-green-100 text-[#1a1a1a] border-b border-[#e8e8e8] rounded-t-xl shadow-md">
+            <div class="flex items-center justify-between w-full">
+              <ion-title class="text-lg font-bold tracking-tight">Todas las categorías</ion-title>
+              <ion-buttons slot="end">
+                <ion-button class="px-2 text-gray-500 hover:bg-green-100 rounded-full transition" @click="closeCategoryMenu">
+                  <ion-icon :icon="closeOutline"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </div>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="bg-gradient-to-br from-white via-green-50 to-green-100 rounded-b-xl shadow-lg">
+          <ion-list class="p-0 flex flex-col">
+            <ion-item
+              v-for="category in categories"
+              :key="category.id"
+              class="px-4 py-[14px] text-base font-semibold text-[#1a7f34] cursor-pointer border-b border-[#e0e0e0] transition-colors duration-200 hover:bg-green-100/80 rounded-lg">
+              <ion-label>{{ category.name }}</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-content>
       </ion-menu>
 
       <!-- ===== MENU LATERAL (FILTROS) ===== -->
@@ -36,18 +49,19 @@
         @reset="resetFilters"
       />
 
+      <!-- ===== HEADER PRINCIPAL (TOPBAR) ===== -->
       <ion-header id="header-container" class="bg-white shadow-md z-10 border-b border-gray-200">  
       <!-- ===== HEADER PRINCIPAL (TOPBAR) ===== -->
       <ion-toolbar class="main-toolbar bg-white border-transparent py-2 px-2 sm:px-4 min-h-[64px] backdrop-blur-md shadow-sm">
-        <div class="header-content flex flex-col sm:flex-row items-center justify-between w-full gap-2 sm:gap-6 px-2 sm:px-6 py-1">
-          <!-- Logo y título -->
-          <div class="flex items-center gap-2 min-w-[100px] cursor-pointer select-none" @click="goToHomeWithCarousel">
-            <ion-img src="/logo.png" class="h-9 w-9 sm:h-12 sm:w-12 border-2 border-green-300 rounded-xl shadow bg-white transition-transform hover:scale-105" alt="Logo Remarket"></ion-img>
-            <h1 class="hidden sm:inline text-green-900 text-lg sm:text-2xl font-extrabold whitespace-nowrap drop-shadow tracking-tight">Remarket</h1>
+        <div class="header-content flex flex-row items-center justify-between w-full gap-2 sm:gap-6 px-2 sm:px-6 py-1">
+          <!-- Logo y título alineados a la izquierda -->
+          <div class="flex items-center gap-3 min-w-[120px] cursor-pointer select-none mr-auto" @click="goToHomeWithCarousel">
+            <ion-img src="/logo.png" class="h-14 w-14 sm:h-20 sm:w-20 border-2 border-green-300 rounded-xl shadow bg-white transition-transform hover:scale-105" alt="Logo Remarket"></ion-img>
+            <h1 class="text-green-900 text-xl sm:text-3xl font-extrabold whitespace-nowrap drop-shadow tracking-tight flex items-center">Remarket</h1>
           </div>
 
           <!-- Searchbar centrada -->
-          <div class="flex-1 flex justify-center w-full sm:w-auto min-w-[100px] max-w-xs sm:max-w-md order-3 sm:order-none">
+          <div class="hidden sm:flex flex-1 justify-center w-full sm:w-auto min-w-[100px] max-w-xs sm:max-w-md lg:max-w-xl xl:max-w-2xl order-3 sm:order-none">
             <ion-searchbar
               class="custom-searchbar w-full"
               placeholder="Buscar productos..."
@@ -57,11 +71,11 @@
           </div>
 
           <!-- Iconos de acción -->
-          <ion-buttons class="action-buttons flex gap-2 sm:gap-4 items-center ml-0 sm:ml-1 order-2 sm:order-none">
+          <ion-buttons class="action-buttons flex gap-1 sm:gap-2 items-center ml-auto order-2 sm:order-none pr-1 sm:pr-2">
             <ion-button 
               v-if="!isLoggedIn" 
               @click="goToLogin" 
-              class="login-btn px-4 py-1 text-sm font-bold bg-gradient-to-r from-green-600 to-green-400 text-white hover:from-green-700 hover:to-green-500 transition-all duration-200 rounded-full shadow-lg border border-green-700/20"
+              class="login-btn hidden sm:inline-flex px-4 py-1 text-sm font-bold bg-gradient-to-r from-green-600 to-green-400 text-white hover:from-green-700 hover:to-green-500 transition-all duration-200 rounded-full shadow-lg border border-green-700/20"
               aria-label="Iniciar sesión"
             >
               <span>Iniciar sesión</span>
@@ -72,7 +86,7 @@
               aria-label="Compras"
               @click="goToPurchases"
             >
-              <ion-icon :icon="cart" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-green-600 text-gray-500"></ion-icon>
+              <ion-icon :icon="cart" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-green-600 text-gray-500 text-2xl sm:text-3xl md:text-4xl"></ion-icon>
             </ion-button>
             <ion-button
               class="icon-btn search-btn group md:hidden"
@@ -80,7 +94,7 @@
               aria-label="Buscar"
               @click="goToSearch"
             >
-              <ion-icon :icon="searchOutline" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-green-600 text-gray-500"></ion-icon>
+              <ion-icon :icon="searchOutline" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-green-600 text-gray-500 text-2xl sm:text-3xl md:text-4xl"></ion-icon>
             </ion-button>
             <ion-button 
               v-if="isLoggedIn" 
@@ -89,7 +103,7 @@
               title="Mi perfil"
               aria-label="Mi perfil"
             >
-              <ion-icon :icon="personCircleOutline" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-green-600 text-gray-500"></ion-icon>
+              <ion-icon :icon="personCircleOutline" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-green-600 text-gray-500 text-2xl sm:text-3xl md:text-4xl"></ion-icon>
             </ion-button>
             <ion-button 
               @click="goToFavorites"
@@ -97,7 +111,7 @@
               title="Favoritos"
               aria-label="Favoritos"
             >
-              <ion-icon :icon="heart" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-red-500 text-gray-500"></ion-icon>
+              <ion-icon :icon="heart" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-red-500 text-gray-500 text-2xl sm:text-3xl md:text-4xl"></ion-icon>
             </ion-button>
           </ion-buttons>
         </div>
@@ -123,49 +137,92 @@
           </ion-segment-button>
         </ion-segment>
       </ion-toolbar>
-
-      <!-- ==================Categorias Menu ==================== -->
-
-      
       </ion-header>
 
     <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
     <ion-content :fullscreen="true" class="bg-white">
       <!-- Carrusel de productos destacados -->
-      <section class="w-full max-w-5xl mx-auto py-4 px-2">
-        <h2 class="text-xl font-bold mb-4 text-gray-800 text-center tracking-tight">Destacados</h2>
-        <ion-slides :options="carouselOptions" class="rounded-2xl shadow-lg bg-gradient-to-br from-white via-gray-50 to-green-50 p-2">
-          <template v-for="product in featuredProducts" :key="product.id">
-            <div class="swiper-slide flex justify-center items-center">
-              <ion-card class="max-w-xs w-full mx-auto rounded-2xl overflow-hidden shadow-md border border-green-100 hover:shadow-xl transition-shadow duration-300 bg-white">
-                <ion-img :src="product.image" :alt="product.title" class="h-44 object-cover rounded-t-2xl border-b border-green-100"></ion-img>
-                <ion-card-header class="px-4 pt-3 pb-1">
-                  <ion-card-title class="truncate text-lg font-semibold text-green-900">{{ product.title }}</ion-card-title>
-                </ion-card-header>
-                <ion-card-content class="px-4 pb-4 pt-2">
-                  <div class="flex items-center justify-between">
-                    <span class="text-xl font-bold text-green-700">{{ product.price }} €</span>
-                  </div>
-                </ion-card-content>
-              </ion-card>
-            </div>
-          </template>
-        </ion-slides>
-      </section>
 
-      <!-- Prueba de stores: mostrar datos reactivos -->
-      <section class="w-full max-w-5xl mx-auto py-2 px-2">
-        <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
-          <h3 class="font-semibold text-green-900 mb-2">Debug Stores:</h3>
-          <div class="text-sm text-gray-700">
-            <div><b>Productos en store:</b> {{ productStore.products?.length ?? 0 }}</div>
-            <div><b>Favoritos en store:</b> {{ favoriteStore.favorites?.length ?? 0 }}</div>
-            <div><b>Chats en store:</b> {{ chatStore.chats?.length ?? 0 }}</div>
+      <swiper
+        :slidesPerView="1.2"
+        :breakpoints="{ 640: { slidesPerView: 2.2 }, 768: { slidesPerView: 3.2 }, 1024: { slidesPerView: 5 } }"
+        :spaceBetween="10"
+        :loop="true"
+        :pagination="{ clickable: true }"
+        :navigation="true"
+        :modules="modules"
+        class="featured-swiper my-4 px-1 sm:px-4"
+        style="padding-bottom: 40px;"
+      >
+        <swiper-slide v-for="product in featuredProducts" :key="product.id">
+          <ion-card class="max-w-xs w-full mx-auto rounded-2xl overflow-hidden shadow-md border border-green-100 hover:shadow-xl transition-shadow duration-300 bg-white">
+            <ion-img :src="product.image" :alt="product.title" class="h-44 object-cover rounded-t-2xl border-b border-green-100"></ion-img>
+            <ion-card-header class="px-4 pt-3 pb-1">
+              <ion-card-title class="truncate text-lg font-semibold text-green-900">{{ product.title }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="px-4 pb-4 pt-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold text-green-700">{{ product.price }} €</span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </swiper-slide>
+        <div class="swiper-pagination" style="margin-top: 24px;"></div>
+      </swiper>
+
+
+      <!-- Sección de todos los productos -->
+      <section class="w-full max-w-5xl mx-auto py-4 px-1 sm:px-2">
+        <h2 class="text-lg sm:text-xl font-bold mb-4 text-gray-800 text-center tracking-tight">Todos los productos</h2>
+        <div class="grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-6">
+          <div v-for="product in allProducts" :key="product.id" class="flex justify-center items-center">
+            <ion-card
+              class="w-full max-w-[95vw] sm:max-w-xs mx-auto rounded-2xl overflow-hidden shadow-md border border-green-100 hover:shadow-xl transition-shadow duration-300 bg-white cursor-pointer"
+              @click="goToProductDetail(product.id)"
+            >
+              <ion-img :src="product.image" :alt="product.title" class="h-28 sm:h-44 object-cover rounded-t-2xl border-b border-green-100"></ion-img>
+              <ion-card-header class="px-1 sm:px-4 pt-2 pb-1">
+                <ion-card-title class="truncate text-sm sm:text-lg font-semibold text-green-900">{{ product.title }}</ion-card-title>
+              </ion-card-header>
+              <ion-card-content class="px-1 sm:px-4 pb-3 pt-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-base sm:text-xl font-bold text-green-700">{{ product.price }} €</span>
+                </div>
+              </ion-card-content>
+            </ion-card>
           </div>
+
+
         </div>
       </section>
+
       <!-- Aquí va el resto del contenido principal de la página -->
     </ion-content>
+
+
+    <!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->
+    <ion-fab
+      slot="fixed"
+      horizontal="start"
+      vertical="bottom"
+    >
+      <ion-fab-button class="chat-fab-button" @click="toggleChatFab">
+        <ion-icon :icon="chevronForwardCircle"></ion-icon>
+        <ion-badge v-if="unreadCount > 0" class="fab-badge">{{ unreadCount }}</ion-badge>
+      </ion-fab-button>
+      <ion-fab-list side="end" :class="{'fab-list-active': isChatFabOpen}">
+        <ion-fab-button class="chat-fab-item" title="Publicar" @click="goToSellFromFab">
+          <ion-icon :icon="add"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button class="chat-fab-item chat-item" title="Vendedor" @click="goToChatList('seller')">
+          <ion-icon :icon="chatbubblesOutline"></ion-icon>
+          <ion-badge v-if="unreadCount > 0" class="fab-list-badge">{{ unreadCount }}</ion-badge>
+        </ion-fab-button>
+        <ion-fab-button class="chat-fab-item" title="Mensajes" @click="goToChatList('support')">
+          <ion-icon :icon="storefrontOutline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
   </ion-page>
 </template>
 
@@ -191,65 +248,57 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-} from '@ionic/vue'
-// Productos destacados de ejemplo
-const featuredProducts = [
-  {
-    id: 101,
-    title: 'iPhone 14 Pro Max',
-    price: 999,
-    image: 'https://dummyimage.com/400x300/1a7f34/fff&text=iPhone+14+Pro+Max',
-  },
-  {
-    id: 102,
-    title: 'Zapatillas Nike Air',
-    price: 120,
-    image: 'https://dummyimage.com/400x300/222/fff&text=Nike+Air',
-  },
-  {
-    id: 103,
-    title: 'Robot Aspirador Xiaomi',
-    price: 180,
-    image: 'https://dummyimage.com/400x300/444/fff&text=Robot+Xiaomi',
-  },
-]
+  IonFab,
+  IonFabButton,
+  IonFabList,
+  IonBadge
 
-const carouselOptions = {
-  slidesPerView: 1.2,
-  spaceBetween: 16,
-  centeredSlides: true,
-  loop: true,
-  autoplay: { delay: 3500, disableOnInteraction: false },
-  breakpoints: {
-    640: { slidesPerView: 2.2 },
-    1024: { slidesPerView: 3.2 },
-  },
-}
+} from '@ionic/vue'
+
+// Importar productStore para mostrar productos destacados
+const featuredProducts = computed(() => productStore.products.slice(0, 10)) // Mostrar solo los primeros 10 productos como destacados
+const allProducts = computed(() => productStore.products) // Todos los productos para otras secciones
+
 import { 
   personCircleOutline,
   heart,
   cart,
   closeOutline,
-  menuOutline
+  menuOutline,
+  chatbubblesOutline,
+  searchOutline,
+  chevronForwardCircle,
+  add,
+  storefrontOutline
 } from 'ionicons/icons'
 
 // Importar estilos de Swiper para que IonSlides funcione correctamente
-import 'swiper/css';
+  // Import Swiper Vue.js components
+  import { Swiper, SwiperSlide } from 'swiper/vue';
+
+  // Import Swiper styles
+  import 'swiper/css';
+
+  import 'swiper/css/pagination';
+  import 'swiper/css/navigation';
+
+  // import required modules
+  import { Pagination, Navigation } from 'swiper/modules';
+
+  // Register Swiper components and modules for use in template
+  const modules = [Pagination, Navigation];
 
 // Datos de ejemplo para categorías
-const categories = [
-  { id: 1, name: 'Electrónica' },
-  { id: 2, name: 'Ropa' },
-  { id: 3, name: 'Hogar' },
-  { id: 4, name: 'Deportes' },
-  { id: 5, name: 'Juguetes' },
-  { id: 6, name: 'Libros' },
-  { id: 7, name: 'Belleza' },
-  { id: 8, name: 'Automotriz' },
-]
+import { categories } from '../utils/constants'
 
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+
+const isChatFabOpen = ref(false);
+
+function toggleChatFab() {
+  isChatFabOpen.value = !isChatFabOpen.value;
+}
 import { useProductStore } from '../stores/productStore'
 import { useFavoriteStore } from '../stores/favoriteStore'
 import { useChatStore } from '../stores/chatStore'
@@ -276,10 +325,25 @@ import FiltersMenu from '../components/FiltersMenu.vue'
 const categoryMenu = ref(null)
 
 function openCategoryMenu() {
-  const menu = document.querySelector('ion-menu[content-id="home-content"]')
+  const menu = document.querySelector('ion-menu[content-id="home-content"]');
   if (menu && typeof menu.open === 'function') {
-    menu.open()
+    menu.open();
   }
+}
+
+function closeCategoryMenu() {
+  const menu = document.querySelector('ion-menu[content-id="home-content"]');
+  if (menu && typeof menu.close === 'function') {
+    menu.close();
+  }
+}
+
+// ...existing code...
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+function goToProductDetail(id) {
+  router.push({ name: 'ProductDetail', params: { id } })
 }
 </script>
 
@@ -328,9 +392,21 @@ ion-toolbar {
 }
 
 /* Iconos de acción */
+
 .header-container ion-icon {
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
+  font-size: 1.5rem !important;
+}
+@media (min-width: 640px) {
+  .header-container ion-icon {
+    font-size: 2rem !important;
+  }
+}
+@media (min-width: 768px) {
+  .header-container ion-icon {
+    font-size: 2.5rem !important;
+  }
 }
 
 .header-container ion-icon:hover {
@@ -397,11 +473,23 @@ ion-toolbar {
 .main-toolbar {
   --background: #ffffff;
   --border-color: transparent;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --min-height: 70px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --min-height: 56px;
   --ion-color-base: transparent;
 }
+
+@media (min-width: 640px) {
+  .main-toolbar {
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 70px;
+  }
+}
+
+
 </style>

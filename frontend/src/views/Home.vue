@@ -462,20 +462,7 @@
           </div>
         </template>
       </div>
-
-      <ion-infinite-scroll
-        v-if="hasMore"
-        ref="infiniteScrollRef"
-        threshold="120px"
-        @ionInfinite="ionInfinite"
-      >
-        <ion-infinite-scroll-content
-          loading-spinner="bubbles"
-          loading-text="Cargando mas productos..."
-        ></ion-infinite-scroll-content>
-      </ion-infinite-scroll>
     </ion-content>
-
     <!-- Bottom FAB -->
     <ion-fab
       slot="fixed"
@@ -526,8 +513,6 @@ import {
   IonCardTitle,
   IonCardContent,
   IonImg,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
   IonBadge,
   alertController,
   onIonViewWillEnter,
@@ -1001,18 +986,6 @@ const onCarouselTouchEnd = (sectionId: string, itemsCount: number) => {
   state.touchDeltaX = 0
 }
 
-const ionInfinite = async (event: CustomEvent) => {
-  if (visibleCount.value < filteredProducts.value.length) {
-    visibleCount.value = Math.min(visibleCount.value + itemsPerPage, filteredProducts.value.length)
-  }
-
-  await nextTick()
-  const target = event.target as HTMLIonInfiniteScrollElement | null
-  target?.complete()
-  if (!hasMore.value && target) {
-    target.disabled = true
-  }
-}
 
 const resetVisibleCount = async () => {
   visibleCount.value = itemsPerPage

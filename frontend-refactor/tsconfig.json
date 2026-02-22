@@ -4,7 +4,6 @@
     "useDefineForClassFields": true,
     "module": "NodeNext",
     "moduleResolution": "nodenext",
-    "ignoreDeprecations": "6.0",
     "strict": true,
     "jsx": "preserve",
     "resolveJsonModule": true,
@@ -17,7 +16,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "../frontend/src/views/Tabs.vue"],
   "references": [{ "path": "./tsconfig.node.json" }],
   "exclude": [
     "src/components/layout/CategoryTabs.vue",

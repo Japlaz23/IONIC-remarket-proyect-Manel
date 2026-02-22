@@ -18,7 +18,7 @@ import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 import './assets/styles/main.css';
 
-
+import 'swiper/css';
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
@@ -32,7 +32,8 @@ import './assets/styles/main.css';
 import { createApp } from 'vue';
 import App from './App.vue';
 import { IonicVue } from '@ionic/vue';
-import router from './router';
+
+ import  router from './router/index.js'
 import { createPinia } from 'pinia';
 
 /* Theme variables */

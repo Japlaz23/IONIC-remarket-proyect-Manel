@@ -534,6 +534,10 @@ export const useProductStore = defineStore('product', () => {
     })
   }
 
+  const getProductsBySeller = (sellerId: number): Product[] => {
+    return products.value.filter((p) => p.sellerId === sellerId);
+  };
+
   return {
     products,
     favorites,
@@ -543,5 +547,6 @@ export const useProductStore = defineStore('product', () => {
     getProductById,
     toggleFavorite,
     addProduct,
+    getProductsBySeller,
   }
 })
