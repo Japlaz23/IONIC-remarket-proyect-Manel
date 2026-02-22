@@ -120,14 +120,13 @@
       <ion-toolbar class="categories-toolbar bg-white border-b border-gray-200 px-0 py-0">
         <ion-buttons slot="start" class="menu-wrapper">
           <ion-button class="menu-button" @click="openCategoryMenu">
-                      <ion-button class="menu-button ml-2" @click="openFilterMenu">
-                        <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
-                        <span>Filtros</span>
-                      </ion-button>
-
             <ion-icon :icon="menuOutline" slot="start"></ion-icon>
             <span>Todas las categorías</span>
           </ion-button>
+          <!-- <ion-button class="menu-button ml-2 hidden md:inline-flex" @click="openFilterMenu">
+            <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
+            <span>Filtros</span>
+          </ion-button> -->
         </ion-buttons>
         <ion-segment :value="selectedCategory" class="categories-scroll flex-nowrap overflow-x-auto" scrollable>
           <ion-segment-button
@@ -360,14 +359,6 @@ function goToSellFromFab() {
   router.push({ name: 'Sell' });
 }
 
-
-import { funnelOutline } from 'ionicons/icons'
-function openFilterMenu() {
-  const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]');
-  if (menu && typeof menu.open === 'function') {
-    menu.open();
-  }
-}
 
 function closeFilterMenu() {
   const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]');
