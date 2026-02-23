@@ -57,15 +57,7 @@
             <h1 class="text-green-900 text-xl sm:text-3xl font-extrabold whitespace-nowrap drop-shadow tracking-tight flex items-center">Remarket</h1>
           </div>
 
-          <!-- Searchbar centrada -->
-          <div class="hidden sm:flex flex-1 justify-center w-full sm:w-auto min-w-[100px] max-w-xs sm:max-w-md lg:max-w-xl xl:max-w-2xl order-3 sm:order-none">
-            <ion-searchbar
-              class="custom-searchbar w-full"
-              placeholder="Buscar productos..."
-              show-cancel-button="focus"
-              aria-label="Buscar productos"
-            ></ion-searchbar>
-          </div>
+
 
           <!-- Iconos de acción -->
           <ion-buttons class="action-buttons flex gap-1 sm:gap-2 items-center ml-auto order-2 sm:order-none pr-1 sm:pr-2">
@@ -358,10 +350,6 @@ function goToChatList(type: string) {
 function goToSearch() {
   router.push({ name: 'Search' })
 }
-
-
-
-
 
 
 // ==================== FAVORITOS ====================

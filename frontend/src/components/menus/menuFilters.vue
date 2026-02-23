@@ -123,9 +123,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
-
-// import { defineEmits } from 'vue' // Removed to fix macro conflict
+// import { defineEmits } from 'vue'
 const emit = defineEmits(['apply-filters'])
 
 // Estados
@@ -174,29 +172,3 @@ function clearFilters() {
   applyFilters()
 }
 </script>
-
-<style scoped>
-input[type="number"],
-input[type="text"],
-select {
-  background-color: #fff;
-  color: #222;
-  border: 1px solid #d1d5db;
-  box-shadow: none;
-}
-
-input[type="number"]::placeholder,
-input[type="text"]::placeholder {
-  color: #888;
-  opacity: 1;
-}
-
-input[type="checkbox"] {
-  accent-color: #16a34a;
-}
-
-/* Botones condición y generales */
-button {
-  box-shadow: none;
-}
-</style>
