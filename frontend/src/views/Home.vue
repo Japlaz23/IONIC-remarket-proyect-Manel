@@ -14,6 +14,10 @@
     @resetFilters="resetFilters"
   />
 
+  <!-- ================= HEADER ================= -->
+  <ion-toolbar>
+
+  </ion-toolbar>
 
       <!-- Contenido Carrusell + grid-->
       
@@ -25,7 +29,24 @@
 
         <div v-else class="market-sections">
           <section v-if="!showFiltersLayout">
-            
+            <section v-for="section in carouselSections" :key="section.id" class="category-section">
+              <div class="section-header">
+                <h2>{{ section.name }}</h2>
+                <span>{{ section.items.length }} productos</span>
+              </div>
+
+              <div
+                class="product-carousel"
+                @touchstart.passive="onCarouselTouchStart($event, section.id)"
+                @touchmove.passive="onCarouselTouchMove($event, section.id)"
+                @touchend="onCarouselTouchEnd(section.id, section.items.length)"
+              >
+                <!-- Carousel content goes here -->
+
+                <Swiper
+                  :
+              </div>
+            </section>
           </section>
         </div>
 
@@ -314,9 +335,27 @@
 </template>
 
 <script setup lang="ts">
-// import Swiper from 'swiper'
+/* swipper */
+
+import { Swiper, SwiperSlide, useSwiper } from 'swiper/vue'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+
+import { Navigation, Pagination } from 'swiper/modules'
+
+/* Componentes */
 import FiltersMenu from '@/components/FiltersMenu.vue'
 import CategoryMenu from '@/components/CategoryMenu.vue'
+import { HOME_CATEGORIES, BRANDS_BY_CATEGORY } from '@/utils/constants'
+import { computed, ref, reactive, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { useProductStore } from '@/stores/productStore'
+import { useChatStore } from '@/stores/chatStore'
+import { useReviewStore } from '@/stores/reviewStore'
+import { useFavoriteStore } from '@/stores/favoriteStore'
+import { useRouter } from 'vue-router'
+
+/* Ionic & Vue */
 import {
   IonHeader,
   IonPage,
@@ -360,14 +399,8 @@ import {
   funnelOutline,
   heartOutline,
 } from 'ionicons/icons'
-import { useRouter } from 'vue-router'
+import { SwiperClass } from 'swiper/react'
 
-import { HOME_CATEGORIES, BRANDS_BY_CATEGORY } from '@/utils/constants'
-import { computed, ref, reactive, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
-import { useProductStore } from '@/stores/productStore'
-import { useChatStore } from '@/stores/chatStore'
-import { useReviewStore } from '@/stores/reviewStore'
-import { useFavoriteStore } from '@/stores/favoriteStore'
 
 const router = useRouter()
 const store = useProductStore()
