@@ -1,4 +1,3 @@
-
 <template>
   <ion-page>
     <!-- ==================== HEADER ==================== -->
@@ -265,6 +264,12 @@ function toggleChatFab() {
   isChatFabOpen.value = !isChatFabOpen.value
 }
 
+// Estado de login
+const isLoggedIn = computed(() => {
+  // Puedes ajustar la lógica según tu sistema de autenticación
+  return !!localStorage.getItem('token') || !!localStorage.getItem('user')
+})
+
 // Categoría seleccionada
 const selectedCategory = ref(categories[0]?.name || '')
 
@@ -293,32 +298,32 @@ const unreadCount = computed(() => {
 // Abrir/cerrar menús laterales
 function openCategoryMenu() {
   const menu = document.querySelector('ion-menu[content-id="home-content"]')
-  if (menu && typeof menu.open === 'function') menu.open()
+  if (menu && typeof (menu as any).open === 'function') (menu as any).open()
 }
 
 function closeCategoryMenu() {
   const menu = document.querySelector('ion-menu[content-id="home-content"]')
-  if (menu && typeof menu.close === 'function') menu.close()
+  if (menu && typeof (menu as any).close === 'function') (menu as any).close()
 }
 
 function closeFilterMenu() {
   const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]')
-  if (menu && typeof menu.close === 'function') menu.close()
+  if (menu && typeof (menu as any).close === 'function') (menu as any).close()
 }
 
 // Cambiar categoría
-function selectCategory(name) {
+function selectCategory(name: string) {
   selectedCategory.value = name
 }
 
 function openFilterMenu() {
-  const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]')
-  if (menu && typeof menu.open === 'function') menu.open()
+  const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]');
+  if (menu && typeof (menu as any).open === 'function') (menu as any).open();
 }
 
 // Navegación
-function goToProductDetail(id) {
-  router.push({ name: 'ProductDetail', params: { id } })
+function goToProductDetail(id: string | number) {
+  router.push({ name: 'ProductDetail', params: { id } });
 }
 
 function goToHomeWithCarousel() {
@@ -346,7 +351,7 @@ function goToSellFromFab() {
   router.push({ name: 'Sell' })
 }
 
-function goToChatList(type) {
+function goToChatList(type: string) {
   router.push({ name: 'ChatList', params: { type } })
 }
 
@@ -354,12 +359,7 @@ function goToSearch() {
   router.push({ name: 'Search' })
 }
 
-// ==================== ON MOUNT ====================
-onMounted(() => {
-  if (typeof productStore.fetchProducts === 'function') {
-    productStore.fetchProducts()
-  }
-})
+
 
 
 
