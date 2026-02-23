@@ -22,15 +22,12 @@
               v-for="category in categories"
               :key="category.name"
               @click="selectCategory(category.name)"
-              :class="selectedCategory === category.name ? 'bg-green-100 text-green-900' : 'text-[#1a7f34]'"
-            >
+              :class="selectedCategory === category.name ? 'bg-green-100 text-green-900' : 'text-[#1a7f34]'">
               <ion-label>{{ category.name }}</ion-label>
             </ion-item>
           </ion-list>
         </ion-content>
       </ion-menu>
-
-
       <!-- ===== MENU LATERAL (FILTROS) ===== -->
       <ion-menu content-id="home-content" side="end" type="overlay" class="side-menu">
         <ion-header>
@@ -77,24 +74,21 @@
               v-if="!isLoggedIn" 
               @click="goToLogin" 
               class="login-btn hidden sm:inline-flex px-4 py-1 text-sm font-bold bg-gradient-to-r from-green-600 to-green-400 text-white hover:from-green-700 hover:to-green-500 transition-all duration-200 rounded-full shadow-lg border border-green-700/20"
-              aria-label="Iniciar sesión"
-            >
+              aria-label="Iniciar sesión">
               <span>Iniciar sesión</span>
             </ion-button>
             <ion-button
               class="icon-btn purchases-btn group"
               title="Compras"
               aria-label="Compras"
-              @click="goToPurchases"
-            >
+              @click="goToPurchases">
               <ion-icon :icon="cart" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-green-600 text-gray-500 text-2xl sm:text-3xl md:text-4xl"></ion-icon>
             </ion-button>
             <ion-button
               class="icon-btn search-btn group md:hidden"
               title="Buscar"
               aria-label="Buscar"
-              @click="goToSearch"
-            >
+              @click="goToSearch">
               <ion-icon :icon="searchOutline" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-green-600 text-gray-500 text-2xl sm:text-3xl md:text-4xl"></ion-icon>
             </ion-button>
             <ion-button 
@@ -102,16 +96,14 @@
               @click="goToProfileCustumer"
               class="icon-btn profile-btn group"
               title="Mi perfil"
-              aria-label="Mi perfil"
-            >
+              aria-label="Mi perfil">
               <ion-icon :icon="personCircleOutline" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-green-600 text-gray-500 text-2xl sm:text-3xl md:text-4xl"></ion-icon>
             </ion-button>
             <ion-button 
               @click="goToFavorites"
               class="icon-btn favorites-btn group"
               title="Favoritos"
-              aria-label="Favoritos"
-            >
+              aria-label="Favoritos">
               <ion-icon :icon="heart" class="transition-transform duration-200 group-hover:scale-125 group-hover:text-red-500 text-gray-500 text-2xl sm:text-3xl md:text-4xl"></ion-icon>
             </ion-button>
           </ion-buttons>
@@ -132,8 +124,7 @@
             :key="category.name"
             :value="category.name"
             @click="selectCategory(category.name)"
-            :class="{ 'active': selectedCategory === category.name }"
-          >
+            :class="{ 'active': selectedCategory === category.name }">
             {{ category.name }}
           </ion-segment-button>
         </ion-segment>
@@ -143,7 +134,6 @@
     <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
     <ion-content :fullscreen="true" class="bg-white">
       <!-- Carrusel de productos destacados -->
-
       <swiper
         :slidesPerView="1.2"
         :breakpoints="{ 640: { slidesPerView: 2.2 }, 768: { slidesPerView: 3.2 }, 1024: { slidesPerView: 5 } }"
@@ -153,8 +143,7 @@
         :navigation="true"
         :modules="modules"
         class="featured-swiper my-4 px-1 sm:px-4"
-        style="padding-bottom: 40px;"
-      >
+        style="padding-bottom: 40px;">
         <swiper-slide v-for="product in featuredProducts" :key="product.id">
           <ion-card class="max-w-xs w-full mx-auto rounded-2xl overflow-hidden shadow-md border border-green-100 hover:shadow-xl transition-shadow duration-300 bg-white">
             <ion-img :src="product.image" :alt="product.title" class="h-44 object-cover rounded-t-2xl border-b border-green-100"></ion-img>
@@ -170,7 +159,6 @@
         </swiper-slide>
         <div class="swiper-pagination" style="margin-top: 24px;"></div>
       </swiper>
-
 
       <!-- Sección de todos los productos -->
       <section class="w-full max-w-5xl mx-auto py-4 px-1 sm:px-2">
@@ -201,10 +189,7 @@
           </div>
         </div>
       </section>
-
-      <!-- Aquí va el resto del contenido principal de la página -->
     </ion-content>
-
 
     <!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->
     <ion-fab
@@ -232,7 +217,7 @@
   </ion-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProductStore } from '@/stores/productStore'
@@ -298,7 +283,10 @@ const featuredProducts = computed(() => filteredProducts.value.slice(0, 10))
 const allProducts = computed(() => filteredProducts.value)
 
 // Mensajes no leídos
-const unreadCount = computed(() => chatStore.unreadCount || 0)
+const unreadCount = computed(() => {
+  if (!chatStore.chats || !Array.isArray(chatStore.chats)) return 0;
+  return chatStore.chats.reduce((sum, chat) => sum + (chat.unreadCount || 0), 0);
+})
 
 // ==================== FUNCIONES ====================
 
@@ -323,10 +311,10 @@ function selectCategory(name) {
   selectedCategory.value = name
 }
 
-// function openFilterMenu() {
-//   const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]')
-//   if (menu && typeof menu.open === 'function') menu.open()
-// }
+function openFilterMenu() {
+  const menu = document.querySelector('ion-menu[content-id="home-content"][side="end"]')
+  if (menu && typeof menu.open === 'function') menu.open()
+}
 
 // Navegación
 function goToProductDetail(id) {
@@ -350,8 +338,9 @@ function goToPurchases() {
 }
 
 function goToFavorites() {
-  router.push({ name: 'Favorites' })
+  router.push({ name: 'Favoritos' })
 }
+
 
 function goToSellFromFab() {
   router.push({ name: 'Sell' })
@@ -370,6 +359,16 @@ onMounted(() => {
   if (typeof productStore.fetchProducts === 'function') {
     productStore.fetchProducts()
   }
+})
+
+
+
+
+// ==================== FAVORITOS ====================
+import { useFavoriteStore } from '@/stores/favoriteStore'
+const favoriteStore = useFavoriteStore()
+onMounted(() => {
+  favoriteStore.loadFavorites()
 })
 </script>
 

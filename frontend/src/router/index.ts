@@ -14,11 +14,11 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   // Ejemplo de rutas comentadas listas para usar:
-  // {
-  //   path: '/favorites',
-  //   name: 'Favorites',
-  //   component: () => import('@/views/Favorites.vue'),
-  // },
+  {
+    path: '/favoritos',
+    name: 'Favoritos',
+    component: () => import('@/views/Favoritos.vue'),
+  },
   // {
   //   path: '/cart',
   //   name: 'Cart',
