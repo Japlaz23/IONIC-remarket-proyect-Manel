@@ -1,0 +1,228 @@
+/* Utilidades responsive para uso global */
+@media (max-width: 768px) {
+  .responsive-hide-md {
+    display: none !important;
+  }
+  .responsive-block-md {
+    display: block !important;
+  }
+  .responsive-flex-col-md {
+    flex-direction: column !important;
+  }
+  .responsive-w-full-md {
+    width: 100% !important;
+  }
+  .responsive-px-2-md {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  .responsive-text-center-md {
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 425px) {
+  .responsive-hide-sm {
+    display: none !important;
+  }
+  .responsive-block-sm {
+    display: block !important;
+  }
+  .responsive-flex-col-sm {
+    flex-direction: column !important;
+  }
+  .responsive-w-full-sm {
+    width: 100% !important;
+  }
+  .responsive-px-1-sm {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
+  .responsive-text-center-sm {
+    text-align: center !important;
+  }
+}
+/* @tailwind base; */
+/* @tailwind components; */
+/* @tailwind utilities; */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+	--ion-color-primary: #1a7f34;
+	--ion-color-primary-rgb: 26, 127, 52;
+	--ion-color-primary-contrast: #ffffff;
+	--ion-color-primary-contrast-rgb: 255,255,255;
+	--ion-color-primary-shade: #176f2e;
+	--ion-color-primary-tint: #32994b;
+	--ion-color-light: #ffffff;
+	--ion-color-light-rgb: 255,255,255;
+	--ion-background-color: #ffffff;
+}
+
+body, html {
+	background-color: var(--ion-background-color) !important;
+	color: var(--ion-color-primary);
+}
+
+/* Utilidades para texto y fondo verde/white */
+.text-ionic-green {
+	color: #1a7f34 !important;
+}
+.bg-ionic-green {
+	background-color: #1a7f34 !important;
+}
+.bg-ionic-white {
+	background-color: #fff !important;
+}
+.text-ionic-white {
+	color: #fff !important;
+}
+
+
+html, body {
+	font-family: var(--font-family-base);
+}
+
+ion-header, .ion-header, body {
+		background: #fff !important;
+		box-shadow: none !important;
+		border-bottom: none !important;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.auth-alert .alert-wrapper {
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+}
+
+.auth-alert .alert-title {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.auth-alert .alert-message {
+  color: #5f6368;
+}
+
+.auth-alert .alert-button-group {
+  padding: 0 16px 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.auth-alert .alert-button {
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-weight: 600;
+}
+
+.auth-alert .alert-button-role-cancel {
+  color: var(--primary-color);
+}
+
+.auth-alert .alert-button:not(.alert-button-role-cancel) {
+  background: var(--primary-color);
+  color: #ffffff;
+}
+
+ion-modal.google-auth-modal::part(content) {
+  border-radius: 20px;
+  width: 92%;
+  max-width: 380px;
+  height: auto;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+}
+
+ion-modal.google-auth-modal::part(backdrop) {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.google-modal-content {
+  --background: transparent;
+}
+
+.google-modal-surface {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.google-modal-card {
+  width: 100%;
+  background: var(--background-color);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+}
+
+.google-modal-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.google-modal-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #e0e0e0;
+  display: grid;
+  place-items: center;
+  background: var(--background-color);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+.google-g {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.google-modal-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.google-modal-subtitle {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #5f6368;
+  line-height: 1.4;
+}
+
+.google-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.google-continue {
+  --background: var(--primary-color);
+  --color: #ffffff;
+  --border-radius: 999px;
+  font-weight: 600;
+}
+
+.google-cancel {
+  --color: var(--primary-color);
+  --border-radius: 999px;
+  font-weight: 600;
+}
+
