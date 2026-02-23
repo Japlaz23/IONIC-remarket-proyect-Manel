@@ -5,19 +5,39 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/home',
+    redirect: '/tabs/home',
   },
   {
-    path: '/home',
-    name: 'Home',
-    component: () => import('@/views/HomePage.vue'), // Lazy load
-  },
-
-  // Ejemplo de rutas comentadas listas para usar:
-  {
-    path: '/favoritos',
-    name: 'Favoritos',
-    component: () => import('@/views/Favoritos.vue'),
+    path: '/tabs',
+    component: () => import('../Tabs.vue'),
+    children: [
+      {
+        path: '',
+        redirect: '/tabs/home',
+      },
+      {
+        path: 'home',
+        name: 'Home',
+        component: () => import('@/views/HomePage.vue'),
+      },
+      {
+        path: 'favoritos',
+        name: 'Favoritos',
+        component: () => import('@/views/Favoritos.vue'),
+      },
+      // Puedes agregar aquí más rutas hijas para otros tabs
+      // Ejemplo:
+      // {
+      //   path: 'purchases',
+      //   name: 'Purchases',
+      //   component: () => import('@/views/Purchases.vue'),
+      // },
+      // {
+      //   path: 'profilecustomer',
+      //   name: 'ProfileCustomer',
+      //   component: () => import('@/views/ProfileCostumer.vue'),
+      // },
+    ],
   },
   // {
   //   path: '/cart',

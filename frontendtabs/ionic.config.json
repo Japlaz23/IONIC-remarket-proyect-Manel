@@ -1,0 +1,7 @@
+{
+  "name": "frontendtabs",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
