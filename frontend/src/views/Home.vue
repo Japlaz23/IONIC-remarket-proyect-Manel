@@ -14,17 +14,13 @@
     @resetFilters="resetFilters"
   />
   <ion-header class="header-content">
-    <ion-toolbar class="header-toolbar">
-
-      <!-- Logo -->
+    <div class="header-row">
       <div class="logo-section" @click="goToHomeWithCarousel">
         <div class="logo-icon-box">
           <ion-img src="/logo.png" alt="Logo" class="logo-image"></ion-img>
         </div>
         <span class="brand-title">ReMarket</span>
       </div>
-
-      <!-- Searchbar -->
       <div class="center-searchbar">
         <ion-searchbar
           class="home-searchbar"
@@ -34,9 +30,7 @@
           @ionInput="resetVisibleCount"
         ></ion-searchbar>
       </div>
-
-      <!-- Botones -->
-      <ion-buttons class="actions-buttons">
+      <div class="actions-buttons">
         <ion-button
           v-if="!isLoggedIn"
           @click="goToLogin"
@@ -44,45 +38,40 @@
         >
           <span class="hidden sm:inline">Iniciar sesión</span>
         </ion-button>
-
         <ion-button class="icon-btn" @click="goToPurchases">
           <ion-icon :icon="cartOutline"></ion-icon>
         </ion-button>
-
         <ion-button class="icon-btn" @click="goToFavorites">
           <ion-icon :icon="heartOutline"></ion-icon>
         </ion-button>
-
         <ion-button class="icon-btn" @click="goToProfileCustumer">
           <ion-icon :icon="personCircle"></ion-icon>
         </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-
-          <!-- Menú horizontal de categorías -->
-      <div class="categories-toolbar">
-          <div class="menu-wrapper">          
-            <ion-button class="filters-button mobile-only" @click="openFiltersMenu">
-              <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
-              Filtros
-            </ion-button>
-          </div>
-          <ion-button class="menu-button" @click="openCategoryMenu">
-            <ion-icon :icon="menuOutline"></ion-icon>
-            <span>Todas las categorías</span>
-          </ion-button>
-        </div>
-        <div class="categories-scroll">
-          <div
-            v-for="category in categories"
-            :key="category.id"
-            @click="selectCategory(category.id)"
-            :class="['category-item', { active: selectedCategory === category.id }]"
-          >
-            {{ category.name }}
-
-        </div>
       </div>
+    </div>
+
+    <div class="categories-toolbar">
+      <div class="menu-wrapper">
+        <ion-button class="filters-button mobile-only" @click="openFiltersMenu">
+          <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
+          Filtros
+        </ion-button>
+      </div>
+      <ion-button class="menu-button" @click="openCategoryMenu">
+        <ion-icon :icon="menuOutline"></ion-icon>
+        <span>Todas las categorías</span>
+      </ion-button>
+    </div>
+    <div class="categories-scroll">
+      <div
+        v-for="category in categories"
+        :key="category.id"
+        @click="selectCategory(category.id)"
+        :class="['category-item', { active: selectedCategory === category.id }]"
+      >
+        {{ category.name }}
+      </div>
+    </div>
   </ion-header>
 
       <!-- Contenido Carrusell + grid-->
@@ -229,7 +218,6 @@
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 

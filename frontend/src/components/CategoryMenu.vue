@@ -43,3 +43,7 @@ function selectCategoryFromMenu(id: string) {
   emits('selectCategoryFromMenu', id)
 }
 </script>
+
+<style scoped>
+
+</style>
