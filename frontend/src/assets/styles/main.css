@@ -226,3 +226,39 @@ ion-modal.google-auth-modal::part(backdrop) {
   font-weight: 600;
 }
 
+/* Estilos swiper */
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swiper {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Cambia el color de fondo al pasar el mouse */
+
+  ion-fab-button {
+    width: 64px !important;
+    height: 64px !important;
+  }
