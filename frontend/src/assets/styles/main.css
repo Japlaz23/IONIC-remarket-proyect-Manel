@@ -65,9 +65,8 @@
   --ion-color-light: #ffffff;
   --ion-color-light-rgb: 255,255,255;
   --ion-background-color: #ffffff;
-
   /* Swiper theme color */
-  --swiper-theme-color: #1a7f34;
+  --swiper-theme-color: #1a7f34 !important;
 }
 
 body, html {

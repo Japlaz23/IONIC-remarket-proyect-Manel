@@ -64,7 +64,7 @@
                 :key="`${section.id}-${product.id}-${index}`"
                 >
                 <ion-card
-                class="product-card compact-card"
+                class="product-card"
                 @click="goToProduct(product.id)"
                 >
                 <div class="product-image-container">
@@ -79,7 +79,7 @@
                   </button>
                 </div>
                 <ion-card-header>
-                  <ion-card-title class="product-title line-clamp-2">
+                  <ion-card-title class="product-title">
                     {{ product.title }}
                   </ion-card-title>
                 </ion-card-header>
@@ -92,8 +92,6 @@
                 </ion-card>
               </SwiperSlide>
             </Swiper>
-            <!-- Espacio entre paginación y productos -->
-            <div class="pagination-product-space"></div>
               </div>
             </section>
           </section>
@@ -103,208 +101,6 @@
 
 
       </ion-content>
-
-    <!-- <ion-content id="home-content">
-      
-
-              <div v-if="section.items.length > 1" class="carousel-dots">
-                <button
-                  v-for="(product, dotIndex) in section.items"
-                  :key="`dot-${section.id}-${product.id}`"
-                  type="button"
-                  class="carousel-dot"
-                  :class="{ active: getCarouselDotIndex(section.id, section.items.length) === dotIndex }"
-                  :aria-label="`Ir a ${product.title}`"
-                  @click="goToSlide(section.id, dotIndex, section.items.length)"
-                ></button>
-              </div>
-            </div>
-          </section>
-
-          <section v-if="visibleNonCarouselProducts.length > 0" class="category-section">
-            <div class="section-header">
-              <h2>Otros productos</h2>
-              <span>{{ nonCarouselProducts.length }} productos</span>
-            </div>
-            <div class="product-grid compact-grid">
-              <ion-card
-                v-for="product in visibleNonCarouselProducts"
-                :key="product.id"
-                class="product-card compact-card"
-                @click="goToProduct(product.id)"
-              >
-                <div class="product-image-container">
-                  <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
-                  <button 
-                    type="button"
-                    class="favorite-btn"
-                    :class="{ active: isFavoriteProduct(product.id) }"
-                    @click="toggleProductFavorite($event, product.id)"
-                  >
-                    <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
-                  </button>
-                </div>
-                <ion-card-header>
-                  <ion-card-title class="product-title line-clamp-2">
-                    {{ product.title }}
-                  </ion-card-title>
-                </ion-card-header>
-                <ion-card-content>
-                  <div class="product-meta">
-                    <span class="product-price">{{ product.price }}€</span>
-                    <span class="product-location">{{ product.location }}</span>
-                  </div>
-                  <div v-if="getSellerRating(product.sellerId)" class="product-rating">
-                    <span class="rating-stars">{{ getSellerRating(product.sellerId)?.stars }}</span>
-                    <span class="rating-value">{{ getSellerRating(product.sellerId)?.value.toFixed(1) }}</span>
-                    <span class="rating-count">({{ getSellerRating(product.sellerId)?.count }})</span>
-                  </div>
-                </ion-card-content>
-              </ion-card>
-            </div>
-          </section>
-        </template>
-
-        <template v-else>
-          <div class="category-layout">
-            <aside class="filters-panel">
-              <div class="filters-card">
-                <div class="filters-title">Filtros</div>
-                <div class="filters-group">
-                  <div class="filters-label">Precio</div>
-                  <div class="filters-row">
-                    <ion-input
-                      v-model="filters.minPrice"
-                      type="number"
-                      inputmode="decimal"
-                      placeholder="Min"
-                      class="filters-input"
-                    ></ion-input>
-                    <ion-input
-                      v-model="filters.maxPrice"
-                      type="number"
-                      inputmode="decimal"
-                      placeholder="Max"
-                      class="filters-input"
-                    ></ion-input>
-                  </div>
-                </div>
-
-                <div class="filters-group">
-                  <div class="filters-label">Condicion</div>
-                  <ion-select v-model="filters.condition" interface="popover" class="filters-select">
-                    <ion-select-option value="all">Todas</ion-select-option>
-                    <ion-select-option value="Nuevo">Nuevo</ion-select-option>
-                    <ion-select-option value="Usado">Usado</ion-select-option>
-                  </ion-select>
-                </div>
-
-                <div class="filters-group">
-                  <div class="filters-label">Ubicacion</div>
-                  <ion-input
-                    v-model="filters.location"
-                    placeholder="Ciudad"
-                    class="filters-input"
-                  ></ion-input>
-                </div>
-
-                <div class="filters-group">
-                  <div class="filters-label">Ordenar</div>
-                  <ion-select v-model="filters.sort" interface="popover" class="filters-select">
-                    <ion-select-option value="recent">Mas reciente</ion-select-option>
-                    <ion-select-option value="price-asc">Precio mas bajo</ion-select-option>
-                    <ion-select-option value="price-desc">Precio mas alto</ion-select-option>
-                  </ion-select>
-                </div>
-
-                <div class="filters-group" v-if="availableBrands.length > 0">
-                  <div class="filters-label">Marca</div>
-                  <ion-select v-model="filters.brand" interface="popover" class="filters-select">
-                    <ion-select-option
-                      v-for="brand in availableBrands"
-                      :key="brand.value"
-                      :value="brand.value"
-                    >
-                      {{ brand.label }}
-                    </ion-select-option>
-                  </ion-select>
-                </div>
-
-                <div class="filters-actions">
-                  <ion-button fill="clear" size="small" @click="resetFilters">Limpiar</ion-button>
-                </div>
-              </div>
-            </aside>
-
-            <div class="category-products">
-              <div class="mobile-filters-bar">
-                <ion-button class="filters-button" @click="openFiltersMenu">
-                  <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
-                  Filtros
-                </ion-button>
-              </div>
-
-              <section v-for="section in categorySections" :key="section.id" class="category-section">
-                <div class="section-header">
-                  <h2>{{ section.name }}</h2>
-                  <span>{{ section.items.length }} productos</span>
-                </div>
-
-                <div class="product-grid compact-grid">
-                  <ion-card
-                    v-for="product in section.items"
-                    :key="product.id"
-                    class="product-card compact-card"
-                    @click="goToProduct(product.id)"
-                  >
-                    <div class="product-image-container">
-                      <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
-                      <button 
-                        type="button"
-                        class="favorite-btn"
-                        :class="{ active: isFavoriteProduct(product.id) }"
-                        @click="toggleProductFavorite($event, product.id)"
-                      >
-                        <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
-                      </button>
-                    </div>
-                    <ion-card-header>
-                      <ion-card-title class="product-title line-clamp-2">
-                        {{ product.title }}
-                      </ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content>
-                      <div class="product-meta">
-                        <span class="product-price">{{ product.price }}€</span>
-                        <span class="product-location">{{ product.location }}</span>
-                      </div>
-                      <div v-if="getSellerRating(product.sellerId)" class="product-rating">
-                        <span class="rating-stars">{{ getSellerRating(product.sellerId)?.stars }}</span>
-                        <span class="rating-value">{{ getSellerRating(product.sellerId)?.value.toFixed(1) }}</span>
-                        <span class="rating-count">({{ getSellerRating(product.sellerId)?.count }})</span>
-                      </div>
-                    </ion-card-content>
-                  </ion-card>
-                </div>
-              </section>
-            </div>
-          </div>
-        </template>
-      </div>
-
-      <ion-infinite-scroll
-        v-if="hasMore"
-        ref="infiniteScrollRef"
-        threshold="120px"
-        @ionInfinite="ionInfinite"
-      >
-        <ion-infinite-scroll-content
-          loading-spinner="bubbles"
-          loading-text="Cargando mas productos..."
-        ></ion-infinite-scroll-content>
-      </ion-infinite-scroll>
-    </ion-content> -->
-
     <!-- Bottom FAB -->
 
   </ion-page>
@@ -1093,9 +889,10 @@ onBeforeUnmount(() => {
 }
 
 .product-title {
+  padding-left: 8px;
   font-size: 1.1rem;
-  font-weight: 700;
-  color: #1a7f34;
+  font-weight: 600;
+  color: #000000;
   margin: 0;
   min-height: 2.4em;
   line-height: 1.2;
