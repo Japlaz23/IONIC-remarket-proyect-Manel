@@ -1,3 +1,4 @@
+
 /* Utilidades responsive para uso global */
 @media (max-width: 768px) {
   .responsive-hide-md {
@@ -51,21 +52,27 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+/* ==================== VARIABLES GLOBALES ==================== */
 :root {
-	--ion-color-primary: #1a7f34;
-	--ion-color-primary-rgb: 26, 127, 52;
-	--ion-color-primary-contrast: #ffffff;
-	--ion-color-primary-contrast-rgb: 255,255,255;
-	--ion-color-primary-shade: #176f2e;
-	--ion-color-primary-tint: #32994b;
-	--ion-color-light: #ffffff;
-	--ion-color-light-rgb: 255,255,255;
-	--ion-background-color: #ffffff;
+  /* Colores principales */
+  --ion-color-primary: #1a7f34;
+  --ion-color-primary-rgb: 26, 127, 52;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #176f2e;
+  --ion-color-primary-tint: #32994b;
+  --ion-color-light: #ffffff;
+  --ion-color-light-rgb: 255,255,255;
+  --ion-background-color: #ffffff;
+
+  /* Swiper theme color */
+  --swiper-theme-color: #1a7f34;
 }
 
 body, html {
-	background-color: var(--ion-background-color) !important;
-	color: var(--ion-color-primary);
+  background-color: var(--ion-background-color) !important;
+  color: var(--ion-color-primary);
 }
 
 /* Utilidades para texto y fondo verde/white */
@@ -84,19 +91,15 @@ body, html {
 
 
 html, body {
-	font-family: var(--font-family-base);
+  font-family: var(--font-family-base, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif);
 }
 
 ion-header, .ion-header, body {
-		background: #fff !important;
-		box-shadow: none !important;
-		border-bottom: none !important;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  background: #fff !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+  /* Fallback font-family ya está en :root arriba */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -227,9 +230,17 @@ ion-modal.google-auth-modal::part(backdrop) {
 }
 
 
-/* Cambia el color de fondo al pasar el mouse */
 
-  ion-fab-button {
-    width: 64px !important;
-    height: 64px !important;
-  }
+/* ==================== COMPONENTES IONIC ==================== */
+ion-fab-button {
+  width: 64px !important;
+  height: 64px !important;
+}
+
+ion-segment-button {
+  --indicator-color: #1a7f34;
+  --color-checked: #1a7f34;
+  --color: #666666;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
