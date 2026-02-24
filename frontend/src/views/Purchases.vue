@@ -257,6 +257,11 @@ const filterPurchases = () => {
 <style scoped>
 .purchases-content {
   --background: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100%;
 }
 
 .empty-state {
@@ -267,6 +272,7 @@ const filterPurchases = () => {
   text-align: center;
   padding: 60px 20px;
   min-height: 60vh;
+  margin: 0 auto;
 }
 
 .empty-icon {
@@ -294,6 +300,9 @@ const filterPurchases = () => {
 
 .purchases-container {
   padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .filter-group {

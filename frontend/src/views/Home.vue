@@ -1,5 +1,4 @@
-
- <template>
+<template>
   <ion-page>
   <CategoryMenu
     :categories="categories"
@@ -14,57 +13,53 @@
     @closeFiltersMenu="closeFiltersMenu"
     @resetFilters="resetFilters"
   />
-  <ion-header class="header-container">
-    <!-- Header con logo y título -->
-    <ion-toolbar class="header-content">
+  <ion-header class="header-content">
+    <ion-toolbar class="header-toolbar">
+
+      <!-- Logo -->
       <div class="logo-section" @click="goToHomeWithCarousel">
         <div class="logo-icon-box">
           <ion-img src="/logo.png" alt="Logo" class="logo-image"></ion-img>
         </div>
         <span class="brand-title">ReMarket</span>
-        <!-- Search -->
-        <div class="hidden sm:flex flex-1 justify-center w-full sm:w-auto min-w-[100px] max-w-xs sm:max-w-md lg:max-w-xl xl:max-w-2xl order-3 sm:order-none">
-          <ion-searchbar
-          class="home-searchbar"
-            v-model="store.searchQuery"
-            placeholder="Buscar productos..."
-            showCancelButton="focus"
-            @ionInput="resetVisibleCount"
-          ></ion-searchbar>
-        </div>
-        <!-- Icons header buttons -->
-         <ion-buttons class="actions-buttons">
-         <ion-button
-         v-if="!isLoggedIn"
-         @click="goToLogin"
-         class="login-btn"
-         >
-         <span class="hidden sm:inline">Iniciar sesión</span>
-         </ion-button>
-         <ion-button
-         class="icon-btn purchases-btn"
-         title="Mis compras"
-         @click="goToPurchases">
-         <ion-icon :icon="cartOutline"></ion-icon>
-         </ion-button>
-          <ion-button
-          class="icon-btn favorites-btn"
-          title="Mis favoritos"
-          @click="goToFavorites"
-          >
-          <ion-icon :icon="heartOutline"></ion-icon>
-          </ion-button>
-          <ion-button
-          class="icon-btn profile-btn"
-          title="Mi perfil"
-          @click="goToProfileCustumer"
-          >
-          <ion-icon :icon="personCircle"></ion-icon>
-          </ion-button>
-         </ion-buttons>
       </div>
+
+      <!-- Searchbar -->
+      <div class="center-searchbar">
+        <ion-searchbar
+          class="home-searchbar"
+          v-model="store.searchQuery"
+          placeholder="Buscar productos..."
+          showCancelButton="focus"
+          @ionInput="resetVisibleCount"
+        ></ion-searchbar>
+      </div>
+
+      <!-- Botones -->
+      <ion-buttons class="actions-buttons">
+        <ion-button
+          v-if="!isLoggedIn"
+          @click="goToLogin"
+          class="login-btn"
+        >
+          <span class="hidden sm:inline">Iniciar sesión</span>
+        </ion-button>
+
+        <ion-button class="icon-btn" @click="goToPurchases">
+          <ion-icon :icon="cartOutline"></ion-icon>
+        </ion-button>
+
+        <ion-button class="icon-btn" @click="goToFavorites">
+          <ion-icon :icon="heartOutline"></ion-icon>
+        </ion-button>
+
+        <ion-button class="icon-btn" @click="goToProfileCustumer">
+          <ion-icon :icon="personCircle"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      
     </ion-toolbar>
-    </ion-header>
+  </ion-header>
 
       <!-- Contenido Carrusell + grid-->
     <ion-content id="home-content">
@@ -139,12 +134,47 @@
           </section>
         </section>
       </div>
+      <!-- grid -->
+       <div
+       v-if="showFiltersLayout"
+       class="product-grid"
+        >
+        <ion-card
+          v-for="product in visibleProducts"
+          :key="product.id"
+          class="product-card"
+          @click="goToProduct(product.id)"
+        >
+          <div class="product-image-container">
+            <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+            <button 
+              type="button"
+              class="favorite-btn"
+              :class="{ active: isFavoriteProduct(product.id) }"
+              @click="toggleProductFavorite($event, product.id)"
+            >
+              <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
+            </button>
+          </div>
+          <ion-card-header>
+            <ion-card-title class="product-title">
+              {{ product.title }}
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="product-meta">
+              <span class="product-price">{{ product.price }}€</span>
+              <span class="product-location">{{ product.location }}</span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
 
-      <!-- GRID-->
 
 
     </ion-content>
     <!-- Bottom FAB -->
+
 
   </ion-page>
 </template>
@@ -194,6 +224,8 @@ import {
   IonCardTitle,
   IonCardContent,
   IonImg,
+  IonGrid,
+  IonRow,
   IonBadge,
   alertController,
   onIonViewWillEnter
@@ -784,27 +816,64 @@ onBeforeUnmount(() => {
 /* =========================
    HEADER HOME
 ========================= */
-.header-container {
-  --background: #ffffff;
+.header-content {
+  width: 100%;
+  background: #fff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   z-index: 100;
 }
 
-.header-content {
+.header-toolbar {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  width: 100%;
+  min-height: 64px;
+  padding: 0 24px;
+  box-sizing: border-box;
+  gap: 0;
 }
 
-/* =========================
-   LOGO
-========================= */
 .logo-section {
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.center-searchbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 0;
+  min-width: 200px;
+  max-width: 700px;
+  margin: 0 32px;
+}
+
+.home-searchbar {
+  width: 100%;
+  min-width: 180px;
+  max-width: 700px;
+}
+
+.actions-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  min-width: 0;
 }
 
 .logo-icon-box {
@@ -815,6 +884,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  margin-left: 0;
 }
 
 .logo-image {
@@ -828,7 +898,51 @@ onBeforeUnmount(() => {
   font-size: 24px;
   font-weight: 800;
   color: #1a1a1a;
+  margin-right: 0;
 }
+
+.center-searchbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 100%;
+  min-width: 180px;
+  max-width: 600px;
+  margin: 0 32px;
+}
+
+.home-searchbar {
+  width: 100%;
+  max-width: 420px;
+  --background: #f1f5f9;
+  --border-radius: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --placeholder-color: #94a3b8;
+  --icon-color: #94a3b8;
+}
+
+.actions-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .header-toolbar {
+    min-height: 72px;
+    padding: 0 48px;
+  }
+  .center-searchbar {
+    margin: 0 48px;
+    max-width: 700px;
+  }
+}
+
+
 
 /* =========================
    MARKET LAYOUT
@@ -983,15 +1097,5 @@ onBeforeUnmount(() => {
 .favorite-btn ion-icon {
   font-size: 20px;
 }
-/* =========================
-   SEARCHBAR
-========================= */
-.home-searchbar {
-  --background: #f1f5f9;
-  --border-radius: 12px;
-  --padding-start: 12px;
-  --padding-end: 12px;
-  --placeholder-color: #94a3b8;
-  --icon-color: #94a3b8;
-} 
+
 </style>

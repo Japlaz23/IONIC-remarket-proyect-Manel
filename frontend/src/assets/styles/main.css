@@ -43,9 +43,9 @@
     text-align: center !important;
   }
 }
-/* @tailwind base; 
+ @tailwind base; 
  @tailwind components; 
- @tailwind utilities; */
+ @tailwind utilities; 
 
 * {
   margin: 0;
@@ -227,8 +227,6 @@ ion-modal.google-auth-modal::part(backdrop) {
   --border-radius: 999px;
   font-weight: 600;
 }
-
-
 
 /* ==================== COMPONENTES IONIC ==================== */
 ion-fab-button {
