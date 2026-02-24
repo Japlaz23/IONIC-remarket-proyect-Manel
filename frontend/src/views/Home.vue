@@ -14,93 +14,138 @@
     @closeFiltersMenu="closeFiltersMenu"
     @resetFilters="resetFilters"
   />
-
-  <!-- ================= HEADER ================= -->
-  <ion-toolbar>
-
-  </ion-toolbar>
-
+  <ion-header class="header-container">
+    <!-- Header con logo y título -->
+    <ion-toolbar class="header-content">
+      <div class="logo-section" @click="goToHomeWithCarousel">
+        <div class="logo-icon-box">
+          <ion-img src="/logo.png" alt="Logo" class="logo-image"></ion-img>
+        </div>
+        <span class="brand-title">ReMarket</span>
+        <!-- Search -->
+        <div class="hidden sm:flex flex-1 justify-center w-full sm:w-auto min-w-[100px] max-w-xs sm:max-w-md lg:max-w-xl xl:max-w-2xl order-3 sm:order-none">
+          <ion-searchbar
+          class="home-searchbar"
+            v-model="store.searchQuery"
+            placeholder="Buscar productos..."
+            showCancelButton="focus"
+            @ionInput="resetVisibleCount"
+          ></ion-searchbar>
+        </div>
+        <!-- Icons header buttons -->
+         <ion-buttons class="actions-buttons">
+         <ion-button
+         v-if="!isLoggedIn"
+         @click="goToLogin"
+         class="login-btn"
+         >
+         <span class="hidden sm:inline">Iniciar sesión</span>
+         </ion-button>
+         <ion-button
+         class="icon-btn purchases-btn"
+         title="Mis compras"
+         @click="goToPurchases">
+         <ion-icon :icon="cartOutline"></ion-icon>
+         </ion-button>
+          <ion-button
+          class="icon-btn favorites-btn"
+          title="Mis favoritos"
+          @click="goToFavorites"
+          >
+          <ion-icon :icon="heartOutline"></ion-icon>
+          </ion-button>
+          <ion-button
+          class="icon-btn profile-btn"
+          title="Mi perfil"
+          @click="goToProfileCustumer"
+          >
+          <ion-icon :icon="personCircle"></ion-icon>
+          </ion-button>
+         </ion-buttons>
+      </div>
+    </ion-toolbar>
+    </ion-header>
       <!-- Contenido Carrusell + grid-->
       
-      <ion-content id="home-content">
-        <!-- Mostrar carruseles o layout de categorías según el estado -->
-        <div v-if="!hasContent" class="empty-state">
-          <p>No hay productos para mostrar</p>
-        </div>
+    <ion-content id="home-content">
+      <!-- Mostrar carruseles o layout de categorías según el estado -->
+      <div v-if="!hasContent" class="empty-state">
+        <p>No hay productos para mostrar</p>
+      </div>
 
-        <div v-else class="market-sections">
-          <section v-if="!showFiltersLayout">
-            <section v-for="section in carouselSections" :key="section.id" class="category-section carousel-separated">
-              <div class="section-header">
-                <h2>{{ section.name }}</h2>
-              </div>
+      <div v-else class="market-sections">
+        <section v-if="!showFiltersLayout">
+          <section v-for="section in carouselSections" :key="section.id" class="category-section carousel-separated">
+            <div class="section-header">
+              <h2>{{ section.name }}</h2>
+            </div>
 
-              <div
-                class="product-carousel carousel-wrapper"
-                @touchstart.passive="onCarouselTouchStart($event, section.id)"
-                @touchmove.passive="onCarouselTouchMove($event, section.id)"
-                @touchend="onCarouselTouchEnd(section.id, section.items.length)"
+            <div
+              class="product-carousel carousel-wrapper"
+              @touchstart.passive="onCarouselTouchStart($event, section.id)"
+              @touchmove.passive="onCarouselTouchMove($event, section.id)"
+              @touchend="onCarouselTouchEnd(section.id, section.items.length)"
+            >
+              <!-- Carousel -->
+              <Swiper
+                :slidesPerView="4"
+                :spaceBetween="30"
+                :loop="true"
+                :pagination="{
+                  clickable: true,
+                }"
+                :navigation="true"
+                :modules="modules"
+                :breakpoints="{
+                  0: { slidesPerView: 2, spaceBetween: 10 },
+                  480: { slidesPerView: 2, spaceBetween: 20 },
+                  768: { slidesPerView: 2, spaceBetween: 30 },
+                  1024: { slidesPerView: 4, spaceBetween: 30 },
+                }"
+                class="product-swiper"                  
+                >
+              <SwiperSlide
+              v-for="(product, index) in section.items"
+              :key="`${section.id}-${product.id}-${index}`"
               >
-                <!-- Carousel -->
-                <Swiper
-                  :slidesPerView="4"
-                  :spaceBetween="30"
-                  :loop="true"
-                  :pagination="{
-                    clickable: true,
-                  }"
-                  :navigation="true"
-                  :modules="modules"
-                  :breakpoints="{
-                    0: { slidesPerView: 2, spaceBetween: 10 },
-                    480: { slidesPerView: 2, spaceBetween: 20 },
-                    768: { slidesPerView: 2, spaceBetween: 30 },
-                    1024: { slidesPerView: 4, spaceBetween: 30 },
-                  }"
-                  class="product-swiper"                  
-                  >
-                <SwiperSlide
-                v-for="(product, index) in section.items"
-                :key="`${section.id}-${product.id}-${index}`"
+              <ion-card
+              class="product-card"
+              @click="goToProduct(product.id)"
+              >
+              <div class="product-image-container">
+                <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                <button 
+                  type="button"
+                  class="favorite-btn"
+                  :class="{ active: isFavoriteProduct(product.id) }"
+                  @click="toggleProductFavorite($event, product.id)"
                 >
-                <ion-card
-                class="product-card"
-                @click="goToProduct(product.id)"
-                >
-                <div class="product-image-container">
-                  <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
-                  <button 
-                    type="button"
-                    class="favorite-btn"
-                    :class="{ active: isFavoriteProduct(product.id) }"
-                    @click="toggleProductFavorite($event, product.id)"
-                  >
-                    <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
-                  </button>
-                </div>
-                <ion-card-header>
-                  <ion-card-title class="product-title">
-                    {{ product.title }}
-                  </ion-card-title>
-                </ion-card-header>
-                <ion-card-content>
-                  <div class="product-meta">
-                    <span class="product-price">{{ product.price }}€</span>
-                    <span class="product-location">{{ product.location }}</span>
-                  </div>
-                </ion-card-content>
-                </ion-card>
-              </SwiperSlide>
-            </Swiper>
+                  <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
+                </button>
               </div>
-            </section>
+              <ion-card-header>
+                <ion-card-title class="product-title">
+                  {{ product.title }}
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="product-meta">
+                  <span class="product-price">{{ product.price }}€</span>
+                  <span class="product-location">{{ product.location }}</span>
+                </div>
+              </ion-card-content>
+              </ion-card>
+            </SwiperSlide>
+          </Swiper>
+            </div>
           </section>
-        </div>
+        </section>
+      </div>
 
-        <!-- GRID-->
+      <!-- GRID-->
 
 
-      </ion-content>
+    </ion-content>
     <!-- Bottom FAB -->
 
   </ion-page>
@@ -747,16 +792,6 @@ onBeforeUnmount(() => {
   z-index: 100;
 }
 
-.main-toolbar {
-  --background: #ffffff;
-  --border-color: transparent;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --min-height: 70px;
-}
-
 .header-content {
   display: flex;
   align-items: center;
@@ -791,6 +826,7 @@ onBeforeUnmount(() => {
 }
 
 .brand-title {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 24px;
   font-weight: 800;
   color: #1a1a1a;
@@ -945,4 +981,16 @@ onBeforeUnmount(() => {
   background: #e6ebf2;
   color: #ef4444;
 }
+
+/* =========================
+   SEARCHBAR
+========================= */
+.home-searchbar {
+  --background: #f1f5f9;
+  --border-radius: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --placeholder-color: #94a3b8;
+  --icon-color: #94a3b8;
+} 
 </style>
