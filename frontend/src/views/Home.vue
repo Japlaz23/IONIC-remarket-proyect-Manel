@@ -57,8 +57,32 @@
           <ion-icon :icon="personCircle"></ion-icon>
         </ion-button>
       </ion-buttons>
-      
     </ion-toolbar>
+
+          <!-- Menú horizontal de categorías -->
+      <div class="categories-toolbar">
+          <div class="menu-wrapper">          
+            <ion-button class="filters-button mobile-only" @click="openFiltersMenu">
+              <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
+              Filtros
+            </ion-button>
+          </div>
+          <ion-button class="menu-button" @click="openCategoryMenu">
+            <ion-icon :icon="menuOutline"></ion-icon>
+            <span>Todas las categorías</span>
+          </ion-button>
+        </div>
+        <div class="categories-scroll">
+          <div
+            v-for="category in categories"
+            :key="category.id"
+            @click="selectCategory(category.id)"
+            :class="['category-item', { active: selectedCategory === category.id }]"
+          >
+            {{ category.name }}
+
+        </div>
+      </div>
   </ion-header>
 
       <!-- Contenido Carrusell + grid-->
