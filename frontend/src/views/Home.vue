@@ -65,8 +65,8 @@
       </div>
     </ion-toolbar>
     </ion-header>
+    
       <!-- Contenido Carrusell + grid-->
-      
     <ion-content id="home-content">
       <!-- Mostrar carruseles o layout de categorías según el estado -->
       <div v-if="!hasContent" class="empty-state">
