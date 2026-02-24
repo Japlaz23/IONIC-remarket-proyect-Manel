@@ -65,7 +65,7 @@
       </div>
     </ion-toolbar>
     </ion-header>
-    
+
       <!-- Contenido Carrusell + grid-->
     <ion-content id="home-content">
       <!-- Mostrar carruseles o layout de categorías según el estado -->
@@ -957,10 +957,10 @@ onBeforeUnmount(() => {
 
 .favorite-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 36px;
-  height: 36px;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   background: rgba(255,255,255,0.92);
@@ -982,6 +982,9 @@ onBeforeUnmount(() => {
   color: #ef4444;
 }
 
+.favorite-btn ion-icon {
+  font-size: 20px;
+}
 /* =========================
    SEARCHBAR
 ========================= */
