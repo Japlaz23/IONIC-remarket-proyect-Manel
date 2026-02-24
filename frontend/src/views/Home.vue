@@ -197,8 +197,29 @@
 
 
     </ion-content>
-    <!-- Bottom FAB -->
-
+<!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->
+    <ion-fab
+      slot="fixed"
+      horizontal="start"
+      vertical="bottom"
+    >
+      <ion-fab-button class="chat-fab-button" @click="toggleChatFab">
+        <ion-icon :icon="chevronForwardCircle"></ion-icon>
+        <ion-badge v-if="unreadCount > 0" class="fab-badge">{{ unreadCount }}</ion-badge>
+      </ion-fab-button>
+      <ion-fab-list side="end" :class="{'fab-list-active': isChatFabOpen}">
+        <ion-fab-button class="chat-fab-item" title="Publicar" @click="goToSellFromFab">
+          <ion-icon :icon="add"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button class="chat-fab-item chat-item" title="Vendedor" @click="goToChatList('seller')">
+          <ion-icon :icon="chatbubblesOutline"></ion-icon>
+          <ion-badge v-if="unreadCount > 0" class="fab-list-badge">{{ unreadCount }}</ion-badge>
+        </ion-fab-button>
+        <ion-fab-button class="chat-fab-item" title="Mensajes" @click="goToChatList('support')">
+          <ion-icon :icon="storefrontOutline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
 
   </ion-page>
 </template>
