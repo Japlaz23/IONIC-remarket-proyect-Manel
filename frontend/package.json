@@ -12,19 +12,19 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@capacitor/cli": "^8.1.0",
+    "@capacitor/core": "^5.0.0",
     "@ionic/core": "^8.7.17",
     "@ionic/vue": "^8.7.17",
     "@ionic/vue-router": "^8.7.17",
-    "@capacitor/core": "^5.0.0",
-    "@capacitor/cli": "^5.0.0",
     "axios": "^1.13.5",
     "ionicons": "^8.0.13",
     "lodash-es": "^4.17.23",
     "pinia": "^3.0.4",
     "sweetalert2": "^11.26.18",
+    "swiper": "^12.1.2",
     "vue": "^3.5.25",
-    "vue-router": "^4.6.4",
-    "swiper": "^11.1.4"
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
@@ -32,9 +32,9 @@
     "@vitejs/plugin-vue": "^6.0.2",
     "@vue/cli-service": "5.0.9",
     "@vue/tsconfig": "^0.5.1",
+    "cypress": "^13.6.6",
     "postcss": "^8.5.6",
     "typescript": "^5.4.5",
-    "vite": "^7.3.1",
-    "cypress": "^13.6.6"
+    "vite": "^7.3.1"
   }
 }
