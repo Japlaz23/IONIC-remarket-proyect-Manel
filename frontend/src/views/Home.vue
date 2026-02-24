@@ -47,8 +47,6 @@
                   :loop="true"
                   :pagination="{
                     clickable: true,
-                    bulletClass: 'carousel-dot',
-                    bulletActiveClass: 'carousel-dot-active',
                   }"
                   :navigation="true"
                   :modules="modules"
@@ -65,7 +63,7 @@
                 :key="`${section.id}-${product.id}-${index}`"
                 >
                 <ion-card
-                class="product-card compact-card carusel-slide"
+                class="product-card compact-card"
                 @click="goToProduct(product.id)"
                 >
                 <div class="product-image-container">
@@ -1340,9 +1338,6 @@ ion-segment-button {
 
 /* ==================== PRODUCT CARD STYLES ==================== */
 
-.products-grid {
-  width: 100%;
-}
 
 .market-sections {
   display: flex;
@@ -1464,63 +1459,8 @@ ion-segment-button {
 }
 
 /* ==================== CAROUSEL STYLES ==================== */
-.carousel-separated {
-  margin-bottom: 32px;
-}
-
-.product-carousel {
-  position: relative;
-  padding: 0 80px; /* Espacio para las flechas */
-}
-
-.product-swiper {
-  padding-bottom: 24px; /* Espacio para la paginación */
-}
-
-.swiper-button-prev,
-.swiper-button-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-  color: #1a7f34;
-  width: 40px !important;
-  height: 40px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  transition: background 0.2s;
-}
-
-.carousel-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 12px;
-}
-
-.carousel-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  border: none;
-  background: #d0d7de;
-  cursor: pointer;
-  transition: width 0.2s ease, background 0.2s ease;
-}
-
-.carousel-dot.active {
-  width: 18px;
-  background: #1a7f34;
+.products-grid {
+  width: 100%;
 }
 
 .product-grid {

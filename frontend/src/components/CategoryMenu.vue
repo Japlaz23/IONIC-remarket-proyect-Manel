@@ -26,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import { IonMenu, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent } from '@ionic/vue'
 import { closeOutline } from 'ionicons/icons'
 
 const props = defineProps({
