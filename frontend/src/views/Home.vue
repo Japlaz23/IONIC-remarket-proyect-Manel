@@ -5,7 +5,6 @@
     @closeCategoryMenu="closeCategoryMenu"
     @selectCategoryFromMenu="selectCategoryFromMenu"
   />
-
   <FiltersMenu
     :showFiltersLayout="showFiltersLayout"
     :filters="filters"
@@ -14,66 +13,52 @@
     @resetFilters="resetFilters"
   />
   <ion-header>
-    <ion-toolbar>
-      <ion-item> 
-        <ion-avatar slot="start" class="logo-section" @click="goToHomeWithCarousel">
-          <ion-img src="/logo.png" alt="Logo" class="logo-image logo-icon-box"></ion-img>
-      </ion-avatar>
-      <ion-label class="logo-text">ReMarket</ion-label>
-
-      <!-- Searchbar -->
-        <ion-searchbar
-          class=" home-searchbar"
-          v-model="store.searchQuery"
-          placeholder="Buscar productos..."
-          showCancelButton="focus"
-          @ionInput="resetVisibleCount"
-        ></ion-searchbar>
-
-      <!-- Botones -->
-      <ion-buttons class="actions-buttons">
-        <ion-button
-          v-if="!isLoggedIn"
-          @click="goToLogin"
-          class="login-btn"
-        >
-          <span class="hidden sm:inline">Iniciar sesión</span>
-        </ion-button>
-
-        <ion-button class="icon-btn" @click="goToPurchases">
-          <ion-icon :icon="cartOutline"></ion-icon>
-        </ion-button>
-
-        <ion-button class="icon-btn" @click="goToFavorites">
-          <ion-icon :icon="heartOutline"></ion-icon>
-        </ion-button>
-
-        <ion-button class="icon-btn" @click="goToProfileCustumer">
-          <ion-icon :icon="personCircle"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-item>
-    </ion-toolbar>
-
-          <!-- Menú horizontal de categorías -->
-      <div class="categories-toolbar">      
-          <ion-button class="menu-button" @click="openCategoryMenu">
-            <ion-icon :icon="menuOutline"></ion-icon>
-            <span>Todas las categorías</span>
-          </ion-button>
+    <ion-toolbar class="header-toolbar">
+      <div class="header-content">
+        <div class="header-left" @click="goToHomeWithCarousel">
+          <ion-avatar class="logo-section">
+            <ion-img src="/logo.png" alt="Logo" class="logo-image logo-icon-box"></ion-img>
+          </ion-avatar>
+          <span class="ml-3 font-extrabold text-2xl text-gray-900 select-none">ReMarket</span>
         </div>
-    
-        
-          <!-- <div
-            v-for="category in categories"
-            :key="category.id"
-            @click="selectCategory(category.id)"
-            :class="['category-item', { active: selectedCategory === category.id }]"
-          >
-            {{ category.name }}
-
-        </div> -->
-
+        <div class="header-center">
+          <ion-searchbar
+            class="home-searchbar"
+            v-model="store.searchQuery"
+            placeholder="Buscar productos..."
+            showCancelButton="focus"
+            @ionInput="resetVisibleCount"
+          ></ion-searchbar>
+        </div>
+        <div class="header-right">
+          <ion-buttons class="actions-buttons">
+            <ion-button
+              v-if="!isLoggedIn"
+              @click="goToLogin"
+              class="login-btn"
+            >
+              <span class="hidden sm:inline">Iniciar sesión</span>
+            </ion-button>
+            <ion-button class="icon-btn" @click="goToPurchases">
+              <ion-icon :icon="cartOutline"></ion-icon>
+            </ion-button>
+            <ion-button class="icon-btn" @click="goToFavorites">
+              <ion-icon :icon="heartOutline"></ion-icon>
+            </ion-button>
+            <ion-button class="icon-btn" @click="goToProfileCustumer">
+              <ion-icon :icon="personCircle"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </div>
+      </div>
+    </ion-toolbar>
+    <!-- Menú horizontal de categorías -->
+    <div class="categories-toolbar">      
+      <ion-button class="menu-button" @click="openCategoryMenu">
+        <ion-icon :icon="menuOutline"></ion-icon>
+        <span>Todas las categorías</span>
+      </ion-button>
+    </div>
   </ion-header>
 
       <!-- Contenido Carrusell + grid-->
@@ -290,6 +275,7 @@ import {
   heartOutline,
 } from 'ionicons/icons'
 
+import Swal from 'sweetalert2'
 import '@/assets/styles/main.css'
 
 const router = useRouter()
@@ -332,7 +318,7 @@ onIonViewWillEnter(() => {
 
 const categories = HOME_CATEGORIES
 
-const carouselCategoryIds = new Set(['Electrónica', 'Vehículos'])
+const carouselCategoryIds = new Set(['Electrónica'])
 
 const brandsByCategory = BRANDS_BY_CATEGORY
 
@@ -701,24 +687,25 @@ const goToSearch = () => {
 }
 
 const confirmLogin = async () => {
-  const alert = await alertController.create({
-    header: 'Inicia sesion',
-    message: 'Necesitas iniciar sesion para continuar.',
-    cssClass: 'auth-alert',
-    buttons: [
-      {
-        text: 'Cancelar',
-        role: 'cancel',
+  const result = await Swal.fire({
+    title: 'Inicia sesion',
+    text: 'Necesitas iniciar sesion para continuar.',
+    icon: 'info',
+    target: document.body,
+    heightAuto: false, // fuerza el centrado vertical
+      customClass: {
+        popup: 'swal2-remarket-popup',
+        confirmButton: 'swal2-remarket-confirm',
+        cancelButton: 'swal2-remarket-cancel',
+        container: 'swal2-ionic-container-fix',
       },
-      {
-        text: 'Continuar',
-        handler: () => {
-          router.push('/login')
-        },
-      },
-    ],
-  })
-  await alert.present()
+    confirmButtonText: 'Continuar',
+    cancelButtonText: 'Cancelar',
+    showCancelButton: true,
+  })  
+  if (result.isConfirmed) {
+    goToLogin()
+  }
 }
 
 const goToSell = () => {
@@ -793,13 +780,44 @@ onBeforeUnmount(() => {
 /* =========================
    HEADER HOME
 ========================= */
+/* Header layout horizontal */
+.header-content {
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.header-center {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .logo-section {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
   min-width: 0;
+}
+.logo-text {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  color: #1a1a1a;
 }
 
 .home-searchbar {
@@ -813,8 +831,8 @@ onBeforeUnmount(() => {
   --padding-end: 12px;
   --placeholder-color: #94a3b8;
   --icon-color: #94a3b8;
+  padding-top: 20px;
 }
-
 .actions-buttons {
   display: flex;
   align-items: center;
@@ -1057,11 +1075,15 @@ onBeforeUnmount(() => {
 
 
 :deep(.swiper-button-prev) {
-  left: 8px;
+  left: -1px;
+  background-color: #fff !important;
+
 }
 
 :deep(.swiper-button-next) {
-  right: 8px;
+  right: -1px;
+    background-color: #fff !important;
+
 }
 
 /* Estilos para el carrusel con flechas laterales */
@@ -1070,7 +1092,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: transparent;
+  
 }
 
 .product-swiper {
@@ -1080,10 +1102,51 @@ onBeforeUnmount(() => {
 
 
 .swiper-button-prev::before {
-  content: "";
+  background-color: #fff !important;
 }
 .swiper-button-next::before {
-  content: "";
+  background-color: #fff !important;
+
 }
 
+/* Agrandar iconos del header */
+.actions-buttons ion-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+/* Fix para que SweetAlert2 salga siempre centrado y por encima de Ionic */
+:global(.swal2-ionic-fix) {
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+:global(.swal2-ionic-container-fix) {
+  z-index: 99999 !important;
+  pointer-events: all !important;
+}
+
+:global(.swal2-remarket-popup) {
+  border-radius: 18px;
+  border: 2px solid #1a7f34;
+  background: #f8fafc;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+:global(.swal2-remarket-confirm) {
+  background: #1a7f34 !important;
+  color: #fff !important;
+  font-weight: bold;
+  border-radius: 8px !important;
+  padding: 8px 24px !important;
+  font-size: 1.1em;
+}
+
+:global(.swal2-remarket-cancel) {
+  background: #e6ebf2 !important;
+  color: #1a7f34 !important;
+  border-radius: 8px !important;
+  font-weight: bold;
+  padding: 8px 24px !important;
+  font-size: 1.1em;
+}
 </style>
