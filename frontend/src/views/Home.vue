@@ -219,7 +219,7 @@ import CategoryMenu from '@/components/CategoryMenu.vue'
 import { HOME_CATEGORIES, BRANDS_BY_CATEGORY } from '@/utils/constants'
 import { computed, ref, reactive, watch } from 'vue'
 import { useProductStore } from '@/stores/productStore'
-import { useChatStore } from '@/stores/chatStore'
+// import { useChatStore } from '@/stores/chatStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
 import { useRouter } from 'vue-router'
 /* Ionic & Vue */
@@ -236,9 +236,9 @@ import {
   // IonSelect,
   // IonSelectOption,
   menuController,
-  IonFab,
-  IonFabButton,
-  IonFabList,
+  // IonFab,
+  // IonFabButton,
+  // IonFabList,
   IonCard,
   IonCardHeader,
   IonCardTitle,
@@ -246,7 +246,7 @@ import {
   IonImg,
   // IonGrid,
   // IonRow,
-  IonBadge,
+  // IonBadge,
   onIonViewWillEnter,
   IonAvatar,
 } from '@ionic/vue'
@@ -254,12 +254,12 @@ import {
 import {
   heart,
   personCircle,
-  storefrontOutline,
-  add,
+  // storefrontOutline,
+  // add,
   cartOutline,
   // searchOutline,
-  chatbubblesOutline,
-  chevronForwardCircle,
+  // chatbubblesOutline,
+  // chevronForwardCircle,
   // chevronBackOutline,
   // chevronForwardOutline,
   // funnelOutline,
@@ -272,12 +272,12 @@ import '@/assets/styles/main.css'
 
 const router = useRouter()
 const store = useProductStore()
-const chatStore = useChatStore()
+// const chatStore = useChatStore()
 const favoriteStore = useFavoriteStore()
 
 const isLoggedIn = ref(false)
-const isChatFabOpen = ref(false)
-const unreadCount = computed(() => chatStore.totalUnread)
+// const isChatFabOpen = ref(false)
+// const unreadCount = computed(() => chatStore.totalUnread)
 
 // interface CarouselState {
 //   index: number
@@ -498,9 +498,9 @@ const confirmLogin = async () => {
 //   router.push('/tabs/search')
 // }
 
-const goToSell = () => {
-  router.push('/tabs/sell')
-}
+// const goToSell = () => {
+//   router.push('/tabs/sell')
+// }
 
 const goToPurchases = () => {
   if (!isLoggedIn.value) {
@@ -519,10 +519,10 @@ const goToProduct = (id: number) => {
   router.push(`/product/${id}`)
 }
 
-const goToSellFromFab = () => {
-  isChatFabOpen.value = false
-  goToSell()
-}
+// const goToSellFromFab = () => {
+//   isChatFabOpen.value = false
+//   goToSell()
+// }
 
 const goToLogin = () => {
   router.push('/login')
@@ -544,22 +544,22 @@ const goToFavorites = () => {
   router.push('/tabs/favorites')
 }
 
-const toggleChatFab = () => {
-  isChatFabOpen.value = !isChatFabOpen.value
-}
+// const toggleChatFab = () => {
+//   isChatFabOpen.value = !isChatFabOpen.value
+// }
 
-const goToChatList = (type: 'support' | 'seller') => {
-  if (!isLoggedIn.value) {
-    confirmLogin()
-    return
-  }
-  isChatFabOpen.value = false
-  if (type === 'support') {
-    router.push('/tabs/chat')
-    return
-  }
-  router.push('/chat/1')
-}
+// const goToChatList = (type: 'support' | 'seller') => {
+//   if (!isLoggedIn.value) {
+//     confirmLogin()
+//     return
+//   }
+//   isChatFabOpen.value = false
+//   if (type === 'support') {
+//     router.push('/tabs/chat')
+//     return
+//   }
+//   router.push('/chat/1')
+// }
 
 watch(
   () => [
