@@ -283,14 +283,14 @@ const isLoggedIn = ref(false)
 const isChatFabOpen = ref(false)
 const unreadCount = computed(() => chatStore.totalUnread)
 
-interface CarouselState {
-  index: number
-  slideSize: number
-  isTransitioning: boolean
-  clones: number
-  touchStartX: number | null
-  touchDeltaX: number
-}
+// interface CarouselState {
+//   index: number
+//   slideSize: number
+//   isTransitioning: boolean
+//   clones: number
+//   touchStartX: number | null
+//   touchDeltaX: number
+// }
 
 // const carouselState = reactive<Record<string, CarouselState>>({})
 
@@ -449,12 +449,12 @@ const categorySections = computed(() => {
     .filter((section) => section.items.length > 0)
 })
 
-const hasMore = computed(() => {
-  if (showFiltersLayout.value) {
-    return visibleCount.value < filteredProducts.value.length
-  }
-  return visibleCount.value < nonCarouselProducts.value.length
-})
+// const hasMore = computed(() => {
+//   if (showFiltersLayout.value) {
+//     return visibleCount.value < filteredProducts.value.length
+//   }
+//   return visibleCount.value < nonCarouselProducts.value.length
+// })
 
 const hasContent = computed(() => {
   if (showFiltersLayout.value) {
@@ -498,9 +498,9 @@ const confirmLogin = async () => {
 }
 
 /* enrutamientos */
-const goToSearch = () => {
-  router.push('/tabs/search')
-}
+// const goToSearch = () => {
+//   router.push('/tabs/search')
+// }
 
 const goToSell = () => {
   router.push('/tabs/sell')
@@ -578,7 +578,7 @@ watch(
     filters.brand,
   ],
   () => {
-    resetVisibleCount()
+    visibleCount.value = itemsPerPage
   },
 )
 
