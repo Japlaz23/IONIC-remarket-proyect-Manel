@@ -27,7 +27,6 @@
             v-model="store.searchQuery"
             placeholder="Buscar productos..."
             showCancelButton="focus"
-            @ionInput="resetVisibleCount"
           ></ion-searchbar>
         </div>
         <div class="header-right">
@@ -222,7 +221,7 @@ import { Navigation, Pagination } from 'swiper/modules'
 import FiltersMenu from '@/components/FiltersMenu.vue'
 import CategoryMenu from '@/components/CategoryMenu.vue'
 import { HOME_CATEGORIES, BRANDS_BY_CATEGORY } from '@/utils/constants'
-import { computed, ref, reactive, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, reactive, watch, nextTick } from 'vue'
 import { useProductStore } from '@/stores/productStore'
 import { useChatStore } from '@/stores/chatStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
@@ -237,9 +236,9 @@ import {
   IonSearchbar,
   IonButtons,
   IonContent,
-  IonInput,
-  IonSelect,
-  IonSelectOption,
+  // IonInput,
+  // IonSelect,
+  // IonSelectOption,
   menuController,
   IonFab,
   IonFabButton,
@@ -249,14 +248,11 @@ import {
   IonCardTitle,
   IonCardContent,
   IonImg,
-  IonGrid,
-  IonRow,
+  // IonGrid,
+  // IonRow,
   IonBadge,
-  alertController,
   onIonViewWillEnter,
-  IonLabel,
   IonAvatar,
-  IonItem,
 } from '@ionic/vue'
 
 import {
@@ -266,12 +262,12 @@ import {
   menuOutline,
   add,
   cartOutline,
-  searchOutline,
+  // searchOutline,
   chatbubblesOutline,
   chevronForwardCircle,
-  chevronBackOutline,
-  chevronForwardOutline,
-  funnelOutline,
+  // chevronBackOutline,
+  // chevronForwardOutline,
+  // funnelOutline,
   heartOutline,
 } from 'ionicons/icons'
 
@@ -296,8 +292,7 @@ interface CarouselState {
   touchDeltaX: number
 }
 
-const carouselState = reactive<Record<string, CarouselState>>({})
-const infiniteScrollRef = ref<HTMLElement | null>(null)
+// const carouselState = reactive<Record<string, CarouselState>>({})
 
 const itemsPerPage = 8
 const visibleCount = ref(itemsPerPage)
@@ -335,9 +330,9 @@ const availableBrands = computed(() => {
   return brandsByCategory[selectedCategory.value]
 })
 
-const selectCategory = (categoryId: string) => {
-  selectedCategory.value = categoryId
-}
+// const selectCategory = (categoryId: string) => {
+//   selectedCategory.value = categoryId
+// }
 
 const openCategoryMenu = async () => {
   await menuController.open()
@@ -352,9 +347,9 @@ const selectCategoryFromMenu = async (categoryId: string) => {
   await menuController.close()
 }
 
-const openFiltersMenu = async () => {
-  await menuController.open('filters-menu')
-}
+// const openFiltersMenu = async () => {
+//   await menuController.open('filters-menu')
+// }
 
 const closeFiltersMenu = async () => {
   await menuController.close('filters-menu')
@@ -467,69 +462,6 @@ const hasContent = computed(() => {
   }
   return carouselSections.value.length > 0 || visibleNonCarouselProducts.value.length > 0
 })
-
-const getClonesCount = (itemsCount: number) => {
-  if (itemsCount <= 1) {
-    return 0
-  }
-  return Math.min(2, itemsCount)
-}
-
-const getCarouselState = (sectionId: string, itemsCount: number) => {
-  if (!carouselState[sectionId]) {
-    carouselState[sectionId] = {
-      index: 0,
-      slideSize: 0,
-      isTransitioning: true,
-      clones: getClonesCount(itemsCount),
-      touchStartX: null,
-      touchDeltaX: 0,
-    }
-  }
-
-  carouselState[sectionId].clones = getClonesCount(itemsCount)
-  return carouselState[sectionId]
-}
-
-
-const nextSlide = (sectionId: string, itemsCount: number) => {
-  if (itemsCount <= 1) {
-    return
-  }
-  const state = getCarouselState(sectionId, itemsCount)
-  state.isTransitioning = true
-  state.index += 2
-}
-
-const prevSlide = (sectionId: string, itemsCount: number) => {
-  if (itemsCount <= 1) {
-    return
-  }
-  const state = getCarouselState(sectionId, itemsCount)
-  state.isTransitioning = true
-  state.index -= 2
-}
-
-const goToSlide = (sectionId: string, targetIndex: number, itemsCount: number) => {
-  if (itemsCount <= 1) {
-    return
-  }
-  const state = getCarouselState(sectionId, itemsCount)
-  state.isTransitioning = true
-  state.index = targetIndex + state.clones
-}
-
-
-const resetVisibleCount = async () => {
-  visibleCount.value = itemsPerPage
-  await nextTick()
-  const target = infiniteScrollRef.value as HTMLIonInfiniteScrollElement | null
-  if (target) {
-    target.disabled = !hasMore.value
-  }
-}
-
-
 
 /* Función para alternar favorito de un producto */
 const toggleProductFavorite = (e: Event, productId: number) => {
