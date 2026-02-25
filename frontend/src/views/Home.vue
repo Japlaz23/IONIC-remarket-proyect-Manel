@@ -495,41 +495,25 @@ const getCarouselState = (sectionId: string, itemsCount: number) => {
 }
 
 
-const updateCarouselSlideSize = (sectionId: string) => {
-  const track = carouselTrackRefs.value[sectionId]
-  const state = carouselState[sectionId]
 
-  if (!track || !state) {
-    return
-  }
 
-  const slide = track.querySelector<HTMLElement>('.carousel-slide')
-  if (!slide) {
-    return
-  }
-  const styles = window.getComputedStyle(track)
-  const gapValue = styles.columnGap || styles.gap || '12px'
-  const gap = Number.parseFloat(gapValue) || 12
-  state.slideSize = slide.getBoundingClientRect().width + gap
-}
+// const initCarousel = async (sectionId: string, itemsCount: number) => {
+//   const state = getCarouselState(sectionId, itemsCount)
 
-const initCarousel = async (sectionId: string, itemsCount: number) => {
-  const state = getCarouselState(sectionId, itemsCount)
+//   if (itemsCount <= 1) {
+//     state.index = 0
+//     state.isTransitioning = false
+//     return
+//   }
 
-  if (itemsCount <= 1) {
-    state.index = 0
-    state.isTransitioning = false
-    return
-  }
+//   if (state.index === 0 || state.index < state.clones || state.index >= itemsCount + state.clones * 2) {
+//     state.index = state.clones
+//   }
 
-  if (state.index === 0 || state.index < state.clones || state.index >= itemsCount + state.clones * 2) {
-    state.index = state.clones
-  }
-
-  state.isTransitioning = true
-  await nextTick()
-  updateCarouselSlideSize(sectionId)
-}
+//   state.isTransitioning = true
+//   await nextTick()
+//   updateCarouselSlideSize(sectionId)
+// }
 
 const nextSlide = (sectionId: string, itemsCount: number) => {
   if (itemsCount <= 1) {
@@ -558,49 +542,7 @@ const goToSlide = (sectionId: string, targetIndex: number, itemsCount: number) =
   state.index = targetIndex + state.clones
 }
 
-const getCarouselDotIndex = (sectionId: string, itemsCount: number) => {
-  if (itemsCount <= 1) {
-    return 0
-  }
-  const state = getCarouselState(sectionId, itemsCount)
-  const normalized = (state.index - state.clones) % itemsCount
-  return normalized < 0 ? normalized + itemsCount : normalized
-}
 
-const onCarouselTouchStart = (event: TouchEvent, sectionId: string) => {
-  const state = carouselState[sectionId]
-  if (!state) {
-    return
-  }
-  state.touchStartX = event.touches[0]?.clientX ?? null
-  state.touchDeltaX = 0
-}
-
-const onCarouselTouchMove = (event: TouchEvent, sectionId: string) => {
-  const state = carouselState[sectionId]
-  if (!state || state.touchStartX === null) {
-    return
-  }
-  state.touchDeltaX = (event.touches[0]?.clientX ?? state.touchStartX) - state.touchStartX
-}
-
-const onCarouselTouchEnd = (sectionId: string, itemsCount: number) => {
-  const state = carouselState[sectionId]
-  if (!state) {
-    return
-  }
-
-  if (Math.abs(state.touchDeltaX) > 30) {
-    if (state.touchDeltaX > 0) {
-      prevSlide(sectionId, itemsCount)
-    } else {
-      nextSlide(sectionId, itemsCount)
-    }
-  }
-
-  state.touchStartX = null
-  state.touchDeltaX = 0
-}
 
 // const ionInfinite = async (event: CustomEvent) => {
 //   if (visibleCount.value < filteredProducts.value.length) {
@@ -624,15 +566,6 @@ const resetVisibleCount = async () => {
   }
 }
 
-const goToHomeWithCarousel = () => {
-  selectedCategory.value = ''
-  router.push('/tabs/home')
-}
-
-const goToProduct = (id: number) => {
-  router.push(`/product/${id}`)
-}
-
 // const getSellerRating = (sellerId: number) => {
 //   const ratingStr = reviewStore.getSellerAverageRating(sellerId)
 //   const rating = typeof ratingStr === 'string' ? parseFloat(ratingStr) : ratingStr
@@ -644,6 +577,7 @@ const goToProduct = (id: number) => {
 //   }
 // }
 
+/* Función para alternar favorito de un producto */
 const toggleProductFavorite = (e: Event, productId: number) => {
   e.stopPropagation()
   favoriteStore.loadFavorites()
@@ -654,38 +588,7 @@ const isFavoriteProduct = (productId: number) => {
   return favoriteStore.isFavorite(productId)
 }
 
-const goToLogin = () => {
-  router.push('/login')
-}
-
-const goToProfileCustumer = () => {
-  if (!isLoggedIn.value) {
-    confirmLogin()
-    return
-  }
-  router.push('/tabs/profile')
-}
-
-const goToFavorites = () => {
-  if (!isLoggedIn.value) {
-    confirmLogin()
-    return
-  }
-  router.push('/tabs/favorites')
-}
-
-const goToPurchases = () => {
-  if (!isLoggedIn.value) {
-    confirmLogin()
-    return
-  }
-  router.push('/tabs/purchases')
-}
-
-const goToSearch = () => {
-  router.push('/tabs/search')
-}
-
+/* Función para mostrar alerta (SweetAlert) de inicio de sesión */
 const confirmLogin = async () => {
   const result = await Swal.fire({
     title: 'Inicia sesion',
@@ -708,13 +611,55 @@ const confirmLogin = async () => {
   }
 }
 
+/* enrutamientos */
+const goToSearch = () => {
+  router.push('/tabs/search')
+}
+
 const goToSell = () => {
   router.push('/tabs/sell')
+}
+
+const goToPurchases = () => {
+  if (!isLoggedIn.value) {
+    confirmLogin()
+    return
+  }
+  router.push('/tabs/purchases')
+}
+
+const goToHomeWithCarousel = () => {
+  selectedCategory.value = ''
+  router.push('/tabs/home')
+}
+
+const goToProduct = (id: number) => {
+  router.push(`/product/${id}`)
 }
 
 const goToSellFromFab = () => {
   isChatFabOpen.value = false
   goToSell()
+}
+
+const goToLogin = () => {
+  router.push('/login')
+}
+
+const goToProfileCustumer = () => {
+  if (!isLoggedIn.value) {
+    confirmLogin()
+    return
+  }
+  router.push('/tabs/profile')
+}
+
+const goToFavorites = () => {
+  if (!isLoggedIn.value) {
+    confirmLogin()
+    return
+  }
+  router.push('/tabs/favorites')
 }
 
 const toggleChatFab = () => {
@@ -733,22 +678,6 @@ const goToChatList = (type: 'support' | 'seller') => {
   }
   router.push('/chat/1')
 }
-
-const handleCarouselResize = () => {
-  Object.keys(carouselState).forEach((sectionId) => {
-    updateCarouselSlideSize(sectionId)
-  })
-}
-
-watch(
-  carouselSections,
-  (sections) => {
-    sections.forEach((section) => {
-      initCarousel(section.id, section.items.length)
-    })
-  },
-  { immediate: true },
-)
 
 watch(
   () => [
