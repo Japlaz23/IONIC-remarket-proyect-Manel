@@ -192,7 +192,13 @@
           </ion-card-content>
         </ion-card>
       </div>
+
+      <!-- ========= layout filtros ========= -->
+
+      
     </ion-content>
+
+
 <!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->
     <ion-fab
       slot="fixed"
