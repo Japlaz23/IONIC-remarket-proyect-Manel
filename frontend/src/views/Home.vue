@@ -53,7 +53,8 @@
     </ion-toolbar>
     <ion-toolbar class="categorys-menu">
       <ion-button @click="openCategoryMenu">
-        <ion-icon :icon="listOutline"> Todas las categorías</ion-icon>
+        <ion-icon :icon="listOutline"></ion-icon>
+        <span class="ml-2 hidden sm:inline">Categorías</span>
       </ion-button>
      
     </ion-toolbar>
@@ -135,10 +136,8 @@
           </section>
         </section>
       </div>
-      <!-- grid         v-if="showFiltersLayout" -->
-       <div
-       class="product-grid"
-        >
+      <!-- grid v-if="showFiltersLayout" -->
+       <div class="product-grid">
         <ion-card
           v-for="product in visibleProducts"
           :key="product.id"
