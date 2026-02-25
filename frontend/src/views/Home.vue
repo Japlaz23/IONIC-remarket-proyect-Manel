@@ -13,26 +13,22 @@
     @closeFiltersMenu="closeFiltersMenu"
     @resetFilters="resetFilters"
   />
-  <ion-header class="header-content">
-    <ion-toolbar class="header-toolbar">
+  <ion-header>
+    <ion-toolbar>
+      <ion-item> 
+        <ion-avatar slot="start" class="logo-section" @click="goToHomeWithCarousel">
+          <ion-img src="/logo.png" alt="Logo" class="logo-image logo-icon-box"></ion-img>
+      </ion-avatar>
+      <ion-label class="logo-text">ReMarket</ion-label>
 
-      <!-- Logo -->
-      <div class="logo-section" @click="goToHomeWithCarousel">
-        <div class="logo-icon-box">
-          <ion-img src="/logo.png" alt="Logo" class="logo-image"></ion-img>
-        </div>
-        <span class="brand-title">ReMarket</span>
-      </div>
       <!-- Searchbar -->
-      <div class="center-searchbar">
         <ion-searchbar
-          class="home-searchbar"
+          class=" home-searchbar"
           v-model="store.searchQuery"
           placeholder="Buscar productos..."
           showCancelButton="focus"
           @ionInput="resetVisibleCount"
         ></ion-searchbar>
-      </div>
 
       <!-- Botones -->
       <ion-buttons class="actions-buttons">
@@ -56,23 +52,19 @@
           <ion-icon :icon="personCircle"></ion-icon>
         </ion-button>
       </ion-buttons>
+    </ion-item>
     </ion-toolbar>
 
           <!-- Menú horizontal de categorías -->
-      <div class="categories-toolbar">
-          <div class="menu-wrapper">          
-            <ion-button class="filters-button mobile-only" @click="openFiltersMenu">
-              <ion-icon :icon="funnelOutline" slot="start"></ion-icon>
-              Filtros
-            </ion-button>
-          </div>
+      <div class="categories-toolbar">      
           <ion-button class="menu-button" @click="openCategoryMenu">
             <ion-icon :icon="menuOutline"></ion-icon>
             <span>Todas las categorías</span>
           </ion-button>
         </div>
-        <div class="categories-scroll">
-          <div
+    
+        
+          <!-- <div
             v-for="category in categories"
             :key="category.id"
             @click="selectCategory(category.id)"
@@ -80,12 +72,13 @@
           >
             {{ category.name }}
 
-        </div>
-      </div>
+        </div> -->
+
   </ion-header>
 
       <!-- Contenido Carrusell + grid-->
-    <ion-content id="home-content">
+    <ion-content >
+      <div class="page-container">
       <!-- Mostrar carruseles o layout de categorías según el estado -->
       <div v-if="!hasContent" class="empty-state">
         <p>No hay productos para mostrar</p>
@@ -99,61 +92,63 @@
             </div>
 
             <div
-              class="product-carousel carousel-wrapper"
-              @touchstart.passive="onCarouselTouchStart($event, section.id)"
-              @touchmove.passive="onCarouselTouchMove($event, section.id)"
-              @touchend="onCarouselTouchEnd(section.id, section.items.length)"
+              class="carousel-wrapper"
+ 
             >
               <!-- Carousel -->
-              <Swiper
-                :loop="true"
-                :pagination="{
-                  clickable: true,
-                }"
-                :navigation="true"
-                :modules="modules"
-                :breakpoints="{
-                  0: { slidesPerView: 2, spaceBetween: 10 },
-                  480: { slidesPerView: 2, spaceBetween: 20 },
-                  768: { slidesPerView: 2, spaceBetween: 30 },
-                  1024: { slidesPerView: 4, spaceBetween: 30 },
-                }"
-                class="product-swiper"                  
+              <div class="carousel-row">
+                <Swiper
+                  :loop="true"
+                  :navigation="{ nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }"
+                  :pagination="false"
+                  :modules="modules"
+                  :breakpoints="{
+                    0: { slidesPerView: 2, spaceBetween: 10 },
+                    480: { slidesPerView: 2, spaceBetween: 20 },
+                    768: { slidesPerView: 2, spaceBetween: 30 },
+                    1024: { slidesPerView: 4, spaceBetween: 30 },
+                  }"
+                  class="product-swiper"
                 >
-              <SwiperSlide
-              v-for="(product, index) in section.items"
-              :key="`${section.id}-${product.id}-${index}`"
-              >
-              <ion-card
-              class="product-card"
-              @click="goToProduct(product.id)"
-              >
-              <div class="product-image-container">
-                <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
-                <button 
-                  type="button"
-                  class="favorite-btn"
-                  :class="{ active: isFavoriteProduct(product.id) }"
-                  @click="toggleProductFavorite($event, product.id)"
-                >
-                  <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
-                </button>
+                  <SwiperSlide
+                    v-for="(product, index) in section.items"
+                    :key="`${section.id}-${product.id}-${index}`"
+                  >
+                    <ion-card
+                      class="product-card"
+                      @click="goToProduct(product.id)"
+                    >
+                      <div class="product-image-container">
+                        <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                        <button 
+                          type="button"
+                          class="favorite-btn"
+                          :class="{ active: isFavoriteProduct(product.id) }"
+                          @click="toggleProductFavorite($event, product.id)"
+                        >
+                          <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
+                        </button>
+                      </div>
+                      <ion-card-header>
+                        <ion-card-title class="product-title">
+                          {{ product.title }}
+                        </ion-card-title>
+                      </ion-card-header>
+                      <ion-card-content>
+                        <div class="product-meta">
+                          <span class="product-price">{{ product.price }}€</span>
+                          <span class="product-location">{{ product.location }}</span>
+                        </div>
+                      </ion-card-content>
+                    </ion-card>
+                  </SwiperSlide>
+                </Swiper>
+                <button class=" swiper-button-prev" ></button>
+                <button class=" swiper-button-next" ></button>
               </div>
-              <ion-card-header>
-                <ion-card-title class="product-title">
-                  {{ product.title }}
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content>
-                <div class="product-meta">
-                  <span class="product-price">{{ product.price }}€</span>
-                  <span class="product-location">{{ product.location }}</span>
-                </div>
-              </ion-card-content>
-              </ion-card>
-            </SwiperSlide>
-          </Swiper>
-            </div>
+          
+        
+        </div>
           </section>
         </section>
       </div>
@@ -195,7 +190,7 @@
 
       <!-- ========= layout filtros ========= -->
 
-      
+      </div>
     </ion-content>
 
 
@@ -245,7 +240,6 @@ import { HOME_CATEGORIES, BRANDS_BY_CATEGORY } from '@/utils/constants'
 import { computed, ref, reactive, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { useProductStore } from '@/stores/productStore'
 import { useChatStore } from '@/stores/chatStore'
-import { useReviewStore } from '@/stores/reviewStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
 import { useRouter } from 'vue-router'
 /* Ionic & Vue */
@@ -274,9 +268,12 @@ import {
   IonRow,
   IonBadge,
   alertController,
-  onIonViewWillEnter
+  onIonViewWillEnter,
+  IonLabel,
+  IonAvatar,
+  IonItem,
 } from '@ionic/vue'
-import type { ComponentPublicInstance } from 'vue'
+
 import {
   heart,
   personCircle,
@@ -298,7 +295,6 @@ import '@/assets/styles/main.css'
 const router = useRouter()
 const store = useProductStore()
 const chatStore = useChatStore()
-const reviewStore = useReviewStore()
 const favoriteStore = useFavoriteStore()
 
 const isLoggedIn = ref(false)
@@ -512,22 +508,6 @@ const getCarouselState = (sectionId: string, itemsCount: number) => {
   return carouselState[sectionId]
 }
 
-const setCarouselTrackRef = (sectionId: string) => (el: Element | ComponentPublicInstance | null) => {
-  carouselTrackRefs.value[sectionId] = el as HTMLElement | null
-}
-
-const getCarouselItems = (section: { items: typeof store.filteredProducts }) => {
-  const items = section.items
-  const clones = getClonesCount(items.length)
-
-  if (clones === 0) {
-    return items
-  }
-
-  const head = items.slice(0, clones)
-  const tail = items.slice(-clones)
-  return [...tail, ...items, ...head]
-}
 
 const updateCarouselSlideSize = (sectionId: string) => {
   const track = carouselTrackRefs.value[sectionId]
@@ -541,7 +521,6 @@ const updateCarouselSlideSize = (sectionId: string) => {
   if (!slide) {
     return
   }
-
   const styles = window.getComputedStyle(track)
   const gapValue = styles.columnGap || styles.gap || '12px'
   const gap = Number.parseFloat(gapValue) || 12
@@ -564,54 +543,6 @@ const initCarousel = async (sectionId: string, itemsCount: number) => {
   state.isTransitioning = true
   await nextTick()
   updateCarouselSlideSize(sectionId)
-}
-
-const getCarouselTrackStyle = (sectionId: string) => {
-  const state = carouselState[sectionId]
-
-  if (!state || state.slideSize === 0) {
-    return {}
-  }
-
-  return {
-    transform: `translateX(-${state.index * state.slideSize}px)`,
-    transition: state.isTransitioning ? 'transform 450ms ease' : 'none',
-  }
-}
-
-const jumpToIndex = (sectionId: string, nextIndex: number) => {
-  const state = carouselState[sectionId]
-
-  if (!state) {
-    return
-  }
-
-  state.isTransitioning = false
-  state.index = nextIndex
-  requestAnimationFrame(() => {
-    state.isTransitioning = true
-  })
-}
-
-const handleCarouselTransitionEnd = (sectionId: string, itemsCount: number) => {
-  if (itemsCount <= 1) {
-    return
-  }
-
-  const state = carouselState[sectionId]
-  if (!state) {
-    return
-  }
-
-  const clones = state.clones
-  if (state.index >= itemsCount + clones) {
-    jumpToIndex(sectionId, state.index - itemsCount)
-    return
-  }
-
-  if (state.index < clones) {
-    jumpToIndex(sectionId, state.index + itemsCount)
-  }
 }
 
 const nextSlide = (sectionId: string, itemsCount: number) => {
@@ -685,18 +616,18 @@ const onCarouselTouchEnd = (sectionId: string, itemsCount: number) => {
   state.touchDeltaX = 0
 }
 
-const ionInfinite = async (event: CustomEvent) => {
-  if (visibleCount.value < filteredProducts.value.length) {
-    visibleCount.value = Math.min(visibleCount.value + itemsPerPage, filteredProducts.value.length)
-  }
+// const ionInfinite = async (event: CustomEvent) => {
+//   if (visibleCount.value < filteredProducts.value.length) {
+//     visibleCount.value = Math.min(visibleCount.value + itemsPerPage, filteredProducts.value.length)
+//   }
 
-  await nextTick()
-  const target = event.target as HTMLIonInfiniteScrollElement | null
-  target?.complete()
-  if (!hasMore.value && target) {
-    target.disabled = true
-  }
-}
+//   await nextTick()
+//   const target = event.target as HTMLIonInfiniteScrollElement | null
+//   target?.complete()
+//   if (!hasMore.value && target) {
+//     target.disabled = true
+//   }
+// }
 
 const resetVisibleCount = async () => {
   visibleCount.value = itemsPerPage
@@ -716,16 +647,16 @@ const goToProduct = (id: number) => {
   router.push(`/product/${id}`)
 }
 
-const getSellerRating = (sellerId: number) => {
-  const ratingStr = reviewStore.getSellerAverageRating(sellerId)
-  const rating = typeof ratingStr === 'string' ? parseFloat(ratingStr) : ratingStr
-  if (rating === 0) return null
-  return {
-    value: rating,
-    stars: reviewStore.ratingToStars(rating),
-    count: reviewStore.getReviewsBySeller(sellerId).length,
-  }
-}
+// const getSellerRating = (sellerId: number) => {
+//   const ratingStr = reviewStore.getSellerAverageRating(sellerId)
+//   const rating = typeof ratingStr === 'string' ? parseFloat(ratingStr) : ratingStr
+//   if (rating === 0) return null
+//   return {
+//     value: rating,
+//     stars: reviewStore.ratingToStars(rating),
+//     count: reviewStore.getReviewsBySeller(sellerId).length,
+//   }
+// }
 
 const toggleProductFavorite = (e: Event, productId: number) => {
   e.stopPropagation()
@@ -862,24 +793,6 @@ onBeforeUnmount(() => {
 /* =========================
    HEADER HOME
 ========================= */
-.header-content {
-  width: 100%;
-  background: #fff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  z-index: 100;
-}
-
-.header-toolbar {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  min-height: 64px;
-  padding: 0 24px;
-  box-sizing: border-box;
-  gap: 0;
-}
 
 .logo-section {
   display: flex;
@@ -889,20 +802,17 @@ onBeforeUnmount(() => {
   min-width: 0;
 }
 
-.center-searchbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1 1 0;
-  min-width: 200px;
-  max-width: 700px;
-  margin: 0 32px;
-}
-
 .home-searchbar {
+  margin: 0 auto;
+  display: block;
   width: 100%;
-  min-width: 180px;
-  max-width: 700px;
+  max-width: 420px;
+  --background: #f1f5f9;
+  --border-radius: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --placeholder-color: #94a3b8;
+  --icon-color: #94a3b8;
 }
 
 .actions-buttons {
@@ -947,26 +857,6 @@ onBeforeUnmount(() => {
   margin-right: 0;
 }
 
-.center-searchbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1 1 100%;
-  min-width: 180px;
-  max-width: 600px;
-  margin: 0 32px;
-}
-
-.home-searchbar {
-  width: 100%;
-  max-width: 420px;
-  --background: #f1f5f9;
-  --border-radius: 12px;
-  --padding-start: 12px;
-  --padding-end: 12px;
-  --placeholder-color: #94a3b8;
-  --icon-color: #94a3b8;
-}
 
 .actions-buttons {
   display: flex;
@@ -1142,6 +1032,58 @@ onBeforeUnmount(() => {
 
 .favorite-btn ion-icon {
   font-size: 20px;
+}
+/* Contenedor central para toda la página */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .page-container {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
+.carousel-wrapper {
+  position: relative;
+  padding: 0 44px; /* espacio reservado para las flechas */
+  padding-bottom: 30px;
+}
+
+
+:deep(.swiper-button-prev) {
+  left: 8px;
+}
+
+:deep(.swiper-button-next) {
+  right: 8px;
+}
+
+/* Estilos para el carrusel con flechas laterales */
+.carousel-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+}
+
+.product-swiper {
+  flex: 1;
+  min-width: 0;
+}
+
+
+.swiper-button-prev::before {
+  content: "";
+}
+.swiper-button-next::before {
+  content: "";
 }
 
 </style>
