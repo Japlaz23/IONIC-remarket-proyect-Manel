@@ -79,7 +79,7 @@
               class="carousel-wrapper"
  
             >
-              <!-- Carousel -->
+              <!-- Carousel montado en Swiper.js -->
               <div class="carousel-row">
                 <Swiper
                   :loop="true"
@@ -577,7 +577,6 @@ watch(
     visibleCount.value = itemsPerPage
   },
 )
-
 </script>
 
 <style scoped>
