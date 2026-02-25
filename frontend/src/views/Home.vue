@@ -51,13 +51,12 @@
         </div>
       </div>
     </ion-toolbar>
-    <!-- Menú horizontal de categorías -->
-    <div class="categories-toolbar">      
-      <ion-button class="menu-button" @click="openCategoryMenu">
-        <ion-icon :icon="menuOutline"></ion-icon>
-        <span>Todas las categorías</span>
+    <ion-toolbar class="categorys-menu">
+      <ion-button @click="openCategoryMenu">
+        <ion-icon :icon="listOutline"> Todas las categorías</ion-icon>
       </ion-button>
-    </div>
+     
+    </ion-toolbar>
   </ion-header>
 
       <!-- Contenido Carrusell + grid-->
@@ -136,9 +135,8 @@
           </section>
         </section>
       </div>
-      <!-- grid -->
+      <!-- grid         v-if="showFiltersLayout" -->
        <div
-       v-if="showFiltersLayout"
        class="product-grid"
         >
         <ion-card
@@ -176,10 +174,9 @@
 
       </div>
     </ion-content>
-
-
+    
 <!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->
-    <ion-fab
+    <!-- <ion-fab
       slot="fixed"
       horizontal="start"
       vertical="bottom"
@@ -200,7 +197,7 @@
           <ion-icon :icon="storefrontOutline"></ion-icon>
         </ion-fab-button>
       </ion-fab-list>
-    </ion-fab>
+    </ion-fab> -->
 
   </ion-page>
 </template>
@@ -259,7 +256,6 @@ import {
   heart,
   personCircle,
   storefrontOutline,
-  menuOutline,
   add,
   cartOutline,
   // searchOutline,
@@ -269,6 +265,7 @@ import {
   // chevronForwardOutline,
   // funnelOutline,
   heartOutline,
+  listOutline,
 } from 'ionicons/icons'
 
 import Swal from 'sweetalert2'
@@ -738,7 +735,8 @@ watch(
 ========================= */
 .product-grid {
   display: grid;
-  gap: 12px;
+  gap: 20px;
+  padding-bottom: 20px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
