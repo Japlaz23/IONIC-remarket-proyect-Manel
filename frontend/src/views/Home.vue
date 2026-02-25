@@ -297,7 +297,6 @@ interface CarouselState {
 }
 
 const carouselState = reactive<Record<string, CarouselState>>({})
-const carouselTrackRefs = ref<Record<string, HTMLElement | null>>({})
 const infiniteScrollRef = ref<HTMLElement | null>(null)
 
 const itemsPerPage = 8
@@ -469,8 +468,6 @@ const hasContent = computed(() => {
   return carouselSections.value.length > 0 || visibleNonCarouselProducts.value.length > 0
 })
 
-
-
 const getClonesCount = (itemsCount: number) => {
   if (itemsCount <= 1) {
     return 0
@@ -494,26 +491,6 @@ const getCarouselState = (sectionId: string, itemsCount: number) => {
   return carouselState[sectionId]
 }
 
-
-
-
-// const initCarousel = async (sectionId: string, itemsCount: number) => {
-//   const state = getCarouselState(sectionId, itemsCount)
-
-//   if (itemsCount <= 1) {
-//     state.index = 0
-//     state.isTransitioning = false
-//     return
-//   }
-
-//   if (state.index === 0 || state.index < state.clones || state.index >= itemsCount + state.clones * 2) {
-//     state.index = state.clones
-//   }
-
-//   state.isTransitioning = true
-//   await nextTick()
-//   updateCarouselSlideSize(sectionId)
-// }
 
 const nextSlide = (sectionId: string, itemsCount: number) => {
   if (itemsCount <= 1) {
@@ -543,20 +520,6 @@ const goToSlide = (sectionId: string, targetIndex: number, itemsCount: number) =
 }
 
 
-
-// const ionInfinite = async (event: CustomEvent) => {
-//   if (visibleCount.value < filteredProducts.value.length) {
-//     visibleCount.value = Math.min(visibleCount.value + itemsPerPage, filteredProducts.value.length)
-//   }
-
-//   await nextTick()
-//   const target = event.target as HTMLIonInfiniteScrollElement | null
-//   target?.complete()
-//   if (!hasMore.value && target) {
-//     target.disabled = true
-//   }
-// }
-
 const resetVisibleCount = async () => {
   visibleCount.value = itemsPerPage
   await nextTick()
@@ -566,16 +529,7 @@ const resetVisibleCount = async () => {
   }
 }
 
-// const getSellerRating = (sellerId: number) => {
-//   const ratingStr = reviewStore.getSellerAverageRating(sellerId)
-//   const rating = typeof ratingStr === 'string' ? parseFloat(ratingStr) : ratingStr
-//   if (rating === 0) return null
-//   return {
-//     value: rating,
-//     stars: reviewStore.ratingToStars(rating),
-//     count: reviewStore.getReviewsBySeller(sellerId).length,
-//   }
-// }
+
 
 /* Función para alternar favorito de un producto */
 const toggleProductFavorite = (e: Event, productId: number) => {
@@ -696,13 +650,6 @@ watch(
   },
 )
 
-onMounted(() => {
-  window.addEventListener('resize', handleCarouselResize)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', handleCarouselResize)
-})
 </script>
 
 <style scoped>
