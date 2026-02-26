@@ -1,17 +1,19 @@
 <template>
   <ion-page>
-  <CategoryMenu
-    :categories="categories"
-    @closeCategoryMenu="closeCategoryMenu"
-    @selectCategoryFromMenu="selectCategoryFromMenu"
-  />
-  <FiltersMenu
-    :showFiltersLayout="showFiltersLayout"
-    :filters="filters"
-    :availableBrands="availableBrands"
-    @closeFiltersMenu="closeFiltersMenu"
-    @resetFilters="resetFilters"
-  />
+    <!-- CategoriesMenu para menú lateral -->
+    <CategoriesMenu
+      :categories="categories"
+      @closeCategoriesMenu="closeCategoriesMenu"
+      @selectCategoriesFromMenu="selectCategoriesFromMenu"
+    />
+
+    <FiltersMenu
+      :showFiltersLayout="showFiltersLayout"
+      :filters="filters"
+      :availableBrands="availableBrands"
+      @closeFiltersMenu="closeFiltersMenu"
+      @resetFilters="resetFilters"
+    />
   <ion-header>
     <ion-toolbar class="header-toolbar">
       <div class="header-content">
@@ -51,14 +53,15 @@
         </div>
       </div>
     </ion-toolbar>
-    <ion-toolbar class="categorys-menu">
-      <ion-button @click="openCategoryMenu">
-        <ion-icon :icon="listOutline"></ion-icon>
-        <span class="ml-2 hidden sm:inline">Categorías</span>
-      </ion-button>
-     
+    <ion-toolbar class="categories-menu">
+      <ion-buttons slot="start">
+        <ion-button @click="openCategoriesMenu" class="category-menu-btn">
+          <ion-icon :icon="listOutline"></ion-icon>
+          <span class="ml-2">Categorías</span>
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
-  </ion-header>
+    </ion-header>
 
       <!-- Contenido Carrusell + grid-->
     <ion-content >
@@ -130,8 +133,6 @@
                 <button class=" swiper-button-prev" ></button>
                 <button class=" swiper-button-next" ></button>
               </div>
-          
-        
         </div>
           </section>
         </section>
@@ -215,7 +216,7 @@ import { Navigation, Pagination } from 'swiper/modules'
 
 /* Componentes */
 import FiltersMenu from '@/components/FiltersMenu.vue'
-import CategoryMenu from '@/components/CategoryMenu.vue'
+import CategoriesMenu from '@/components/CategoriesMenu.vue'
 import { HOME_CATEGORIES, BRANDS_BY_CATEGORY } from '@/utils/constants'
 import { computed, ref, reactive, watch } from 'vue'
 import { useProductStore } from '@/stores/productStore'
@@ -232,21 +233,13 @@ import {
   IonSearchbar,
   IonButtons,
   IonContent,
-  // IonInput,
-  // IonSelect,
-  // IonSelectOption,
   menuController,
-  // IonFab,
-  // IonFabButton,
-  // IonFabList,
   IonCard,
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
   IonImg,
-  // IonGrid,
-  // IonRow,
-  // IonBadge,
+
   onIonViewWillEnter,
   IonAvatar,
 } from '@ionic/vue'
@@ -254,15 +247,7 @@ import {
 import {
   heart,
   personCircle,
-  // storefrontOutline,
-  // add,
   cartOutline,
-  // searchOutline,
-  // chatbubblesOutline,
-  // chevronForwardCircle,
-  // chevronBackOutline,
-  // chevronForwardOutline,
-  // funnelOutline,
   heartOutline,
   listOutline,
 } from 'ionicons/icons'
@@ -330,17 +315,17 @@ const availableBrands = computed(() => {
 //   selectedCategory.value = categoryId
 // }
 
-const openCategoryMenu = async () => {
-  await menuController.open()
+const openCategoriesMenu = async () => {
+  await menuController.open('categories-menu')
 }
 
-const closeCategoryMenu = async () => {
-  await menuController.close()
+const closeCategoriesMenu = async () => {
+  await menuController.close('categories-menu')
 }
 
-const selectCategoryFromMenu = async (categoryId: string) => {
+const selectCategoriesFromMenu = async (categoryId: string) => {
   selectedCategory.value = categoryId
-  await menuController.close()
+  await menuController.close('categories-menu')
 }
 
 // const openFiltersMenu = async () => {
@@ -391,7 +376,7 @@ const filteredProducts = computed(() => {
   } else if (filters.sort === 'price-desc') {
     list.sort((a, b) => b.price - a.price)
   } else {
-    list.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    list.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())  
   }
   return list
 })
@@ -421,7 +406,7 @@ const carouselSections = computed(() => {
     .filter((section) => section.items.length > 0)
 })
 
-const categorySections = computed(() => {
+const categoriesections = computed(() => {
   if (!showFiltersLayout.value) {
     return []
   }
@@ -454,7 +439,7 @@ const categorySections = computed(() => {
 
 const hasContent = computed(() => {
   if (showFiltersLayout.value) {
-    return categorySections.value.length > 0
+    return categoriesections.value.length > 0
   }
   return carouselSections.value.length > 0 || visibleNonCarouselProducts.value.length > 0
 })

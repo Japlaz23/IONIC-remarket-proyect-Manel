@@ -4,7 +4,7 @@
       <ion-toolbar class="bg-green-700 text-white flex items-center justify-between px-4 py-2">
         <ion-title class="text-lg font-bold">Todas las categorías</ion-title>
         <ion-buttons slot="end">
-          <ion-button class="hover:bg-green-800 rounded-full p-2" @click="closeCategoryMenu">
+          <ion-button class="hover:bg-green-800 rounded-full p-2" @click="closeCategoriesMenu">
             <ion-icon :icon="closeOutline"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -15,7 +15,7 @@
         <div
           v-for="category in categories as any[]"
           :key="category.id"
-          @click="selectCategoryFromMenu((category as any).id)"
+          @click="selectCategoriesFromMenu((category as any).id)"
           class="cursor-pointer px-4 py-3 hover:bg-green-50 text-gray-800"
         >
           {{ category.name }}
@@ -33,14 +33,14 @@ const props = defineProps({
   categories: Array,
 })
 
-const emits = defineEmits(['closeCategoryMenu', 'selectCategoryFromMenu'])
+const emits = defineEmits(['closeCategoriesMenu', 'selectCategoriesFromMenu'])
 
-function closeCategoryMenu() {
-  emits('closeCategoryMenu')
+function closeCategoriesMenu() {
+  emits('closeCategoriesMenu')
 }
 
-function selectCategoryFromMenu(id: string) {
-  emits('selectCategoryFromMenu', id)
+function selectCategoriesFromMenu(id: string) {
+  emits('selectCategoriesFromMenu', id)
 }
 </script>
 
