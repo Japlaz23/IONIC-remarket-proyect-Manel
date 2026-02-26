@@ -1,4 +1,5 @@
 export const HOME_CATEGORIES = [
+  { id: '', name: 'Todos' },
   { id: 'Electrónica', name: 'Electrónica' },
   { id: 'Vehículos', name: 'Vehículos' },
   { id: 'Moda', name: 'Moda' },
@@ -10,7 +11,7 @@ export const HOME_CATEGORIES = [
   { id: 'Música', name: 'Música' },
 ]
 
-export const BRANDS_BY_CATEGORY: Record<string, Array<{ value: string; label: string }>> = {
+export const BRANDS_BY_CATEGORIES: Record<string, Array<{ value: string; label: string }>> = {
   'Electrónica': [
     { value: 'all', label: 'Todas' },
     { value: 'apple', label: 'Apple' },

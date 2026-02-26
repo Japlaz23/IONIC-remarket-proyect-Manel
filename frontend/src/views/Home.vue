@@ -55,16 +55,32 @@
     </ion-toolbar>
     <ion-toolbar class="categories-menu">
       <ion-buttons slot="start">
-        <ion-button @click="openCategoriesMenu" class="category-menu-btn">
+        <ion-button @click="openCategoriesMenu" class="categories-menu-btn">
           <ion-icon :icon="listOutline"></ion-icon>
           <span class="ml-2">Categorías</span>
         </ion-button>
       </ion-buttons>
+      <ion-segment>
+        <ion-segment
+          v-model="store.selectedCategories"
+        >
+          <ion-segment-button
+            v-for="cat in categories"
+            :key="cat.id"
+            :value="cat.id"
+          >
+            {{ cat.name }}
+          </ion-segment-button>
+        </ion-segment>
+        <ion-segment-content>
+        </ion-segment-content>
+      </ion-segment>
     </ion-toolbar>
+
     </ion-header>
 
       <!-- Contenido Carrusell + grid-->
-    <ion-content >
+    <ion-content id="home-content">
       <div class="page-container">
       <!-- Mostrar carruseles o layout de categorías según el estado -->
       <div v-if="!hasContent" class="empty-state">
@@ -73,7 +89,7 @@
 
       <div v-else class="market-sections">
         <section v-if="!showFiltersLayout">
-          <section v-for="section in carouselSections" :key="section.id" class="category-section carousel-separated">
+          <section v-for="section in carouselSections" :key="section.id" class="categories-section carousel-separated">
             <div class="section-header">
               <h2>{{ section.name }}</h2>
             </div>
@@ -217,7 +233,7 @@ import { Navigation, Pagination } from 'swiper/modules'
 /* Componentes */
 import FiltersMenu from '@/components/FiltersMenu.vue'
 import CategoriesMenu from '@/components/CategoriesMenu.vue'
-import { HOME_CATEGORIES, BRANDS_BY_CATEGORY } from '@/utils/constants'
+import { HOME_CATEGORIES, BRANDS_BY_CATEGORIES } from '@/utils/constants'
 import { computed, ref, reactive, watch } from 'vue'
 import { useProductStore } from '@/stores/productStore'
 // import { useChatStore } from '@/stores/chatStore'
@@ -239,9 +255,11 @@ import {
   IonCardTitle,
   IonCardContent,
   IonImg,
-
   onIonViewWillEnter,
   IonAvatar,
+  IonSegment,
+  IonSegmentButton,
+  IonSegmentContent,
 } from '@ionic/vue'
 
 import {
@@ -293,39 +311,36 @@ onIonViewWillEnter(() => {
 
 const categories = HOME_CATEGORIES
 
-const carouselCategoryIds = new Set(['Electrónica'])
+const carouselcategoriesIds = new Set(['Electrónica'])
 
-const brandsByCategory = BRANDS_BY_CATEGORY
+const brandsBycategories = BRANDS_BY_CATEGORIES
 
-const selectedCategory = computed({
-  get: () => store.selectedCategory,
+const selectedcategories = computed({
+  get: () => store.selectedCategories,
   set: (value) => {
-    store.selectedCategory = value
+    store.selectedCategories = value
   },
 })
 
 const availableBrands = computed(() => {
-  if (!selectedCategory.value || !brandsByCategory[selectedCategory.value]) {
+  if (!selectedcategories.value || !brandsBycategories[selectedcategories.value]) {
     return []
   }
-  return brandsByCategory[selectedCategory.value]
+  return brandsBycategories[selectedcategories.value]
 })
 
-// const selectCategory = (categoryId: string) => {
-//   selectedCategory.value = categoryId
-// }
 
 const openCategoriesMenu = async () => {
-  await menuController.open('categories-menu')
+  await menuController.open()
 }
 
 const closeCategoriesMenu = async () => {
-  await menuController.close('categories-menu')
+  await menuController.close()
 }
 
-const selectCategoriesFromMenu = async (categoryId: string) => {
-  selectedCategory.value = categoryId
-  await menuController.close('categories-menu')
+const selectCategoriesFromMenu = async (categoriesId: string) => {
+  selectedcategories.value = categoriesId
+  await menuController.close()
 }
 
 // const openFiltersMenu = async () => {
@@ -383,14 +398,14 @@ const filteredProducts = computed(() => {
 
 const visibleProducts = computed(() => filteredProducts.value.slice(0, visibleCount.value))
 const nonCarouselProducts = computed(() =>
-  filteredProducts.value.filter((product) => !carouselCategoryIds.has(product.category)),
+  filteredProducts.value.filter((product) => !carouselcategoriesIds.has(product.categories)),
 )
 const visibleNonCarouselProducts = computed(() =>
   nonCarouselProducts.value.slice(0, visibleCount.value),
 )
 
 const showFiltersLayout = computed(() => {
-  return !!(store.selectedCategory || store.searchQuery.trim())
+  return !!(store.selectedCategories || store.searchQuery.trim())
 })
 
 const carouselSections = computed(() => {
@@ -398,10 +413,10 @@ const carouselSections = computed(() => {
     return []
   }
   return categories
-    .filter((category) => carouselCategoryIds.has(category.id))
-    .map((category) => ({
-      ...category,
-      items: filteredProducts.value.filter((product) => product.category === category.id),
+    .filter((categories) => carouselcategoriesIds.has(categories.id))
+    .map((categories) => ({
+      ...categories,
+      items: filteredProducts.value.filter((product) => product.categories === categories.id),
     }))
     .filter((section) => section.items.length > 0)
 })
@@ -412,7 +427,7 @@ const categoriesections = computed(() => {
   }
   
   // Si hay búsqueda activa, mostrar todos los resultados en una sola sección
-  if (store.searchQuery.trim() && !store.selectedCategory) {
+  if (store.searchQuery.trim() && !store.selectedCategories) {
     return [{
       id: 'search-results',
       name: 'Resultados de búsqueda',
@@ -422,10 +437,10 @@ const categoriesections = computed(() => {
   
   // Si hay categoría seleccionada, mostrar solo esa categoría
   return categories
-    .filter((category) => category.id === store.selectedCategory)
-    .map((category) => ({
-      ...category,
-      items: visibleProducts.value.filter((product) => product.category === category.id),
+    .filter((categories) => categories.id === store.selectedCategories)
+    .map((categories) => ({
+      ...categories,
+      items: visibleProducts.value.filter((product) => product.categories === categories.id),
     }))
     .filter((section) => section.items.length > 0)
 })
@@ -479,9 +494,9 @@ const confirmLogin = async () => {
 }
 
 /* enrutamientos */
-// const goToSearch = () => {
-//   router.push('/tabs/search')
-// }
+const goToSearch = () => {
+  router.push('/tabs/search')
+}
 
 // const goToSell = () => {
 //   router.push('/tabs/sell')
@@ -496,7 +511,7 @@ const goToPurchases = () => {
 }
 
 const goToHomeWithCarousel = () => {
-  selectedCategory.value = ''
+  selectedcategories.value = ''
   router.push('/tabs/home')
 }
 
@@ -549,7 +564,7 @@ const goToFavorites = () => {
 watch(
   () => [
     store.filteredProducts,
-    store.selectedCategory,
+    store.selectedCategories,
     store.searchQuery,
     filters.minPrice,
     filters.maxPrice,
@@ -696,7 +711,7 @@ watch(
   padding: 16px;
 }
 
-.category-section {
+.categories-section {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -937,5 +952,14 @@ watch(
   font-weight: bold;
   padding: 8px 24px !important;
   font-size: 1.1em;
+}
+
+.categories-menu {
+  --background: #f1f5f9;
+}
+
+.categories-menu-btn {
+  --background: #1a7f34;
+  --color: #ffffff;
 }
 </style>
