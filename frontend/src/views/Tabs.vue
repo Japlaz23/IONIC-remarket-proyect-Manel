@@ -121,7 +121,7 @@ const tabTransition = (_: HTMLElement, opts: { direction?: 'forward' | 'back'; e
 }
 
 const handleHomeTabClick = () => {
-  store.selectedCategory = ''
+  store.selectedCategories = ''
 }
 </script>
 

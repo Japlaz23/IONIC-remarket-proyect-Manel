@@ -21,7 +21,7 @@
           <ion-avatar class="logo-section">
             <ion-img src="/logo.png" alt="Logo" class="logo-image logo-icon-box"></ion-img>
           </ion-avatar>
-          <span class="ml-3 font-extrabold text-2xl text-gray-900 select-none">ReMarket</span>
+          <span class="logo-text">ReMarket</span>
         </div>
         <div class="header-center">
           <ion-searchbar
@@ -33,12 +33,12 @@
         </div>
         <div class="header-right">
           <ion-buttons class="actions-buttons">
-            <ion-button
+            <ion-button color="primary" fill="outline"
               v-if="!isLoggedIn"
               @click="goToLogin"
               class="login-btn"
             >
-              <span class="hidden sm:inline">Iniciar sesión</span>
+              <span>Iniciar sesión</span>
             </ion-button>
             <ion-button class="icon-btn" @click="goToPurchases">
               <ion-icon :icon="cartOutline"></ion-icon>
@@ -46,7 +46,11 @@
             <ion-button class="icon-btn" @click="goToFavorites">
               <ion-icon :icon="heartOutline"></ion-icon>
             </ion-button>
-            <ion-button class="icon-btn" @click="goToProfileCustumer">
+            <ion-button
+              v-if="isLoggedIn"
+              class="icon-btn"
+              @click="goToProfileCustumer"
+            >
               <ion-icon :icon="personCircle"></ion-icon>
             </ion-button>
           </ion-buttons>
@@ -54,29 +58,20 @@
       </div>
     </ion-toolbar>
     <ion-toolbar class="categories-menu">
-      <ion-buttons slot="start">
-        <ion-button @click="openCategoriesMenu" class="categories-menu-btn">
-          <ion-icon :icon="listOutline"></ion-icon>
-          <span class="ml-2">Categorías</span>
-        </ion-button>
-      </ion-buttons>
-      <ion-segment>
-        <ion-segment
-          v-model="store.selectedCategories"
-        >
-          <ion-segment-button
-            v-for="cat in categories"
-            :key="cat.id"
-            :value="cat.id"
-          >
+      <div style="display: flex; align-items: center;">
+        <ion-buttons slot="start">
+          <ion-button @click="openCategoriesMenu" class="categories-menu-btn">
+            <ion-icon :icon="listOutline"></ion-icon>
+            <span class="ml-2">Categorías</span>
+          </ion-button>
+        </ion-buttons>
+        <ion-segment style="margin-left: 8px;" v-model="store.selectedCategories" class="categories-segment">
+          <ion-segment-button v-for="cat in categories" :key="cat.id" :value="cat.id">
             {{ cat.name }}
           </ion-segment-button>
         </ion-segment>
-        <ion-segment-content>
-        </ion-segment-content>
-      </ion-segment>
+      </div>
     </ion-toolbar>
-
     </ion-header>
 
       <!-- Contenido Carrusell + grid-->
@@ -84,9 +79,14 @@
       <div class="page-container">
       <!-- Mostrar carruseles o layout de categorías según el estado -->
       <div v-if="!hasContent" class="empty-state">
-        <p>No hay productos para mostrar</p>
+        <div class="empty-icon">
+          <ion-icon :icon="cartOutline" size="large"></ion-icon>
+        </div>
+        <p class="empty-title">No hay productos para mostrar</p>
+        <p class="empty-desc">Intenta cambiar los filtros o busca otra categoría.</p>
       </div>
 
+      <!-- -->
       <div v-else class="market-sections">
         <section v-if="!showFiltersLayout">
           <section v-for="section in carouselSections" :key="section.id" class="categories-section carousel-separated">
@@ -154,37 +154,57 @@
         </section>
       </div>
       <!-- grid v-if="showFiltersLayout" -->
-       <div class="product-grid">
-        <ion-card
-          v-for="product in visibleProducts"
-          :key="product.id"
-          class="product-card"
-          @click="goToProduct(product.id)"
-        >
-          <div class="product-image-container">
-            <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
-            <button 
-              type="button"
-              class="favorite-btn"
-              :class="{ active: isFavoriteProduct(product.id) }"
-              @click="toggleProductFavorite($event, product.id)"
+      <ion-grid class="product-grid improved-grid">
+        <ion-row class="product-row center-row">
+          <ion-col
+            v-for="product in visibleProducts"
+            :key="product.id"
+            size="12"
+            size-sm="6"
+            size-md="4"
+            size-lg="3"
+            class="product-col"
+          >
+            <ion-card
+              class="product-card"
+              @click="goToProduct(product.id)"
             >
-              <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
-            </button>
-          </div>
-          <ion-card-header>
-            <ion-card-title class="product-title">
-              {{ product.title }}
-            </ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <div class="product-meta">
-              <span class="product-price">{{ product.price }}€</span>
-              <span class="product-location">{{ product.location }}</span>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </div>
+              <div class="product-image-container">
+                <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                <button 
+                  type="button"
+                  class="favorite-btn"
+                  :class="{ active: isFavoriteProduct(product.id) }"
+                  @click="toggleProductFavorite($event, product.id)"
+                >
+                  <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
+                </button>
+              </div>
+              <ion-card-header>
+                <ion-card-title class="product-title">
+                  {{ product.title }}
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="product-meta">
+                  <span class="product-price">{{ product.price }}€</span>
+                  <span class="product-location">{{ product.location }}</span>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col
+            v-for="n in (4 - visibleProducts.length > 0 ? 4 - visibleProducts.length : 0)"
+            :key="'empty-' + n"
+            size="12"
+            size-sm="6"
+            size-md="4"
+            size-lg="3"
+            class="product-col empty-col"
+          >
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
       <!-- ========= layout filtros ========= -->
 
@@ -259,7 +279,9 @@ import {
   IonAvatar,
   IonSegment,
   IonSegmentButton,
-  IonSegmentContent,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from '@ionic/vue'
 
 import {
@@ -494,9 +516,9 @@ const confirmLogin = async () => {
 }
 
 /* enrutamientos */
-const goToSearch = () => {
-  router.push('/tabs/search')
-}
+// const goToSearch = () => {
+//   router.push('/tabs/search')
+// }
 
 // const goToSell = () => {
 //   router.push('/tabs/sell')
@@ -580,6 +602,39 @@ watch(
 </script>
 
 <style scoped>
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  color: #64748b;
+  background: #f8fafc;
+  border-radius: 18px;
+  margin: 32px 0;
+  box-shadow: 0 2px 12px rgba(26,127,52,0.06);
+}
+.empty-icon {
+  font-size: 64px;
+  color: #b6e2c6;
+  margin-bottom: 12px;
+}
+.empty-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #1a7f34;
+}
+.empty-desc {
+  font-size: 1rem;
+  color: #64748b;
+  margin-bottom: 0;
+}
+.empty-col {
+  pointer-events: none;
+  background: transparent;
+  border: none;
+}
 /* =========================
    HEADER HOME
 ========================= */
@@ -731,11 +786,37 @@ watch(
 /* =========================
    GRID
 ========================= */
-.product-grid {
-  display: grid;
-  gap: 20px;
-  padding-bottom: 20px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+/* Mejor grid responsive y visual */
+.improved-grid {
+  padding-bottom: 32px;
+}
+.product-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+.center-row {
+  justify-content: center !important;
+}
+.product-col {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.product-card {
+  width: 100%;
+  max-width: 340px;
+  min-width: 220px;
+}
+@media (max-width: 600px) {
+  .product-row {
+    gap: 12px;
+  }
+  .product-card {
+    max-width: 100%;
+    min-width: 0;
+  }
 }
 
 /* =========================
@@ -962,4 +1043,27 @@ watch(
   --background: #1a7f34;
   --color: #ffffff;
 }
+
+
+/* Ocultar el menú lateral en pantallas grandes */
+@media (min-width: 992px) {
+  .categories-menu-btn {
+    display: none;
+  }
+}
+
+/* Ocular el segmento de categorías en pantallas pequeñas */
+@media (max-width: 873px) {
+  .categories-segment {
+    display: none;
+  }
+  .logo-text {
+    display: none;
+  }
+
+  .home-searchbar {
+    max-width: none;
+  }
+}
+
 </style>
