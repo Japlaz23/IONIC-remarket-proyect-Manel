@@ -153,7 +153,7 @@
           </section>
         </section>
       </div>
-      <!-- grid v-if="showFiltersLayout" -->
+      <!-- grid  -->
       <ion-grid class="product-grid improved-grid">
         <ion-row class="product-row center-row">
           <ion-col
