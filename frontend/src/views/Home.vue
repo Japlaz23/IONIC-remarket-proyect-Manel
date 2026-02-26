@@ -23,6 +23,7 @@
           </ion-avatar>
           <span class="logo-text">ReMarket</span>
         </div>
+        <!-- Searchbar -->
         <div class="header-center">
           <ion-searchbar
             class="home-searchbar"
@@ -31,8 +32,14 @@
             showCancelButton="focus"
           ></ion-searchbar>
         </div>
+
+        <!-- -->
         <div class="header-right">
           <ion-buttons class="actions-buttons">
+
+            <ion-button class="icon-btn-search" @click="goToSearch">
+              <ion-icon :icon="searchOutline"></ion-icon>
+            </ion-button>
             <ion-button color="primary" fill="outline"
               v-if="!isLoggedIn"
               @click="goToLogin"
@@ -209,32 +216,13 @@
       <!-- ========= layout filtros ========= -->
 
       </div>
-    </ion-content>
-    
-<!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->
-    <!-- <ion-fab
-      slot="fixed"
-      horizontal="start"
-      vertical="bottom"
-    >
-      <ion-fab-button class="chat-fab-button" @click="toggleChatFab">
-        <ion-icon :icon="chevronForwardCircle"></ion-icon>
-        <ion-badge v-if="unreadCount > 0" class="fab-badge">{{ unreadCount }}</ion-badge>
-      </ion-fab-button>
-      <ion-fab-list side="end" :class="{'fab-list-active': isChatFabOpen}">
-        <ion-fab-button class="chat-fab-item" title="Publicar" @click="goToSellFromFab">
-          <ion-icon :icon="add"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-button class="chat-fab-item chat-item" title="Vendedor" @click="goToChatList('seller')">
-          <ion-icon :icon="chatbubblesOutline"></ion-icon>
-          <ion-badge v-if="unreadCount > 0" class="fab-list-badge">{{ unreadCount }}</ion-badge>
-        </ion-fab-button>
-        <ion-fab-button class="chat-fab-item" title="Mensajes" @click="goToChatList('support')">
-          <ion-icon :icon="storefrontOutline"></ion-icon>
-        </ion-fab-button>
-      </ion-fab-list>
-    </ion-fab> -->
+      
+<!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->      
 
+
+
+
+    </ion-content>
   </ion-page>
 </template>
 
@@ -256,7 +244,7 @@ import CategoriesMenu from '@/components/CategoriesMenu.vue'
 import { HOME_CATEGORIES, BRANDS_BY_CATEGORIES } from '@/utils/constants'
 import { computed, ref, reactive, watch } from 'vue'
 import { useProductStore } from '@/stores/productStore'
-// import { useChatStore } from '@/stores/chatStore'
+import { useChatStore } from '@/stores/chatStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
 import { useRouter } from 'vue-router'
 /* Ionic & Vue */
@@ -282,7 +270,12 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonFab,
+  IonFabButton,
+  IonFabList,
+
 } from '@ionic/vue'
+
 
 import {
   heart,
@@ -290,6 +283,11 @@ import {
   cartOutline,
   heartOutline,
   listOutline,
+  chatbubblesOutline,
+  storefrontOutline,
+  chevronForwardCircle,
+  add,
+  searchOutline 
 } from 'ionicons/icons'
 
 import Swal from 'sweetalert2'
@@ -297,11 +295,11 @@ import '@/assets/styles/main.css'
 
 const router = useRouter()
 const store = useProductStore()
-// const chatStore = useChatStore()
+const chatStore = useChatStore()
 const favoriteStore = useFavoriteStore()
 
 const isLoggedIn = ref(false)
-// const isChatFabOpen = ref(false)
+const isChatFabOpen = ref(false)
 // const unreadCount = computed(() => chatStore.totalUnread)
 
 // interface CarouselState {
@@ -467,12 +465,6 @@ const categoriesections = computed(() => {
     .filter((section) => section.items.length > 0)
 })
 
-// const hasMore = computed(() => {
-//   if (showFiltersLayout.value) {
-//     return visibleCount.value < filteredProducts.value.length
-//   }
-//   return visibleCount.value < nonCarouselProducts.value.length
-// })
 
 const hasContent = computed(() => {
   if (showFiltersLayout.value) {
@@ -516,13 +508,13 @@ const confirmLogin = async () => {
 }
 
 /* enrutamientos */
-// const goToSearch = () => {
-//   router.push('/tabs/search')
-// }
+const goToSearch = () => {
+  router.push('/tabs/search')
+}
 
-// const goToSell = () => {
-//   router.push('/tabs/sell')
-// }
+const goToSell = () => {
+  router.push('/tabs/sell')
+}
 
 const goToPurchases = () => {
   if (!isLoggedIn.value) {
@@ -541,10 +533,10 @@ const goToProduct = (id: number) => {
   router.push(`/product/${id}`)
 }
 
-// const goToSellFromFab = () => {
-//   isChatFabOpen.value = false
-//   goToSell()
-// }
+const goToSellFromFab = () => {
+  isChatFabOpen.value = false
+  goToSell()
+}
 
 const goToLogin = () => {
   router.push('/login')
@@ -566,22 +558,22 @@ const goToFavorites = () => {
   router.push('/tabs/favorites')
 }
 
-// const toggleChatFab = () => {
-//   isChatFabOpen.value = !isChatFabOpen.value
-// }
+const toggleChatFab = () => {
+  isChatFabOpen.value = !isChatFabOpen.value
+}
 
-// const goToChatList = (type: 'support' | 'seller') => {
-//   if (!isLoggedIn.value) {
-//     confirmLogin()
-//     return
-//   }
-//   isChatFabOpen.value = false
-//   if (type === 'support') {
-//     router.push('/tabs/chat')
-//     return
-//   }
-//   router.push('/chat/1')
-// }
+const goToChatList = (type: 'support' | 'seller') => {
+  if (!isLoggedIn.value) {
+    confirmLogin()
+    return
+  }
+  isChatFabOpen.value = false
+  if (type === 'support') {
+    router.push('/tabs/chat')
+    return
+  }
+  router.push('/chat/1')
+}
 
 watch(
   () => [
@@ -1050,6 +1042,9 @@ watch(
   .categories-menu-btn {
     display: none;
   }
+  .icon-btn-search {
+    display: none;
+  }
 }
 
 /* Ocular el segmento de categorías en pantallas pequeñas */
@@ -1060,9 +1055,9 @@ watch(
   .logo-text {
     display: none;
   }
-
-  .home-searchbar {
-    max-width: none;
+  
+  .header-center {
+    display: none;
   }
 }
 

@@ -48,7 +48,7 @@
               <p :class="['chat-last-message', { unread: chat.unreadCount > 0 }]">
                 {{ chat.lastMessage }}
               </p>
-              <ion-badge v-if="chat.unreadCount > 0" color="primary" class="unread-badge">
+              <ion-badge  v-if="chat.unreadCount > 0" color="danger" class="unread-badge">
                 {{ chat.unreadCount }}
               </ion-badge>
             </div>

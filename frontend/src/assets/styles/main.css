@@ -249,29 +249,15 @@ ion-modal.google-auth-modal::part(backdrop) {
 }
 
 .google-continue {
-  --background: var(--primary-color);
-  --color: #ffffff;
+  --background: var(--ion-color-primary);
   --border-radius: 999px;
   font-weight: 600;
 }
 
 .google-cancel {
-  --color: var(--primary-color);
+  --color: var(--ion-color-danger);
   --border-radius: 999px;
   font-weight: 600;
 }
 
-/* ==================== COMPONENTES IONIC ==================== */
-ion-fab-button {
-  width: 64px !important;
-  height: 64px !important;
-}
-
-ion-segment-button {
-  --indicator-color: #1a7f34;
-  --color-checked: #1a7f34;
-  --color: #666666;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
 

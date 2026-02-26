@@ -14,7 +14,7 @@
         <ion-tab-button tab="favorites" href="/tabs/favorites">
           <ion-icon :icon="heartOutline"></ion-icon>
           <ion-label>Favoritos</ion-label>
-          <ion-badge v-if="favoriteCount > 0" class="tab-badge">{{ favoriteCount }}</ion-badge>
+          <ion-badge color="danger" v-if="favoriteCount > 0" class="tab-badge">{{ favoriteCount }}</ion-badge>
         </ion-tab-button>
 
         <ion-tab-button tab="sell" href="/tabs/sell">
@@ -25,7 +25,7 @@
         <ion-tab-button tab="chat" href="/tabs/chat">
           <ion-icon :icon="chatbubblesOutline"></ion-icon>
           <ion-label>Chat</ion-label>
-          <ion-badge v-if="unreadCount > 0" class="tab-badge">{{ unreadCount }}</ion-badge>
+          <ion-badge color="danger" v-if="unreadCount > 0" class="tab-badge">{{ unreadCount }}</ion-badge>
         </ion-tab-button>
 
         <ion-tab-button tab="payment-check" href="/tabs/payment-check">

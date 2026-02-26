@@ -141,24 +141,7 @@
       </div>
 
       <!-- RESULT MESSAGE -->
-      <ion-alert
-        v-if="paid"
-        :is-open="paid"
-        header="¡Pago Exitoso!"
-        message="Tu pedido ha sido confirmado. Recibirás una confirmación por email."
-        :buttons="['Aceptar']"
-        @didDismiss="paid = false"
-      ></ion-alert>
-
-      <!-- ERROR MESSAGE -->
-      <ion-alert
-        v-if="error"
-        :is-open="error"
-        header="Error de Pago"
-        :message="error"
-        :buttons="['Reintentar']"
-        @didDismiss="error = null"
-      ></ion-alert>
+      <!-- SweetAlert2 reemplaza los ion-alerts -->
     </ion-content>
 
     <!-- ACTION FOOTER -->
@@ -191,7 +174,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import Swal from 'sweetalert2'
+import { ref, onMounted, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   IonPage,
@@ -213,7 +197,6 @@ import {
   IonRadio,
   IonFooter,
   IonSpinner,
-  IonAlert,
 } from '@ionic/vue'
 import {
   cardOutline,
@@ -260,11 +243,37 @@ const processPayment = async () => {
     }
 
     paid.value = true
-    setTimeout(() => {
-      router.push('/tabs/purchases')
-    }, 2000)
+    await nextTick()
+    await Swal.fire({
+      icon: 'success',
+      title: '¡Pago Exitoso!',
+      text: 'Tu pedido ha sido confirmado. Recibirás una confirmación por email.',
+      confirmButtonText: 'Aceptar',
+      customClass: {
+        popup: 'swal2-remarket-popup',
+        confirmButton: 'swal2-remarket-confirm',
+        container: 'swal2-ionic-container-fix',
+      },
+      heightAuto: false,
+      target: document.body,
+    })
+    router.push('/tabs/purchases')
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Error al procesar el pago'
+    await nextTick()
+    await Swal.fire({
+      icon: 'error',
+      title: 'Error de Pago',
+      text: error.value,
+      confirmButtonText: 'Reintentar',
+      customClass: {
+        popup: 'swal2-remarket-popup',
+        confirmButton: 'swal2-remarket-confirm',
+        container: 'swal2-ionic-container-fix',
+      },
+      heightAuto: false,
+      target: document.body,
+    })
   } finally {
     isProcessing.value = false
   }
@@ -328,7 +337,7 @@ onMounted(() => {
 }
 
 .summary-title {
-  color: #ffffff !important;
+  color: #000000 !important;
   font-size: 16px !important;
   font-weight: 700 !important;
 }
@@ -357,17 +366,17 @@ onMounted(() => {
 }
 
 .detail-label {
-  color: #ffffff;
+  color: #000000;
   font-weight: 500;
 }
 
 .detail-value {
-  color: #e8f5e9;
+  color: #000000;
   font-weight: 600;
 }
 
 .detail-value.success {
-  color: #90ee90;
+  color: #56f756;
 }
 
 .summary-divider {
@@ -380,11 +389,11 @@ onMounted(() => {
 }
 
 .detail-label.bold {
-  color: #ffffff;
+  color: #000000;
 }
 
 .detail-value.bold {
-  color: #ffffff;
+  color: #000000;
 }
 
 .detail-value.large {

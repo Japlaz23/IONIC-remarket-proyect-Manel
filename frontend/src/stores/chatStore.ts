@@ -36,9 +36,9 @@ export const useChatStore = defineStore('chat', () => {
       productImage: '/product-1a.svg',
       otherUserId: 2,
       otherUserName: 'Juan Pérez',
-      lastMessage: '¿Todavía está disponible?',
+      lastMessage: 'Mañana a las 6pm me va genial, nos vemos entonces!',
       lastMessageTime: new Date('2026-02-17T10:50:00'),
-      unreadCount: 2,
+      unreadCount: 1,
       messages: [
         {
           id: 1,
