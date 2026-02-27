@@ -35,7 +35,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardHeader } from '@ionic/vue';
-import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
