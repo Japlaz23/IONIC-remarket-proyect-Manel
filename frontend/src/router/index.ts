@@ -64,6 +64,11 @@ const routes: RouteRecordRaw[] = [
         name: 'Purchases',
         component: Purchases,
       },
+      {
+        path: 'payment-check',
+        name: 'PaymentCheckTab',
+        component: PaymentCheck,
+      },
     ],
   },
   {
