@@ -1,3 +1,5 @@
+
+import ProfielSeller from '@/views/ProfielSeller.vue'
 import { createRouter, createWebHashHistory } from '@ionic/vue-router'
 import { type RouteRecordRaw } from 'vue-router'
 import Tabs from '@/views/Tabs.vue'
@@ -14,6 +16,11 @@ import Settings from '@/views/Settings.vue'
 import PaymentCheck from '@/views/PaymentCheck.vue'
 
 const routes: RouteRecordRaw[] = [
+    {
+      path: '/seller/:id',
+      name: 'SellerProfile',
+      component: ProfielSeller,
+    },
   {
     path: '/',
     redirect: '/tabs/home',

@@ -67,7 +67,7 @@
               <ion-card-header>
               </ion-card-header>
               <ion-card-content class="seller-content" style="padding: 20px;">
-                <img class="seller-avatar" src="/placeholder.svg" alt="Perfil del vendedor" />
+                <img class="seller-avatar" src="./assets/img/profilesSellers/profileSeller1.jpg" alt="Perfil del vendedor" @click="goToSellerProfile"/>
                 <div class="seller-meta">
                   <h3 class="seller-name">{{ product.seller }}</h3>
                   <p class="seller-rating">★★★★★ 4.8 · 24 ventas</p>
@@ -716,6 +716,7 @@ const onZoomPointerUp = (event: PointerEvent) => {
   }
 }
 
+
 const toggleZoom = () => {
   if (zoomScale.value > 1) {
     zoomScale.value = 1
@@ -724,6 +725,13 @@ const toggleZoom = () => {
   }
   zoomScale.value = 2
   zoomTranslate.value = clampTranslate({ x: 0, y: 0 })
+}
+
+const goToSellerProfile = () => {
+  if (!product.value) return
+  router.push({
+    path: `/seller/${product.value.sellerId}`
+  })
 }
 
 onMounted(() => {

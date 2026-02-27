@@ -775,8 +775,8 @@ watch(
   padding-bottom: 32px;
 }
 .product-row {
-  /* display: flex;
-  gap: 24px; */
+   display: flex;
+  gap: 24px; 
   justify-content: center;
 }
 .center-row {

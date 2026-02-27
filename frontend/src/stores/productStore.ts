@@ -8,6 +8,8 @@ interface Product {
   image: string
   category: string
   seller: string
+  sellerEmail?: string
+  sellerAvatar?: string
   sellerId: number
   condition: string
   location: string
@@ -27,6 +29,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/product-1a.svg',
       category: 'Electrónica',
       seller: 'Juan Pérez',
+      sellerEmail: 'juan.perez@example.com',
       sellerId: 1,
       condition: 'Usado - Buen estado',
       location: 'Madrid',
@@ -35,6 +38,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'iPhone 13 Pro en excelente estado',
       images: ['/product-1a.svg', '/product-1b.svg', '/product-1c.svg'],
       brand: 'apple',
+      sellerAvatar: './assets/img/profilesSellers/profileSeller1.jpg',
     },
     {
       id: 2,
@@ -43,6 +47,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/product-2a.svg',
       category: 'Electrónica',
       seller: 'María García',
+      sellerEmail: 'maria.garcia@example.com',
       sellerId: 2,
       condition: 'Nuevo',
       location: 'Barcelona',
@@ -51,6 +56,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'MacBook Air M2 sin usar',
       images: ['/product-2a.svg', '/product-2b.svg', '/product-2c.svg'],
       brand: 'apple',
+      sellerAvatar: './assets/img/profilesSellers/profileSeller2.jpg',
     },
     {
       id: 3,
@@ -59,6 +65,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Electrónica',
       seller: 'Lucia Ortiz',
+      sellerEmail: 'lucia.ortiz@example.com',
       sellerId: 3,
       condition: 'Usado - Buen estado',
       location: 'Valencia',
@@ -67,6 +74,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'Galaxy S22 con caja y cargador.',
       images: ['/placeholder.svg'],
       brand: 'samsung',
+      sellerAvatar: './assets/img/profilesSellers/profileSeller3.jpg',
     },
     {
       id: 4,
@@ -75,6 +83,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Electrónica',
       seller: 'Diego Mora',
+      sellerEmail: 'diego.mora@example.com',
       sellerId: 4,
       condition: 'Usado - Como nuevo',
       location: 'Sevilla',
@@ -82,6 +91,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Con funda y dos mandos extra.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller4.jpg',
     },
     {
       id: 5,
@@ -90,6 +100,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Electrónica',
       seller: 'Paula Rey',
+      sellerEmail: 'paula.rey@example.com',
       sellerId: 5,
       condition: 'Usado - Buen estado',
       location: 'Bilbao',
@@ -98,6 +109,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'Cancelacion de ruido y estuche.',
       images: ['/placeholder.svg'],
       brand: 'sony',
+      sellerAvatar: './assets/img/profilesSellers/profileSeller5.jpg',
     },
     {
       id: 6,
@@ -106,6 +118,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Vehículos',
       seller: 'Roberto Diaz',
+      sellerEmail: 'roberto.diaz@example.com',
       sellerId: 6,
       condition: 'Usado - Buen estado',
       location: 'Zaragoza',
@@ -114,6 +127,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'ITV al dia, 120.000 km.',
       images: ['/placeholder.svg'],
       brand: 'seat',
+      sellerAvatar: './assets/img/profilesSellers/profileSeller6.jpg',
     },
     {
       id: 7,
@@ -122,6 +136,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Vehículos',
       seller: 'Sara Gil',
+      sellerEmail: 'sara.gil@example.com',
       sellerId: 7,
       condition: 'Usado - Buen estado',
       location: 'Malaga',
@@ -129,6 +144,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Ideal ciudad, frenos revisados.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller7.jpg',
     },
     {
       id: 8,
@@ -137,6 +153,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Vehículos',
       seller: 'Ivan Soto',
+      sellerEmail: 'ivan.soto@example.com',
       sellerId: 8,
       condition: 'Usado - Como nuevo',
       location: 'Granada',
@@ -144,6 +161,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Bateria con buena autonomia.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller8.jpg',
     },
     {
       id: 9,
@@ -152,6 +170,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Vehículos',
       seller: 'Nerea Vidal',
+      sellerEmail: 'nerea.vidal@example.com',
       sellerId: 9,
       condition: 'Usado - Buen estado',
       location: 'Alicante',
@@ -159,6 +178,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Revision reciente y neumáticos nuevos.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller9.jpg',
     },
     {
       id: 10,
@@ -167,6 +187,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Vehículos',
       seller: 'Adrian Torres',
+      sellerEmail: 'adrian.torres@example.com',
       sellerId: 10,
       condition: 'Usado - Como nuevo',
       location: 'Valladolid',
@@ -174,6 +195,8 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Un solo dueño, historial completo.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller10.jpg',
+      
     },
     {
       id: 11,
@@ -182,6 +205,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Moda',
       seller: 'Claudia Ramos',
+      sellerEmail: 'claudia.ramos@example.com',
       sellerId: 11,
       condition: 'Usado - Buen estado',
       location: 'Madrid',
@@ -189,6 +213,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Talla M, poco uso.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller11.jpg',
     },
     {
       id: 12,
@@ -197,6 +222,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Moda',
       seller: 'Andrea Cruz',
+      sellerEmail: 'andrea.cruz@example.com',
       sellerId: 12,
       condition: 'Usado - Buen estado',
       location: 'Cordoba',
@@ -205,6 +231,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'Talla 42, con caja.',
       images: ['/placeholder.svg'],
       brand: 'nike',
+      sellerAvatar: './assets/img/profilesSellers/profileSeller12.jpg',
     },
     {
       id: 13,
@@ -213,6 +240,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Moda',
       seller: 'Veronica Pardo',
+      sellerEmail: 'veronica.pardo@example.com',
       sellerId: 13,
       condition: 'Nuevo',
       location: 'Santander',
@@ -220,6 +248,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Cuero natural, acabado premium.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller13.jpg',
     },
     {
       id: 14,
@@ -228,6 +257,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Moda',
       seller: 'Elena Marcos',
+      sellerEmail: 'elena.marcos@example.com',
       sellerId: 14,
       condition: 'Usado - Como nuevo',
       location: 'Gijon',
@@ -235,6 +265,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Talla S, ideal invierno.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller14.jpg',
     },
     {
       id: 15,
@@ -243,6 +274,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Moda',
       seller: 'Mario Cano',
+      sellerEmail: 'mario.cano@example.com',
       sellerId: 15,
       condition: 'Usado - Buen estado',
       location: 'Pamplona',
@@ -250,6 +282,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Correa intercambiable.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller15.jpg',
     },
     {
       id: 16,
@@ -258,6 +291,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Hogar',
       seller: 'Raquel Sanz',
+      sellerEmail: 'raquel.sanz@example.com',
       sellerId: 16,
       condition: 'Usado - Buen estado',
       location: 'Murcia',
@@ -265,6 +299,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Tapizado limpio y sin manchas.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller16.jpg',
     },
     {
       id: 17,
@@ -273,6 +308,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Hogar',
       seller: 'Oscar Glez',
+      sellerEmail: 'oscar.glez@example.com',
       sellerId: 17,
       condition: 'Usado - Buen estado',
       location: 'Salamanca',
@@ -280,6 +316,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Madera maciza, incluye 6 sillas.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller17.jpg',
     },
     {
       id: 18,
@@ -288,6 +325,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Hogar',
       seller: 'Diana Ramos',
+      sellerEmail: 'diana.ramos@example.com',
       sellerId: 18,
       condition: 'Nuevo',
       location: 'A Coruna',
@@ -295,6 +333,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Acabado metalico, luz calida.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller18.jpg',
     },
     {
       id: 19,
@@ -303,6 +342,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Hogar',
       seller: 'Tomas Rios',
+      sellerEmail: 'tomas.rios@example.com',
       sellerId: 19,
       condition: 'Usado - Buen estado',
       location: 'Logrono',
@@ -310,6 +350,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Incluye accesorios y manual.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller19.jpg',
     },
     {
       id: 20,
@@ -318,6 +359,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Hogar',
       seller: 'Marta Alonso',
+      sellerEmail: 'marta.alonso@example.com',
       sellerId: 20,
       condition: 'Usado - Buen estado',
       location: 'Toledo',
@@ -325,6 +367,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Porcelana blanca, sin roturas.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller20.jpg',
     },
     {
       id: 21,
@@ -333,6 +376,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Deportes',
       seller: 'Hugo Martin',
+      sellerEmail: 'hugo.martin@example.com',
       sellerId: 21,
       condition: 'Usado - Buen estado',
       location: 'Oviedo',
@@ -340,6 +384,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Suspension delantera y frenos disco.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller21.jpg',
     },
     {
       id: 22,
@@ -348,6 +393,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Deportes',
       seller: 'David Lago',
+      sellerEmail: 'david.lago@example.com',
       sellerId: 22,
       condition: 'Usado - Buen estado',
       location: 'Burgos',
@@ -355,6 +401,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Incluye barras y discos.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller22.jpg',
     },
     {
       id: 23,
@@ -363,6 +410,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Deportes',
       seller: 'Pablo Costa',
+      sellerEmail: 'pablo.costa@example.com',
       sellerId: 23,
       condition: 'Usado - Buen estado',
       location: 'Cadiz',
@@ -370,6 +418,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Incluye funda y leash.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller23.jpg',
     },
     {
       id: 24,
@@ -378,6 +427,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Deportes',
       seller: 'Cristina Mora',
+      sellerEmail: 'cristina.mora@example.com',
       sellerId: 24,
       condition: 'Usado - Como nuevo',
       location: 'San Sebastian',
@@ -385,6 +435,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Wilson Pro Staff, encordada.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller24.jpg',
     },
     {
       id: 25,
@@ -393,6 +444,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Deportes',
       seller: 'Alba Lozano',
+      sellerEmail: 'alba.lozano@example.com',
       sellerId: 25,
       condition: 'Nuevo',
       location: 'Tarragona',
@@ -400,6 +452,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Talla M, ventilado.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller25.jpg',
     },
     {
       id: 26,
@@ -408,6 +461,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Oficina',
       seller: 'Jose Molina',
+      sellerEmail: 'jose.molina@example.com',
       sellerId: 26,
       condition: 'Usado - Buen estado',
       location: 'Madrid',
@@ -415,6 +469,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Soporte lumbar ajustable.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller26.jpg',
     },
     {
       id: 27,
@@ -423,6 +478,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Oficina',
       seller: 'Sonia Perez',
+      sellerEmail: 'sonia.perez@example.com',
       sellerId: 27,
       condition: 'Usado - Buen estado',
       location: 'Barcelona',
@@ -430,6 +486,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Full HD, panel IPS.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller27.jpg',
     },
     {
       id: 28,
@@ -438,6 +495,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Oficina',
       seller: 'Bruno Diaz',
+      sellerEmail: 'bruno.diaz@example.com',
       sellerId: 28,
       condition: 'Usado - Buen estado',
       location: 'Valencia',
@@ -445,6 +503,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Switches rojos, retroiluminado.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller28.jpg',
     },
     {
       id: 29,
@@ -453,6 +512,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Oficina',
       seller: 'Noelia Ruiz',
+      sellerEmail: 'noelia.ruiz@example.com',
       sellerId: 29,
       condition: 'Usado - Buen estado',
       location: 'Sevilla',
@@ -460,6 +520,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Altura regulable, 120x60.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller29.jpg',
     },
     {
       id: 30,
@@ -468,6 +529,7 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Oficina',
       seller: 'Ismael Leon',
+      sellerEmail: 'ismael.leon@example.com',
       sellerId: 30,
       condition: 'Usado - Buen estado',
       location: 'Castellon',
@@ -475,6 +537,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Incluye toner extra.',
       images: ['/placeholder.svg'],
+      sellerAvatar: './assets/img/profilesSellers/profileSeller30.jpg',
     },
     {
       id: 31,
@@ -483,6 +546,8 @@ export const useProductStore = defineStore('product', () => {
       image: '/placeholder.svg',
       category: 'Musica',
       seller: 'Manuel Herrera',
+      sellerEmail: 'manuel.herrera@example.com',
+      sellerAvatar: './assets/img/profilesSellers/profileSeller31.jpg',
       sellerId: 31,
       condition: 'Usado - Buen estado',
       location: 'Cordoba',

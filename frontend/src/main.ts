@@ -13,7 +13,7 @@ import '@ionic/vue/css/text-transformation.css'
 import '@ionic/vue/css/flex-utils.css'
 import '@ionic/vue/css/display.css'
 import './assets/styles/main.css'
-
+import 'leaflet/dist/leaflet.css'
 import App from './App.vue'
 import router from './router'
 
