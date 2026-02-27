@@ -678,7 +678,6 @@ watch(
   min-width: 0;
 }
 .logo-text {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 34px;
   font-weight: 800;
   color: #1a1a1a;
