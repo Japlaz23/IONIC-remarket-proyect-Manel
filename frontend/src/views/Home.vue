@@ -258,7 +258,6 @@ import CategoriesMenu from '@/components/CategoriesMenu.vue'
 import { HOME_CATEGORIES, BRANDS_BY_CATEGORIES } from '@/utils/constants'
 import { computed, ref, reactive, watch } from 'vue'
 import { useProductStore } from '@/stores/productStore'
-import { useChatStore } from '@/stores/chatStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
 import { useRouter } from 'vue-router'
 /* Ionic & Vue */
