@@ -155,9 +155,6 @@ const profileAvatar = computed(() => {
   return profile.value?.avatarUrl || '/placeholder.svg'
 })
 
-const goHome = () => {
-  ionRouter.push('/tabs/home')
-}
 
 const goToSettings = () => {
   router.push('/settings')
