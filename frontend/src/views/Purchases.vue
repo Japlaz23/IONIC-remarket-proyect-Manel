@@ -122,7 +122,6 @@ import {
   IonBackButton,
   IonButton,
   IonIcon,
-  IonBadge,
   IonSegment,
   IonSegmentButton,
   IonLabel,
