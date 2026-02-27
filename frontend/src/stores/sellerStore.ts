@@ -3,6 +3,8 @@ import { computed } from 'vue';
 import { useProductStore } from '@/stores/productStore';
 
 export interface Seller {
+  phone: string;
+  avatar: any;
 	id: number;
 	name: string;
     email: string;

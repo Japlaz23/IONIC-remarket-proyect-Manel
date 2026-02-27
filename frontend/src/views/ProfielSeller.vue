@@ -95,7 +95,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
 import { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardHeader, IonCardContent, IonSegment, IonSegmentButton } from '@ionic/vue';
 import 'leaflet/dist/leaflet.css';
 import { useRoute } from 'vue-router';
@@ -103,11 +102,8 @@ import { useProductStore } from '@/stores/productStore';
 import { useSellerStore } from '@/stores/sellerStore';
 import { useReviewStore } from '@/stores/reviewStore';
 
-const lat = 41.3851; // ejemplo: latitud de Barcelona
-const lng = 2.1734;  // ejemplo: longitud de Barcelona
 
 const route = useRoute()
-const router = useRouter()
 const activeTab = ref('productos')
 // Si se llega desde un producto, se pasa el productId por query
 const backHref = computed(() => {
