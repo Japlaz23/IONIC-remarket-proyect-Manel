@@ -1,14 +1,11 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-toolbar color="remarket-green">
+      <ion-toolbar >
         <ion-buttons slot="start">
           <ion-back-button default-href="/profile"></ion-back-button>
         </ion-buttons>
         <ion-title>Mis Compras</ion-title>
-        <ion-buttons slot="end" v-if="purchasesList.length > 0">
-          <ion-badge>{{ purchasesList.length }}</ion-badge>
-        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 

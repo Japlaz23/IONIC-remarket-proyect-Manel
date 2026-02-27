@@ -124,6 +124,7 @@ const routes: RouteRecordRaw[] = [
     path: '/profile',
     redirect: '/tabs/profile',
   },
+ 
 ]
 
 const router = createRouter({

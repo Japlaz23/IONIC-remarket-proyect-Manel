@@ -6,9 +6,6 @@
           <ion-back-button default-href="/tabs/home"></ion-back-button>
         </ion-buttons>
         <ion-title>Favoritos</ion-title>
-        <ion-buttons slot="end" v-if="favoriteStore.favoriteCount > 0">
-          <ion-badge>{{ favoriteStore.favoriteCount }}</ion-badge>
-        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
@@ -74,7 +71,6 @@ import {
   IonCardContent,
   IonImg,
   IonButton,
-  IonBadge,
   IonIcon,
 } from '@ionic/vue'
 import { heart as heartFilled } from 'ionicons/icons'

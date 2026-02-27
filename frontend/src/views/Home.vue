@@ -79,10 +79,10 @@
         </ion-segment>
       </div>
     </ion-toolbar>
-    </ion-header>
+  </ion-header>
 
       <!-- Contenido Carrusell + grid-->
-    <ion-content id="home-content">
+    <ion-content id="home-content" class="ion-padding">
       <div class="page-container">
       <!-- Mostrar carruseles o layout de categorías según el estado -->
       <div v-if="!hasContent" class="empty-state">
@@ -201,7 +201,8 @@
             </ion-card>
           </ion-col>
           <ion-col
-            v-for="n in (4 - visibleProducts.length > 0 ? 4 - visibleProducts.length : 0)"
+            v-if="visibleProducts.length % 3 !== 0"
+            v-for="n in (3 - (visibleProducts.length % 3))"
             :key="'empty-' + n"
             size="12"
             size-sm="6"
@@ -217,11 +218,24 @@
 
       </div>
       
-<!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->      
+<!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->
 
-
-
-
+        <ion-fab horizontal="start" vertical="bottom" slot="fixed">
+        <ion-fab-button>
+          <ion-icon :icon="add"></ion-icon>
+        </ion-fab-button>
+          <ion-fab-list side="end">
+            <ion-fab-button @click="goToSellFromFab" style="margin-left: 12px;"> 
+              <ion-icon :icon="storefrontOutline"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button @click="goToChatList('support')" style="margin-left: 12px;">
+              <ion-icon :icon="paperPlane"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button @click="goToChatList('seller')" style="margin-left: 12px;">
+              <ion-icon :icon="personCircle"></ion-icon>
+            </ion-fab-button>
+          </ion-fab-list>
+        </ion-fab>
     </ion-content>
   </ion-page>
 </template>
@@ -283,11 +297,14 @@ import {
   cartOutline,
   heartOutline,
   listOutline,
-  chatbubblesOutline,
   storefrontOutline,
-  chevronForwardCircle,
   add,
-  searchOutline 
+  paperPlane,
+  searchOutline,
+  document,
+  colorPalette,
+  globe,
+
 } from 'ionicons/icons'
 
 import Swal from 'sweetalert2'
@@ -300,7 +317,7 @@ const favoriteStore = useFavoriteStore()
 
 const isLoggedIn = ref(false)
 const isChatFabOpen = ref(false)
-// const unreadCount = computed(() => chatStore.totalUnread)
+const unreadCount = computed(() => chatStore.totalUnread)
 
 // interface CarouselState {
 //   index: number
@@ -418,7 +435,7 @@ const filteredProducts = computed(() => {
 
 const visibleProducts = computed(() => filteredProducts.value.slice(0, visibleCount.value))
 const nonCarouselProducts = computed(() =>
-  filteredProducts.value.filter((product) => !carouselcategoriesIds.has(product.categories)),
+  filteredProducts.value.filter((product) => !carouselcategoriesIds.has(product.category)),
 )
 const visibleNonCarouselProducts = computed(() =>
   nonCarouselProducts.value.slice(0, visibleCount.value),
@@ -436,7 +453,7 @@ const carouselSections = computed(() => {
     .filter((categories) => carouselcategoriesIds.has(categories.id))
     .map((categories) => ({
       ...categories,
-      items: filteredProducts.value.filter((product) => product.categories === categories.id),
+      items: filteredProducts.value.filter((product) => product.category === categories.id),
     }))
     .filter((section) => section.items.length > 0)
 })
@@ -460,7 +477,7 @@ const categoriesections = computed(() => {
     .filter((categories) => categories.id === store.selectedCategories)
     .map((categories) => ({
       ...categories,
-      items: visibleProducts.value.filter((product) => product.categories === categories.id),
+      items: visibleProducts.value.filter((product) => product.category === categories.id),
     }))
     .filter((section) => section.items.length > 0)
 })
@@ -490,18 +507,17 @@ const confirmLogin = async () => {
     title: 'Inicia sesion',
     text: 'Necesitas iniciar sesion para continuar.',
     icon: 'info',
-    target: document.body,
     heightAuto: false, // fuerza el centrado vertical
-      customClass: {
-        popup: 'swal2-remarket-popup',
-        confirmButton: 'swal2-remarket-confirm',
-        cancelButton: 'swal2-remarket-cancel',
-        container: 'swal2-ionic-container-fix',
-      },
+    customClass: {
+      popup: 'swal2-remarket-popup',
+      confirmButton: 'swal2-remarket-confirm',
+      cancelButton: 'swal2-remarket-cancel',
+      container: 'swal2-ionic-container-fix',
+    },
     confirmButtonText: 'Continuar',
     cancelButtonText: 'Cancelar',
     showCancelButton: true,
-  })  
+  })
   if (result.isConfirmed) {
     goToLogin()
   }
@@ -558,9 +574,7 @@ const goToFavorites = () => {
   router.push('/tabs/favorites')
 }
 
-const toggleChatFab = () => {
-  isChatFabOpen.value = !isChatFabOpen.value
-}
+
 
 const goToChatList = (type: 'support' | 'seller') => {
   if (!isLoggedIn.value) {
@@ -1059,6 +1073,12 @@ watch(
   .header-center {
     display: none;
   }
+}
+
+ion-fab-button {
+  --border-radius: 15px;
+  --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+
 }
 
 </style>
