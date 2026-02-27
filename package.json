@@ -2,6 +2,7 @@
   "dependencies": {
     "leaflet": "^1.9.4",
     "swiper": "^12.1.2",
-    "vue-leaflet": "^0.1.0"
+    "vue-leaflet": "^0.1.0",
+    "vue-zoom-img": "^1.0.2"
   }
 }

@@ -167,6 +167,7 @@
             v-for="product in visibleProducts"
             :key="product.id"
             size="6"
+            size-xs="6"
             size-sm="6"
             size-md="4"
             size-lg="3"
@@ -205,6 +206,7 @@
             v-for="n in (3 - (visibleProducts.length % 3))"
             :key="'empty-' + n"
             size="6"
+            size-xs="6"
             size-sm="6"
             size-md="4"
             size-lg="3"
@@ -792,7 +794,19 @@ watch(
 }
 @media (max-width: 600px) {
   .product-row {
-    gap: 12px;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    justify-content: stretch !important;
+    align-items: stretch !important;
+  }
+  .product-col {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none !important;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 0 !important;
   }
   .product-card {
     max-width: 100%;
@@ -929,8 +943,8 @@ watch(
 
 @media (max-width: 600px) {
   .page-container {
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 .carousel-wrapper {
