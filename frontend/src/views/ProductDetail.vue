@@ -18,19 +18,34 @@
       <div class="product-shell">
         <template v-if="product">
           <div class="product-hero-frame">
-            <Swiper
-              :modules="swiperModules"
-              :slides-per-view="1"
-              :pagination="{ clickable: true }"
-              :navigation="true"
-              class="product-swiper"
-            >
-              <SwiperSlide v-for="(image, index) in galleryImages" :key="`${product.id}-${index}`">
-                <div class="swiper-zoom-container">
-                  <img :src="image" :alt="product.title" class="product-hero" @click="openZoomModal(image)" style="cursor: zoom-in;" />
-                </div>
-              </SwiperSlide>
-            </Swiper>
+            <div class="product-carousel" ref="carouselRef" @scroll="handleCarouselScroll">
+              <div
+                v-for="(image, index) in galleryImages"
+                :key="`${product.id}-${index}`"
+                class="product-slide"
+              >
+                <img
+                  :src="image"
+                  :alt="product.title"
+                  class="product-hero"
+                  @click="openZoom(image)"
+                />
+              </div>
+            </div>
+            <div class="carousel-dots" aria-hidden="true">
+              <span
+                v-for="(_, index) in galleryImages"
+                :key="`dot-${product.id}-${index}`"
+                class="carousel-dot"
+                :class="{ active: index === activeSlide }"
+              ></span>
+            </div>
+            <button class="carousel-control prev" type="button" @click="scrollCarousel(-1)">
+              Prev
+            </button>
+            <button class="carousel-control next" type="button" @click="scrollCarousel(1)">
+              Next
+            </button>
             <div class="product-hero-gradient"></div>
           </div>
 
@@ -40,7 +55,7 @@
                 <h1 class="product-title">{{ product.title }}</h1>
                 <div class="product-tags">
                   <span class="product-tag">{{ product.condition }}</span>
-                  <span class="product-tag">{{product.category }}</span>
+                  <span class="product-tag">{{ product.category }}</span>
                   <span class="product-tag">{{ product.location }}</span>
                 </div>
               </div>
@@ -52,7 +67,7 @@
               <ion-card-header>
               </ion-card-header>
               <ion-card-content class="seller-content" style="padding: 20px;">
-                <img class="seller-avatar" src="./assets/img/profilesSellers/profileSeller1.jpg" alt=" llegado del vendedor" @ @click="goToSellerProfile"/>
+                <img class="seller-avatar" src="./assets/img/profilesSellers/profileSeller1.jpg" alt="Perfil del vendedor" @click="goToSellerProfile"/>
                 <div class="seller-meta">
                   <h3 class="seller-name">{{ product.seller }}</h3>
                   <p class="seller-rating">★★★★★ 4.8 · 24 ventas</p>
@@ -97,7 +112,7 @@
 
             <ion-card class="map-card">
               <ion-card-header>
-                <ion-card-title style="padding: 20px;">ubicación del vendedor</ion-card-title>
+                <ion-card-title style="padding: 20px;">Ubicación del vendedor</ion-card-title>
               </ion-card-header>
               <ion-card-content>
                 <div class="map-frame">
@@ -115,7 +130,7 @@
             <ion-card class="reviews-card">
               <ion-card-header class="reviews-card-header">
                 <div class="reviews-header">
-                  <ion-ion-title>Valoraciones del v v</ion-card-title>
+                  <ion-card-title>Valoraciones del vendedor</ion-card-title>
                   <ion-button 
                     size="small" 
                     fill="outline" 
@@ -130,7 +145,7 @@
               </ion-card-header>
               <ion-card-content class="reviews-list">
                 <div v-if="productReviews.length === 0" class="no-reviews">
-                  <p>Aún no hay valor valor para este vendedor.</p>
+                  <p>Aún no hay valoraciones para este vendedor.</p>
                 </div>
                 <div v-for="review in productReviews" :key="review.id" class="review-item">
                   <div class="review-header">
@@ -169,6 +184,51 @@
         </div>
       </div>
     </ion-content>
+
+    <ion-modal
+      :is-open="showZoom"
+      css-class="zoom-modal"
+      :backdrop-dismiss="true"
+      @didDismiss="closeZoom"
+    >
+      <div class="zoom-surface">
+        <button class="zoom-close" type="button" @click="closeZoom">Cerrar</button>
+        <div class="zoom-carousel" ref="zoomCarouselRef" @scroll="handleZoomCarouselScroll">
+          <div
+            v-for="(image, index) in galleryImages"
+            :key="`zoom-${product?.id ?? 'x'}-${index}`"
+            class="zoom-slide"
+          >
+            <img
+              :src="image"
+              alt="Vista ampliada"
+              class="zoom-image"
+              :style="{ transform: `translate(${zoomTranslate.x}px, ${zoomTranslate.y}px) scale(${zoomScale})` }"
+              @dblclick="toggleZoom"
+              @pointerdown="onZoomPointerDown"
+              @pointermove="onZoomPointerMove"
+              @pointerup="onZoomPointerUp"
+              @pointercancel="onZoomPointerUp"
+              @pointerleave="onZoomPointerUp"
+            />
+          </div>
+        </div>
+        <div class="zoom-dots" aria-hidden="true">
+          <span
+            v-for="(_, index) in galleryImages"
+            :key="`zoom-dot-${product?.id ?? 'x'}-${index}`"
+            class="zoom-dot"
+            :class="{ active: index === zoomActiveSlide }"
+          ></span>
+        </div>
+        <button class="zoom-control prev" type="button" @click="scrollZoomCarousel(-1)">
+          Prev
+        </button>
+        <button class="zoom-control next" type="button" @click="scrollZoomCarousel(1)">
+          Next
+        </button>
+      </div>
+    </ion-modal>
 
     <ion-modal
       :is-open="showReviewModal"
@@ -229,28 +289,10 @@
         </ion-content>
       </ion-page>
     </ion-modal>
-
-    <ion-modal
-      :is-open="showZoomModal"
-      css-class="zoom-modal"
-      :backdrop-dismiss="true"
-      @didDismiss="closeZoomModal"
-    >
-      <div class="zoom-modal-content">
-        <button class="zoom-close" @click="closeZoomModal">Cerrar</button>
-        <component v-if="zoomModalImage" :is="VueZoomImg" :src="zoomModalImage" :zoom-src="zoomModalImage" :zoom-scale="2.2" style="max-width:90vw;max-height:80vh;display:block;margin:0 auto;" />
-      </div>
-    </ion-modal>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import 'swiper/css';
-import 'swiper/css/navigation';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Navigation, Pagination } from 'swiper/modules';
-const swiperModules = [Navigation, Pagination];
-import VueZoomImg from 'vue-zoom-img'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
@@ -278,7 +320,6 @@ import { useProductStore } from '@/stores/productStore'
 import { useChatStore } from '@/stores/chatStore'
 import { useReviewStore } from '@/stores/reviewStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
-import { useUserStore } from '@/stores/userStore'
 
 const route = useRoute()
 const router = useRouter()
@@ -286,7 +327,6 @@ const store = useProductStore()
 const chatStore = useChatStore()
 const reviewStore = useReviewStore()
 const favoriteStore = useFavoriteStore()
-const userStore = useUserStore()
 
 const isLoggedIn = ref(false)
 const currentUserId = ref(1) // ID del usuario actual (simulado)
@@ -303,7 +343,7 @@ const product = computed(() => {
 })
 
 const isFav = computed(() => {
-  (!product.value) return false
+  if (!product.value) return false
   return favoriteStore.isFavorite(product.value.id)
 })
 
@@ -318,7 +358,7 @@ const galleryImages = computed(() => {
 const mapCoords = '-25.5013149,152.690286'
 const mapUrl = computed(() => {
   const query = encodeURIComponent(mapCoords)
-  return `https://www.google.com/maps?q=${query}&z=13&output=em`
+  return `https://www.google.com/maps?q=${query}&z=13&output=embed`
 })
 
 // Reviews dinámicas del vendedor del producto
@@ -329,7 +369,6 @@ const productReviews = computed(() => {
 
 // Modal de valoración
 const showReviewModal = ref(false)
-const showZoomModal = ref(false)
 const newReviewRating = ref(0)
 const newReviewText = ref('')
 
@@ -449,6 +488,245 @@ const toggleFavorite = async () => {
   await toast.present()
 }
 
+const carouselRef = ref<HTMLElement | null>(null)
+const activeSlide = ref(0)
+const showZoom = ref(false)
+const zoomImage = ref('')
+const zoomScale = ref(1)
+const zoomTranslate = ref({ x: 0, y: 0 })
+const zoomCarouselRef = ref<HTMLElement | null>(null)
+const zoomActiveSlide = ref(0)
+const zoomPointers = new Map<number, { x: number; y: number }>()
+const zoomStateByIndex = new Map<number, { scale: number; translate: { x: number; y: number } }>()
+let pinchStartDistance = 0
+let pinchStartScale = 1
+let lastTapTime = 0
+let dragPointerId: number | null = null
+let dragStart = { x: 0, y: 0 }
+let dragStartTranslate = { x: 0, y: 0 }
+
+const updateActiveSlide = () => {
+  const carousel = carouselRef.value
+  if (!carousel) {
+    return
+  }
+  const width = carousel.clientWidth
+  if (!width) {
+    return
+  }
+  activeSlide.value = Math.round(carousel.scrollLeft / width)
+}
+
+const handleCarouselScroll = () => {
+  updateActiveSlide()
+}
+
+const scrollCarousel = (direction: number) => {
+  const carousel = carouselRef.value
+  if (!carousel) {
+    return
+  }
+  const width = carousel.clientWidth
+  carousel.scrollBy({ left: width * direction, behavior: 'smooth' })
+}
+
+const openZoom = (image: string) => {
+  zoomImage.value = image
+  showZoom.value = true
+  const index = galleryImages.value.findIndex((item) => item === image)
+  zoomActiveSlide.value = Math.max(index, 0)
+  requestAnimationFrame(() => {
+    const carousel = zoomCarouselRef.value
+    if (!carousel) {
+      return
+    }
+    const width = carousel.clientWidth
+    carousel.scrollTo({ left: width * zoomActiveSlide.value })
+    applyZoomState(zoomActiveSlide.value)
+  })
+}
+
+const closeZoom = () => {
+  saveZoomState(zoomActiveSlide.value)
+  showZoom.value = false
+  zoomImage.value = ''
+  zoomScale.value = 1
+  zoomTranslate.value = { x: 0, y: 0 }
+  zoomPointers.clear()
+  pinchStartDistance = 0
+  pinchStartScale = 1
+  lastTapTime = 0
+  dragPointerId = null
+}
+
+const getActiveZoomImage = () => {
+  const carousel = zoomCarouselRef.value
+  if (!carousel) {
+    return null
+  }
+  const images = carousel.querySelectorAll<HTMLImageElement>('.zoom-image')
+  return images[zoomActiveSlide.value] || null
+}
+
+const clampTranslate = (nextTranslate: { x: number; y: number }) => {
+  const carousel = zoomCarouselRef.value
+  const image = getActiveZoomImage()
+  if (!carousel || !image) {
+    return nextTranslate
+  }
+  const containerWidth = carousel.clientWidth
+  const containerHeight = carousel.clientHeight
+  const baseWidth = image.clientWidth
+  const baseHeight = image.clientHeight
+  const scaledWidth = baseWidth * zoomScale.value
+  const scaledHeight = baseHeight * zoomScale.value
+  const maxX = Math.max(0, (scaledWidth - containerWidth) / 2)
+  const maxY = Math.max(0, (scaledHeight - containerHeight) / 2)
+  return {
+    x: Math.min(maxX, Math.max(-maxX, nextTranslate.x)),
+    y: Math.min(maxY, Math.max(-maxY, nextTranslate.y)),
+  }
+}
+
+const saveZoomState = (index: number) => {
+  zoomStateByIndex.set(index, {
+    scale: zoomScale.value,
+    translate: { ...zoomTranslate.value },
+  })
+}
+
+const applyZoomState = (index: number) => {
+  const saved = zoomStateByIndex.get(index)
+  if (saved) {
+    zoomScale.value = saved.scale
+    zoomTranslate.value = clampTranslate(saved.translate)
+    return
+  }
+  zoomScale.value = 1
+  zoomTranslate.value = { x: 0, y: 0 }
+}
+
+const updateZoomActiveSlide = () => {
+  const carousel = zoomCarouselRef.value
+  if (!carousel) {
+    return
+  }
+  const width = carousel.clientWidth
+  if (!width) {
+    return
+  }
+  const nextIndex = Math.round(carousel.scrollLeft / width)
+  if (nextIndex !== zoomActiveSlide.value) {
+    saveZoomState(zoomActiveSlide.value)
+    zoomActiveSlide.value = nextIndex
+    requestAnimationFrame(() => {
+      applyZoomState(nextIndex)
+    })
+  }
+}
+
+const handleZoomCarouselScroll = () => {
+  updateZoomActiveSlide()
+}
+
+const scrollZoomCarousel = (direction: number) => {
+  const carousel = zoomCarouselRef.value
+  if (!carousel) {
+    return
+  }
+  const width = carousel.clientWidth
+  carousel.scrollBy({ left: width * direction, behavior: 'smooth' })
+}
+
+const getPinchDistance = () => {
+  const points = Array.from(zoomPointers.values())
+  if (points.length < 2) {
+    return 0
+  }
+  const [a, b] = points
+  const dx = a.x - b.x
+  const dy = a.y - b.y
+  return Math.hypot(dx, dy)
+}
+
+const onZoomPointerDown = (event: PointerEvent) => {
+  ;(event.target as HTMLElement).setPointerCapture(event.pointerId)
+  zoomPointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
+  if (zoomPointers.size === 2) {
+    pinchStartDistance = getPinchDistance()
+    pinchStartScale = zoomScale.value
+    dragPointerId = null
+    return
+  }
+
+  if (zoomPointers.size === 1 && zoomScale.value > 1) {
+    dragPointerId = event.pointerId
+    dragStart = { x: event.clientX, y: event.clientY }
+    dragStartTranslate = { ...zoomTranslate.value }
+  }
+}
+
+const onZoomPointerMove = (event: PointerEvent) => {
+  if (!zoomPointers.has(event.pointerId)) {
+    return
+  }
+  zoomPointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
+  if (zoomPointers.size === 2 && pinchStartDistance > 0) {
+    const distance = getPinchDistance()
+    const nextScale = (pinchStartScale * distance) / pinchStartDistance
+    zoomScale.value = Math.min(Math.max(nextScale, 1), 3)
+    if (zoomScale.value === 1) {
+      zoomTranslate.value = { x: 0, y: 0 }
+    }
+    zoomTranslate.value = clampTranslate(zoomTranslate.value)
+    return
+  }
+
+  if (dragPointerId === event.pointerId && zoomScale.value > 1) {
+    const dx = event.clientX - dragStart.x
+    const dy = event.clientY - dragStart.y
+    zoomTranslate.value = clampTranslate({
+      x: dragStartTranslate.x + dx,
+      y: dragStartTranslate.y + dy,
+    })
+  }
+}
+
+const onZoomPointerUp = (event: PointerEvent) => {
+  if (zoomPointers.has(event.pointerId)) {
+    zoomPointers.delete(event.pointerId)
+  }
+  if (zoomPointers.size < 2) {
+    pinchStartDistance = 0
+    pinchStartScale = zoomScale.value
+  }
+
+  if (dragPointerId === event.pointerId) {
+    dragPointerId = null
+  }
+
+  if (zoomPointers.size === 0 && event.pointerType === 'touch') {
+    const now = Date.now()
+    if (now - lastTapTime < 280) {
+      toggleZoom()
+      lastTapTime = 0
+    } else {
+      lastTapTime = now
+    }
+  }
+}
+
+
+const toggleZoom = () => {
+  if (zoomScale.value > 1) {
+    zoomScale.value = 1
+    zoomTranslate.value = { x: 0, y: 0 }
+    return
+  }
+  zoomScale.value = 2
+  zoomTranslate.value = clampTranslate({ x: 0, y: 0 })
+}
+
 const goToSellerProfile = () => {
   if (!product.value) return
   router.push({
@@ -457,11 +735,14 @@ const goToSellerProfile = () => {
 }
 
 onMounted(() => {
-  // El Swiper gestiona el slide activo y el zoom, no necesitamos listeners personalizados
+  updateActiveSlide()
+  window.addEventListener('resize', updateActiveSlide)
+  window.addEventListener('resize', updateZoomActiveSlide)
 })
 
 onBeforeUnmount(() => {
-  // No es necesario limpiar listeners personalizados
+  window.removeEventListener('resize', updateActiveSlide)
+  window.removeEventListener('resize', updateZoomActiveSlide)
 })
 
 const buyProduct = () => {
@@ -547,7 +828,7 @@ const confirmLogin = async () => {
 
 .carousel-control {
   position: absolute;
-  top: 0;
+  top: 50%;
   transform: translateY(-50%);
   z-index: 2;
   border: none;
@@ -624,11 +905,11 @@ const confirmLogin = async () => {
   margin-top: 8px;
 }
 
-.product.tag {
+.product-tag {
   display: inline-flex;
   align-items: center;
   padding: 4px 10px;
-  border-radius: 9999;
+  border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
   color: #0f5223;
@@ -810,12 +1091,7 @@ const confirmLogin = async () => {
 
 /* Review Modal Styles */
 .review-modal-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  background: rgba(15, 23, 42, 0.95);
+  --background: #f8fafc;
 }
 
 .review-form {
@@ -871,7 +1147,7 @@ const confirmLogin = async () => {
 .review-textarea {
   background: white;
   border: 1px solid #e2e8f0;
-  border border: 12px;
+  border-radius: 12px;
   padding: 12px;
   margin-top: 8px;
   --padding-start: 12px;
@@ -908,7 +1184,7 @@ const confirmLogin = async () => {
 
 .primary-action {
   --border-radius: 14px;
-  --background: linear-gradient(135deg, #1a4f34 0%, #0f5223 100%);
+  --background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
   font-weight: 600;
   font-size: 16px;
   transition: all 0.3s ease;
@@ -920,7 +1196,7 @@ const confirmLogin = async () => {
   box-shadow: 0 8px 16px rgba(26, 127, 52, 0.3);
 }
 
-.price.price {
+.price-badge {
   background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
   color: white;
   padding: 12px 16px;
@@ -931,13 +1207,13 @@ const confirmLogin = async () => {
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(26, 127, 55, 0.2);
+  box-shadow: 0 4px 12px rgba(26, 127, 52, 0.2);
 }
 
 .secondary-action {
   --border-radius: 14px;
   font-weight: 600;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .empty-state {
@@ -1053,17 +1329,15 @@ const confirmLogin = async () => {
 
 .zoom-close {
   position: absolute;
-  top: 24px;
-  right: 24px;
-  z-index: 10;
-  background: rgba(0,0,0,0.5);
-  color: #fff;
+  top: 20px;
+  right: 20px;
   border: none;
+  background: rgba(15, 23, 42, 0.6);
+  color: #ffffff;
+  padding: 8px 14px;
   border-radius: 999px;
-  padding: 8px 16px;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 600;
-  cursor: pointer;
 }
 
 .zoom-dots {
@@ -1088,7 +1362,7 @@ const confirmLogin = async () => {
   transform: scale(1.2);
 }
 
-.control {
+.zoom-control {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -1102,16 +1376,16 @@ const confirmLogin = async () => {
   background: rgba(15, 23, 42, 0.55);
 }
 
-.control.prev {
+.zoom-control.prev {
   left: 20px;
 }
 
-.control.next {
+.zoom-control.next {
   right: 20px;
 }
 
 @media (max-width: 520px) {
-  .control {
+  .zoom-control {
     display: none;
   }
 }
