@@ -166,7 +166,7 @@
           <ion-col
             v-for="product in visibleProducts"
             :key="product.id"
-            size="12"
+            size="6"
             size-sm="6"
             size-md="4"
             size-lg="3"
@@ -204,7 +204,7 @@
             v-if="visibleProducts.length % 3 !== 0"
             v-for="n in (3 - (visibleProducts.length % 3))"
             :key="'empty-' + n"
-            size="12"
+            size="6"
             size-sm="6"
             size-md="4"
             size-lg="3"
@@ -220,7 +220,7 @@
       
 <!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->
 
-        <ion-fab horizontal="start" vertical="bottom" slot="fixed">
+        <ion-fab horizontal="start" vertical="bottom" slot="fixed" class="home-fab">
         <ion-fab-button>
           <ion-icon :icon="add"></ion-icon>
         </ion-fab-button>
@@ -796,17 +796,14 @@ watch(
   padding-bottom: 32px;
 }
 .product-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+  /* display: flex;
+  gap: 24px; */
   justify-content: center;
 }
 .center-row {
   justify-content: center !important;
 }
 .product-col {
-  display: flex;
-  justify-content: center;
   margin-bottom: 24px;
 }
 .product-card {
@@ -1070,6 +1067,9 @@ watch(
   }
   
   .header-center {
+    display: none;
+  }
+  .home-fab{
     display: none;
   }
 }
