@@ -301,10 +301,6 @@ import {
   add,
   paperPlane,
   searchOutline,
-  document,
-  colorPalette,
-  globe,
-
 } from 'ionicons/icons'
 
 import Swal from 'sweetalert2'
@@ -312,23 +308,10 @@ import '@/assets/styles/main.css'
 
 const router = useRouter()
 const store = useProductStore()
-const chatStore = useChatStore()
 const favoriteStore = useFavoriteStore()
 
 const isLoggedIn = ref(false)
 const isChatFabOpen = ref(false)
-const unreadCount = computed(() => chatStore.totalUnread)
-
-// interface CarouselState {
-//   index: number
-//   slideSize: number
-//   isTransitioning: boolean
-//   clones: number
-//   touchStartX: number | null
-//   touchDeltaX: number
-// }
-
-// const carouselState = reactive<Record<string, CarouselState>>({})
 
 const itemsPerPage = 8
 const visibleCount = ref(itemsPerPage)
@@ -380,9 +363,6 @@ const selectCategoriesFromMenu = async (categoriesId: string) => {
   await menuController.close()
 }
 
-// const openFiltersMenu = async () => {
-//   await menuController.open('filters-menu')
-// }
 
 const closeFiltersMenu = async () => {
   await menuController.close('filters-menu')
