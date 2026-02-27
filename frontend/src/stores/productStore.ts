@@ -93,7 +93,7 @@ import Impresoralaser3 from '@/assets/img/productsImage/Impresoralaser3.webp'
 import Guitarraacustica1 from '@/assets/img/productsImage/Guitarraacustica1.webp'
 import Guitarraacustica2 from '@/assets/img/productsImage/Guitarraacustica2.webp'
 import Guitarraacustica3 from '@/assets/img/productsImage/Guitarraacustica3.webp'
-import ProfilSeller from '@/assets/img/profilesSellers/profileSeller1.jpg'
+import ProfileSeller from '@/assets/img/profilesSellers/profileSeller1.jpg'
 import { ref, computed } from 'vue'
 
 interface Product {
@@ -133,7 +133,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'iPhone 13 Pro en excelente estado',
       images: [Iphone13Pro1, Iphone13Pro2, Iphone13Pro3],
       brand: 'apple',
-      sellerAvatar: ProfilSeller,
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 2,

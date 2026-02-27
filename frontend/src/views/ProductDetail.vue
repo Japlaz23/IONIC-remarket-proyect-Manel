@@ -67,7 +67,7 @@
               <ion-card-header>
               </ion-card-header>
               <ion-card-content class="seller-content" style="padding: 20px;">
-                <img class="seller-avatar" src="./assets/img/profilesSellers/profileSeller1.jpg" alt="Perfil del vendedor" @click="goToSellerProfile"/>
+                <img class="seller-avatar" src="@/assets/img/profilesSellers/profileSeller1.jpg" alt="Perfil del vendedor" @click="goToSellerProfile"/>
                 <div class="seller-meta">
                   <h3 class="seller-name">{{ product.seller }}</h3>
                   <p class="seller-rating">★★★★★ 4.8 · 24 ventas</p>
