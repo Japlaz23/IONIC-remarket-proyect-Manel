@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Android build
+frontend/android/app/build/
+frontend/android/build/
+frontend/android/.gradle/
+frontend/android/local.properties
+
+# iOS
+frontend/ios/
+
+# Capacitor build cache
+frontend/node_modules/@capacitor/android/capacitor/build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

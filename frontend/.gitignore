@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Android build artifacts
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+
+# iOS
+ios/
+
+# Capacitor build cache inside node_modules
+node_modules/@capacitor/android/capacitor/build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# TypeScript cache
+*.tsbuildinfo
