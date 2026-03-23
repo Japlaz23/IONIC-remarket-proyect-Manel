@@ -7,13 +7,6 @@
       @selectCategoriesFromMenu="selectCategoriesFromMenu"
     />
 
-    <FiltersMenu
-      :showFiltersLayout="showFiltersLayout"
-      :filters="filters"
-      :availableBrands="availableBrands"
-      @closeFiltersMenu="closeFiltersMenu"
-      @resetFilters="resetFilters"
-    />
   <ion-header>
     <ion-toolbar class="header-toolbar">
       <div class="header-content">
@@ -161,8 +154,78 @@
         </section>
       </div>
       <!-- grid  -->
-      <ion-grid class="product-grid improved-grid">
-        <ion-row class="product-row center-row">
+      <div :class="['results-layout', { active: showFiltersLayout }]">
+        <aside v-if="showFiltersLayout" class="filters-sidebar">
+          <div class="filters-sidebar-header">
+            <h3>Filtros</h3>
+            <ion-button size="small" fill="clear" class="sidebar-clear-btn" @click="resetFilters">
+              Limpiar
+            </ion-button>
+          </div>
+
+          <div class="sidebar-field">
+            <label>Filtrar resultados</label>
+            <ion-input
+              v-model="resultsFilterQuery"
+              placeholder="Titulo, marca, descripcion..."
+              class="sidebar-input"
+            ></ion-input>
+          </div>
+
+          <div class="sidebar-two-columns">
+            <div class="sidebar-field">
+              <label>Precio min</label>
+              <ion-input v-model="filters.minPrice" type="number" placeholder="0" class="sidebar-input"></ion-input>
+            </div>
+            <div class="sidebar-field">
+              <label>Precio max</label>
+              <ion-input v-model="filters.maxPrice" type="number" placeholder="1000" class="sidebar-input"></ion-input>
+            </div>
+          </div>
+
+          <div class="sidebar-field">
+            <label>Condicion</label>
+            <ion-select v-model="filters.condition" interface="popover" class="sidebar-select">
+              <ion-select-option value="all">Todas</ion-select-option>
+              <ion-select-option value="Nuevo">Nuevo</ion-select-option>
+              <ion-select-option value="Usado">Usado</ion-select-option>
+            </ion-select>
+          </div>
+
+          <div class="sidebar-field">
+            <label>Ubicacion</label>
+            <ion-input v-model="filters.location" placeholder="Ciudad" class="sidebar-input"></ion-input>
+          </div>
+
+          <div class="sidebar-field" v-if="availableBrands.length > 0">
+            <label>Marca</label>
+            <ion-select v-model="filters.brand" interface="popover" class="sidebar-select">
+              <ion-select-option value="all">Todas</ion-select-option>
+              <ion-select-option
+                v-for="brand in availableBrands"
+                :key="(brand as any).value"
+                :value="(brand as any).value"
+              >
+                {{ (brand as any).label }}
+              </ion-select-option>
+            </ion-select>
+          </div>
+
+          <div class="sidebar-field">
+            <label>Ordenar</label>
+            <ion-select v-model="filters.sort" interface="popover" class="sidebar-select">
+              <ion-select-option value="recent">Mas reciente</ion-select-option>
+              <ion-select-option value="price-asc">Precio mas bajo</ion-select-option>
+              <ion-select-option value="price-desc">Precio mas alto</ion-select-option>
+            </ion-select>
+          </div>
+
+          <p class="results-filter-count">{{ filteredProducts.length }} resultados filtrados</p>
+        </aside>
+
+        <div class="results-products">
+          <ion-grid class="product-grid improved-grid">
+            <ion-row class="product-row" :class="{ 'center-row': !showFiltersLayout }">
           <ion-col
             v-for="product in visibleProducts"
             :key="product.id"
@@ -213,8 +276,10 @@
             class="product-col empty-col"
           >
           </ion-col>
-        </ion-row>
-      </ion-grid>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </div>
 
       <!-- ========= layout filtros ========= -->
 
@@ -255,7 +320,6 @@ import { Navigation, Pagination } from 'swiper/modules'
   const modules = [Pagination, Navigation];
 
 /* Componentes */
-import FiltersMenu from '@/components/FiltersMenu.vue'
 import CategoriesMenu from '@/components/CategoriesMenu.vue'
 import { HOME_CATEGORIES, BRANDS_BY_CATEGORIES } from '@/utils/constants'
 import { computed, ref, reactive, watch } from 'vue'
@@ -288,6 +352,9 @@ import {
   IonFab,
   IonFabButton,
   IonFabList,
+  IonInput,
+  IonSelect,
+  IonSelectOption,
 
 } from '@ionic/vue'
 
@@ -313,6 +380,7 @@ const favoriteStore = useFavoriteStore()
 
 const isLoggedIn = ref(false)
 const isChatFabOpen = ref(false)
+const resultsFilterQuery = ref('')
 
 const itemsPerPage = 8
 const visibleCount = ref(itemsPerPage)
@@ -365,10 +433,6 @@ const selectCategoriesFromMenu = async (categoriesId: string) => {
 }
 
 
-const closeFiltersMenu = async () => {
-  await menuController.close('filters-menu')
-}
-
 const resetFilters = () => {
   filters.minPrice = ''
   filters.maxPrice = ''
@@ -376,10 +440,22 @@ const resetFilters = () => {
   filters.location = ''
   filters.sort = 'recent'
   filters.brand = 'all'
+  resultsFilterQuery.value = ''
 }
 
 const filteredProducts = computed(() => {
   let list = [...store.filteredProducts]
+
+  const localSearchQuery = resultsFilterQuery.value.trim().toLowerCase()
+  if (localSearchQuery) {
+    list = list.filter((product) => {
+      const titleMatches = product.title.toLowerCase().includes(localSearchQuery)
+      const locationMatches = product.location.toLowerCase().includes(localSearchQuery)
+      const brandMatches = (product.brand ?? '').toLowerCase().includes(localSearchQuery)
+      const descriptionMatches = product.description.toLowerCase().includes(localSearchQuery)
+      return titleMatches || locationMatches || brandMatches || descriptionMatches
+    })
+  }
 
   const minPrice = Number.parseFloat(filters.minPrice)
   if (!Number.isNaN(minPrice)) {
@@ -575,6 +651,7 @@ watch(
     store.filteredProducts,
     store.selectedCategories,
     store.searchQuery,
+    resultsFilterQuery.value,
     filters.minPrice,
     filters.maxPrice,
     filters.condition,
@@ -584,6 +661,15 @@ watch(
   ],
   () => {
     visibleCount.value = itemsPerPage
+  },
+)
+
+watch(
+  () => [store.selectedCategories, store.searchQuery],
+  ([selectedCategory, query]) => {
+    if (!selectedCategory && !query.trim()) {
+      resultsFilterQuery.value = ''
+    }
   },
 )
 </script>
@@ -621,6 +707,95 @@ watch(
   pointer-events: none;
   background: transparent;
   border: none;
+}
+
+.results-layout {
+  width: 100%;
+}
+
+.results-layout.active {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.filters-sidebar {
+  background: #ffffff;
+  border: 1px solid #e6ebf2;
+  border-radius: 16px;
+  padding: 14px;
+  position: sticky;
+  top: 14px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.filters-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.filters-sidebar-header h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.sidebar-clear-btn {
+  --color: #1a7f34;
+}
+
+.sidebar-field {
+  margin-top: 10px;
+}
+
+.sidebar-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.sidebar-two-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.sidebar-input,
+.sidebar-select {
+  --background: #f8fafc;
+  --border-radius: 10px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --color: #0f172a;
+  border: 1px solid #dbe5ef;
+  border-radius: 10px;
+}
+
+.results-products {
+  min-width: 0;
+}
+
+.results-filter-count {
+  margin: 12px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .results-layout.active {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-sidebar {
+    position: static;
+  }
 }
 /* =========================
    HEADER HOME
@@ -995,41 +1170,6 @@ watch(
   width: 28px;
   height: 28px;
 }
-/* Fix para que SweetAlert2 salga siempre centrado y por encima de Ionic */
-:global(.swal2-ionic-fix) {
-  z-index: 99999 !important;
-  position: fixed !important;
-}
-:global(.swal2-ionic-container-fix) {
-  z-index: 99999 !important;
-  pointer-events: all !important;
-}
-
-:global(.swal2-remarket-popup) {
-  border-radius: 18px;
-  border: 2px solid #1a7f34;
-  background: #f8fafc;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
-
-:global(.swal2-remarket-confirm) {
-  background: #1a7f34 !important;
-  color: #fff !important;
-  font-weight: bold;
-  border-radius: 8px !important;
-  padding: 8px 24px !important;
-  font-size: 1.1em;
-}
-
-:global(.swal2-remarket-cancel) {
-  background: #e6ebf2 !important;
-  color: #1a7f34 !important;
-  border-radius: 8px !important;
-  font-weight: bold;
-  padding: 8px 24px !important;
-  font-size: 1.1em;
-}
-
 .categories-menu {
   --background: #f1f5f9;
 }

@@ -93,6 +93,16 @@
             <ion-select-option value="price-desc">Precio mas alto</ion-select-option>
           </ion-select>
         </div>
+
+        <div v-if="showContextFilter" class="context-filter-box">
+          <ion-searchbar
+            v-model="contextFilterQuery"
+            placeholder="Filtrar dentro de la busqueda o categoria"
+            :animated="true"
+            class="context-filter-input"
+          ></ion-searchbar>
+          <p class="context-filter-count">{{ resultsCount }} resultados filtrados</p>
+        </div>
         </section>
 
         <section class="search-results">
@@ -137,7 +147,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   IonPage,
@@ -162,8 +172,10 @@ const store = useProductStore()
 const priceFilter = ref<'all' | 'under50' | '50to200' | 'over200'>('all')
 const categoryFilter = ref('all')
 const sortOption = ref<'relevance' | 'recent' | 'price-asc' | 'price-desc'>('relevance')
+const contextFilterQuery = ref('')
 
 const hasQuery = computed(() => store.searchQuery.trim().length > 0)
+const showContextFilter = computed(() => hasQuery.value || categoryFilter.value !== 'all')
 
 const categories = computed(() => {
   const unique = new Set<string>()
@@ -184,8 +196,23 @@ const filteredByCategory = computed(() => {
   })
 })
 
-const filteredByPrice = computed(() => {
+const filteredByContext = computed(() => {
+  const query = contextFilterQuery.value.trim().toLowerCase()
+  if (!query) {
+    return filteredByCategory.value
+  }
+
   return filteredByCategory.value.filter((product) => {
+    const titleMatches = product.title.toLowerCase().includes(query)
+    const locationMatches = product.location.toLowerCase().includes(query)
+    const brandMatches = (product.brand ?? '').toLowerCase().includes(query)
+    const descriptionMatches = product.description.toLowerCase().includes(query)
+    return titleMatches || locationMatches || brandMatches || descriptionMatches
+  })
+})
+
+const filteredByPrice = computed(() => {
+  return filteredByContext.value.filter((product) => {
     if (priceFilter.value === 'under50') {
       return product.price < 50
     }
@@ -226,6 +253,15 @@ const goToProduct = (id: number) => {
 const clearSearch = () => {
   store.searchQuery = ''
 }
+
+watch(
+  () => [store.searchQuery, categoryFilter.value],
+  ([query, category]) => {
+    if (!query.trim() && category === 'all') {
+      contextFilterQuery.value = ''
+    }
+  },
+)
 
 const isNew = (product: { createdAt: Date | string }) => {
   const createdAt = new Date(product.createdAt).getTime()
@@ -390,6 +426,25 @@ onBeforeUnmount(() => {
   --placeholder-color: rgba(255, 255, 255, 0.7);
   --border-radius: 999px;
   min-width: 180px;
+}
+
+.context-filter-box {
+  margin-top: 12px;
+}
+
+.context-filter-input {
+  --background: #ffffff;
+  --color: #0f172a;
+  --border-radius: 12px;
+  --placeholder-color: #94a3b8;
+  --icon-color: #1a7f34;
+}
+
+.context-filter-count {
+  margin: 6px 8px 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .search-results {

@@ -210,9 +210,9 @@ import {
   IonContent,
   IonIcon,
   IonCheckbox,
-  alertController,
   toastController,
 } from '@ionic/vue'
+import Swal from 'sweetalert2'
 import {
   arrowForward,
   personOutline,
@@ -332,52 +332,55 @@ const handleRegister = async () => {
 }
 
 const handleGoogleRegister = async () => {
-  const alert = await alertController.create({
-    header: '🔐 Registrarse con Google',
-    message: 'Serás redirigido a la página de autenticación de Google para crear tu cuenta de forma segura.',
-    buttons: [
-      {
-        text: 'Cancelar',
-        role: 'cancel',
-        cssClass: 'alert-button-cancel',
-      },
-      {
-        text: 'Continuar',
-        cssClass: 'alert-button-confirm',
-        handler: () => {
-          const toast = toastController.create({
-            message: 'Redirigiendo a Google...',
-            duration: 2000,
-            position: 'top',
-            color: 'primary',
-            icon: logoGoogle,
-          })
-          toast.then((t) => t.present())
-          
-          setTimeout(async () => {
-            const user = {
-              email: 'usuario@gmail.com',
-              fullName: 'Usuario Google',
-              name: 'Usuario',
-              registerDate: new Date().toISOString(),
-              provider: 'google',
-            }
-            localStorage.setItem('user', JSON.stringify(user))
-            
-            const successToast = await toastController.create({
-              message: '¡Registro exitoso con Google!',
-              duration: 2000,
-              position: 'top',
-              color: 'success',
-            })
-            await successToast.present()
-            router.push('/')
-          }, 2000)
-        },
-      },
-    ],
+  const result = await Swal.fire({
+    icon: 'question',
+    title: 'Registrarse con Google',
+    text: 'Serás redirigido a la página de autenticación de Google para crear tu cuenta de forma segura.',
+    showCancelButton: true,
+    confirmButtonText: 'Continuar',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+      popup: 'swal2-remarket-popup',
+      confirmButton: 'swal2-remarket-confirm',
+      cancelButton: 'swal2-remarket-cancel',
+      container: 'swal2-ionic-container-fix',
+    },
+    heightAuto: false,
+    target: document.body,
   })
-  await alert.present()
+
+  if (!result.isConfirmed) {
+    return
+  }
+
+  const toast = await toastController.create({
+    message: 'Redirigiendo a Google...',
+    duration: 2000,
+    position: 'top',
+    color: 'primary',
+    icon: logoGoogle,
+  })
+  await toast.present()
+
+  setTimeout(async () => {
+    const user = {
+      email: 'usuario@gmail.com',
+      fullName: 'Usuario Google',
+      name: 'Usuario',
+      registerDate: new Date().toISOString(),
+      provider: 'google',
+    }
+    localStorage.setItem('user', JSON.stringify(user))
+
+    const successToast = await toastController.create({
+      message: '¡Registro exitoso con Google!',
+      duration: 2000,
+      position: 'top',
+      color: 'success',
+    })
+    await successToast.present()
+    router.push('/')
+  }, 2000)
 }
 
 

@@ -236,8 +236,8 @@ import {
   IonSelect,
   IonSelectOption,
   toastController,
-  alertController,
 } from '@ionic/vue'
+import Swal from 'sweetalert2'
 import {
   personCircleOutline,
   locationOutline,
@@ -332,21 +332,26 @@ const addPaymentMethod = async () => {
 }
 
 const removePaymentMethod = async (idx: number) => {
-  const alert = await alertController.create({
-    header: 'Eliminar método de pago',
-    message: '¿Seguro de que quieres eliminar este método de pago?',
-    buttons: [
-      { text: 'Cancelar', role: 'cancel' },
-      {
-        text: 'Eliminar',
-        role: 'destructive',
-        handler: () => {
-          paymentMethods.value.splice(idx, 1)
-        },
-      },
-    ],
+  const result = await Swal.fire({
+    icon: 'warning',
+    title: 'Eliminar método de pago',
+    text: '¿Seguro de que quieres eliminar este método de pago?',
+    showCancelButton: true,
+    confirmButtonText: 'Eliminar',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+      popup: 'swal2-remarket-popup',
+      confirmButton: 'swal2-remarket-confirm',
+      cancelButton: 'swal2-remarket-cancel',
+      container: 'swal2-ionic-container-fix',
+    },
+    heightAuto: false,
+    target: document.body,
   })
-  await alert.present()
+
+  if (result.isConfirmed) {
+    paymentMethods.value.splice(idx, 1)
+  }
 }
 
 const changePassword = async () => {
@@ -375,27 +380,34 @@ const downloadData = async () => {
 }
 
 const deleteAccount = async () => {
-  const alert = await alertController.create({
-    header: 'Eliminar cuenta',
-    message: '⚠️ Esta acción es irreversible. Se perderán todos tus datos.',
-    buttons: [
-      { text: 'Cancelar', role: 'cancel' },
-      {
-        text: 'Eliminar',
-        role: 'destructive',
-        handler: async () => {
-          const toast = await toastController.create({
-            message: 'Cuenta eliminada. Redirigiendo...',
-            color: 'danger',
-            duration: 2000,
-          })
-          await toast.present()
-          setTimeout(() => router.push('/login'), 2000)
-        },
-      },
-    ],
+  const result = await Swal.fire({
+    icon: 'warning',
+    title: 'Eliminar cuenta',
+    text: 'Esta acción es irreversible. Se perderán todos tus datos.',
+    showCancelButton: true,
+    confirmButtonText: 'Eliminar',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+      popup: 'swal2-remarket-popup',
+      confirmButton: 'swal2-remarket-confirm',
+      cancelButton: 'swal2-remarket-cancel',
+      container: 'swal2-ionic-container-fix',
+    },
+    heightAuto: false,
+    target: document.body,
   })
-  await alert.present()
+
+  if (!result.isConfirmed) {
+    return
+  }
+
+  const toast = await toastController.create({
+    message: 'Cuenta eliminada. Redirigiendo...',
+    color: 'danger',
+    duration: 2000,
+  })
+  await toast.present()
+  setTimeout(() => router.push('/login'), 2000)
 }
 
 const saveSettings = async () => {

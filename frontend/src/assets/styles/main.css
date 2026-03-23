@@ -131,6 +131,45 @@ html, body {
     "GRAD" 0;
 }
 
+/* SweetAlert2: alinear la tipografia con la del proyecto */
+.swal2-popup,
+.swal2-title,
+.swal2-html-container,
+.swal2-confirm,
+.swal2-cancel,
+.swal2-remarket-popup {
+  font-family: var(--ion-font-family, "Google Sans", sans-serif) !important;
+}
+
+.swal2-ionic-container-fix {
+  z-index: 99999 !important;
+  pointer-events: all !important;
+}
+
+.swal2-remarket-popup {
+  border-radius: 18px;
+  border: 2px solid #1a7f34;
+  background: #f8fafc;
+}
+
+.swal2-remarket-confirm {
+  background: #1a7f34 !important;
+  color: #fff !important;
+  font-weight: 700;
+  border-radius: 8px !important;
+  padding: 8px 24px !important;
+  font-size: 1.1em;
+}
+
+.swal2-remarket-cancel {
+  background: #e6ebf2 !important;
+  color: #1a7f34 !important;
+  border-radius: 8px !important;
+  font-weight: 700;
+  padding: 8px 24px !important;
+  font-size: 1.1em;
+}
+
 ion-header, .ion-header, body {
   background: #fff !important;
   box-shadow: none !important;

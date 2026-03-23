@@ -312,9 +312,9 @@ import {
   IonModal,
   IonTextarea,
   onIonViewWillEnter,
-  alertController,
   toastController,
 } from '@ionic/vue'
+import Swal from 'sweetalert2'
 import { chatbubbleEllipsesOutline, addOutline, heart, heartOutline, cartOutline } from 'ionicons/icons'
 import { useProductStore } from '@/stores/productStore'
 import { useChatStore } from '@/stores/chatStore'
@@ -434,12 +434,19 @@ const submitReview = async () => {
 }
 
 const showAlreadyReviewedAlert = async () => {
-  const alert = await alertController.create({
-    header: 'Valoración existente',
-    message: 'Ya has valorado a este vendedor.',
-    buttons: ['OK'],
+  await Swal.fire({
+    icon: 'info',
+    title: 'Valoración existente',
+    text: 'Ya has valorado a este vendedor.',
+    confirmButtonText: 'OK',
+    customClass: {
+      popup: 'swal2-remarket-popup',
+      confirmButton: 'swal2-remarket-confirm',
+      container: 'swal2-ionic-container-fix',
+    },
+    heightAuto: false,
+    target: document.body,
   })
-  await alert.present()
 }
 
 const formatReviewDate = (date: Date) => {
@@ -758,24 +765,26 @@ const buyProduct = () => {
 }
 
 const confirmLogin = async () => {
-  const alert = await alertController.create({
-    header: 'Inicia sesion',
-    message: 'Necesitas iniciar sesion para continuar con la compra.',
-    cssClass: 'auth-alert',
-    buttons: [
-      {
-        text: 'Cancelar',
-        role: 'cancel',
-      },
-      {
-        text: 'Continuar',
-        handler: () => {
-          router.push('/login')
-        },
-      },
-    ],
+  const result = await Swal.fire({
+    icon: 'warning',
+    title: 'Inicia sesion',
+    text: 'Necesitas iniciar sesion para continuar con la compra.',
+    showCancelButton: true,
+    confirmButtonText: 'Continuar',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+      popup: 'swal2-remarket-popup',
+      confirmButton: 'swal2-remarket-confirm',
+      cancelButton: 'swal2-remarket-cancel',
+      container: 'swal2-ionic-container-fix',
+    },
+    heightAuto: false,
+    target: document.body,
   })
-  await alert.present()
+
+  if (result.isConfirmed) {
+    router.push('/login')
+  }
 }
 </script>
 

@@ -128,8 +128,8 @@ import {
   IonSegmentButton,
   IonLabel,
   toastController,
-  alertController,
 } from '@ionic/vue'
+import Swal from 'sweetalert2'
 import {
   addCircleOutline,
   eyeOutline,
@@ -241,32 +241,35 @@ const filterSales = () => {
 }
 
 const deleteSale = async (id: number) => {
-  const alert = await alertController.create({
-    header: 'Eliminar publicación',
-    message: '¿Estás seguro de que quieres eliminar este anuncio?',
-    buttons: [
-      {
-        text: 'Cancelar',
-        role: 'cancel',
-      },
-      {
-        text: 'Eliminar',
-        role: 'destructive',
-        handler: () => {
-          salesList.value = salesList.value.filter((s) => s.id !== id)
-
-          toastController
-            .create({
-              message: '✓ Anuncio eliminado correctamente',
-              duration: 2000,
-              color: 'success',
-            })
-            .then((t) => t.present())
-        },
-      },
-    ],
+  const result = await Swal.fire({
+    icon: 'warning',
+    title: 'Eliminar publicación',
+    text: '¿Estás seguro de que quieres eliminar este anuncio?',
+    showCancelButton: true,
+    confirmButtonText: 'Eliminar',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+      popup: 'swal2-remarket-popup',
+      confirmButton: 'swal2-remarket-confirm',
+      cancelButton: 'swal2-remarket-cancel',
+      container: 'swal2-ionic-container-fix',
+    },
+    heightAuto: false,
+    target: document.body,
   })
-  await alert.present()
+
+  if (!result.isConfirmed) {
+    return
+  }
+
+  salesList.value = salesList.value.filter((s) => s.id !== id)
+
+  const toast = await toastController.create({
+    message: '✓ Anuncio eliminado correctamente',
+    duration: 2000,
+    color: 'success',
+  })
+  await toast.present()
 }
 </script>
 
