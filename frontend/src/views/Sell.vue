@@ -615,7 +615,11 @@ const submitSell = async () => {
     canNegotiate: formData.value.canNegotiate,
   }
 
-  store.addProduct(newProduct)
+  // Obtener el userId actual (debería venir del auth, aquí ejemplo con chatStore)
+  const { useChatStore } = await import('@/stores/chatStore')
+  const chatStore = useChatStore()
+  const userId = chatStore.currentUserId?.value || 1
+  store.addProduct({ ...newProduct, sellerId: userId })
 
   const toast = await toastController.create({
     message: '✓ Anuncio publicado correctamente',
@@ -627,7 +631,7 @@ const submitSell = async () => {
   await toast.present()
 
   resetForm()
-  setTimeout(() => router.push('/tabs/home'), 2000)
+  setTimeout(() => router.push('/sales'), 2000)
 }
 
 // Limpiar formulario

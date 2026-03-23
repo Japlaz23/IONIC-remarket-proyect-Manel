@@ -287,8 +287,14 @@
       
 <!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->
 
-        <ion-fab horizontal="start" vertical="bottom" slot="fixed" class="home-fab">
-        <ion-fab-button>
+        <ion-fab
+          horizontal="start"
+          vertical="bottom"
+          slot="fixed"
+          class="home-fab"
+          :activated="isChatFabOpen"
+        >
+        <ion-fab-button @click.stop="toggleChatFab">
           <ion-icon :icon="add"></ion-icon>
         </ion-fab-button>
           <ion-fab-list side="end">
@@ -322,7 +328,7 @@ import { Navigation, Pagination } from 'swiper/modules'
 /* Componentes */
 import CategoriesMenu from '@/components/CategoriesMenu.vue'
 import { HOME_CATEGORIES, BRANDS_BY_CATEGORIES } from '@/utils/constants'
-import { computed, ref, reactive, watch } from 'vue'
+import { computed, ref, reactive, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useProductStore } from '@/stores/productStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
 import { useRouter } from 'vue-router'
@@ -605,6 +611,32 @@ const goToHomeWithCarousel = () => {
 const goToProduct = (id: number) => {
   router.push(`/product/${id}`)
 }
+
+let fabWasOpenOnPointerDown = false;
+const toggleChatFab = () => {
+  isChatFabOpen.value = !isChatFabOpen.value;
+}
+
+const handlePointerDown = (event: Event) => {
+  fabWasOpenOnPointerDown = isChatFabOpen.value;
+}
+
+const handlePointerUp = (event: Event) => {
+  if (!fabWasOpenOnPointerDown) return;
+  const target = event.target as HTMLElement | null;
+  if (target && target.closest('.home-fab')) return;
+  isChatFabOpen.value = false;
+}
+
+onMounted(() => {
+  document.addEventListener('pointerdown', handlePointerDown);
+  document.addEventListener('pointerup', handlePointerUp);
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', handlePointerDown);
+  document.removeEventListener('pointerup', handlePointerUp);
+})
 
 const goToSellFromFab = () => {
   isChatFabOpen.value = false
