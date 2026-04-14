@@ -19,6 +19,7 @@
     "@ionic/vue": "^8.7.17",
     "@ionic/vue-router": "^8.7.17",
     "@vue-leaflet/vue-leaflet": "^0.10.1",
+    "apexcharts": "^5.10.6",
     "axios": "^1.13.5",
     "ionicons": "^8.0.13",
     "leaflet": "^1.9.4",

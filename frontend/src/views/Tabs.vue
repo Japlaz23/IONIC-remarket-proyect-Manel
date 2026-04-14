@@ -28,7 +28,7 @@
           <ion-badge color="danger" v-if="unreadCount > 0" class="tab-badge">{{ unreadCount }}</ion-badge>
         </ion-tab-button>
 
-        <ion-tab-button tab="payment-check" href="/tabs/payment-check">
+        <ion-tab-button tab="purchases" href="/tabs/purchases">
           <ion-icon :icon="cartOutline"></ion-icon>
           <ion-label>Compras</ion-label>
         </ion-tab-button>
@@ -80,7 +80,7 @@ const tabOrder = [
   '/tabs/favorites',
   '/tabs/sell',
   '/tabs/chat',
-  '/tabs/payment-check',
+  '/tabs/purchases',
   '/tabs/profile',
 ]
 

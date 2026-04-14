@@ -235,6 +235,9 @@ const email = ref<string>('')
 const password = ref<string>('')
 const router = useRouter()
 
+const ADMIN_EMAIL = 'admin@remarket.com'
+const ADMIN_PASSWORD = 'Admin1234!'
+
 const handleLogin = async () => {
   if (!email.value || !password.value) {
     const toast = await toastController.create({
@@ -259,9 +262,24 @@ const handleLogin = async () => {
     return
   }
 
+  const normalizedEmail = email.value.trim().toLowerCase()
+  if (normalizedEmail === ADMIN_EMAIL && password.value !== ADMIN_PASSWORD) {
+    const toast = await toastController.create({
+      message: 'Credenciales de administrador incorrectas',
+      duration: 2200,
+      position: 'top',
+      color: 'danger',
+    })
+    await toast.present()
+    return
+  }
+
+  const isAdmin = normalizedEmail === ADMIN_EMAIL && password.value === ADMIN_PASSWORD
+
   const user = {
-    email: email.value,
-    name: email.value.split('@')[0],
+    email: normalizedEmail,
+    name: isAdmin ? 'Administrador' : normalizedEmail.split('@')[0],
+    role: isAdmin ? 'admin' : 'user',
     loginDate: new Date().toISOString(),
   }
 
@@ -275,7 +293,7 @@ const handleLogin = async () => {
   })
   await toast.present()
 
-  router.push('/tabs/home')
+  router.push(isAdmin ? '/dashboard' : '/tabs/home')
 }
 
 const goHome = () => {
