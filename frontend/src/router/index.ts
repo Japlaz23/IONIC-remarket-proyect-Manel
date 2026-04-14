@@ -137,11 +137,47 @@ const routes: RouteRecordRaw[] = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+    children: [
+      {
+        path: '',
+        redirect: '/dashboard/negocio',
+      },
+      {
+        path: 'negocio',
+        name: 'DashboardNegocio',
+        component: () => import('../components/NegocioPage.vue'),
+      },
+      {
+        path: 'tecnico',
+        name: 'DashboardTecnico',
+        component: () => import('../components/TecnicoPage.vue'),
+      },
+      {
+        path: 'kpis',
+        name: 'DashboardKPIs',
+        component: () => import('../components/KPIsPage.vue'),
+      },
+    ],
   },
   {
     path: '/profile',
     redirect: '/tabs/profile',
   },
+
+  {
+    path: '/negocio',
+    redirect: '/dashboard/negocio',
+  }, 
+
+  {
+    path: '/tecnico',
+    redirect: '/dashboard/tecnico',
+  },
+
+  {
+    path: '/kpis',
+    redirect: '/dashboard/kpis'
+  }
  
 ]
 
@@ -159,7 +195,7 @@ const requiresAuth = (path: string) => {
     path === '/sales' ||
     path === '/purchases' ||
     path === '/settings' ||
-    path === '/dashboard' ||
+    path.startsWith('/dashboard') ||
     path === '/profile' ||
     path === '/payment' ||
     path.startsWith('/chat')
@@ -167,7 +203,7 @@ const requiresAuth = (path: string) => {
 }
 
 const requiresAdmin = (path: string) => {
-  return path === '/dashboard'
+  return path.startsWith('/dashboard')
 }
 
 const isAdminUser = () => {
