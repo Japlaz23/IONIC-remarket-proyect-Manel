@@ -145,17 +145,17 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'negocio',
         name: 'DashboardNegocio',
-        component: () => import('../components/NegocioPage.vue'),
+        component: () => import('../views/NegocioPage.vue'),
       },
       {
         path: 'tecnico',
         name: 'DashboardTecnico',
-        component: () => import('../components/TecnicoPage.vue'),
+        component: () => import('../views/TecnicoPage.vue'),
       },
       {
         path: 'kpis',
         name: 'DashboardKPIs',
-        component: () => import('../components/KPIsPage.vue'),
+        component: () => import('../views/KPIsPage.vue'),
       },
     ],
   },

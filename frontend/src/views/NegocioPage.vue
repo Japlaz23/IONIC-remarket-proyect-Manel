@@ -23,9 +23,15 @@
         <!-- 🟢 Fila 1: 4 Columnas -->
         <ion-row class="ion-row-1">
           <ion-col size="6" size-lg="3">
-            <div class="box">
-            <div class="box">Columna 1</div>
-            </div>
+            <SparkLine
+              title="Ventas"
+              value="$5.2K"
+              iconName="cash-outline"
+              bgColor="gradient-blue"
+              textColor="white"
+              :chartOptions="salesChartOptions"
+              :chartSeries="salesChartSeries"
+            />
           </ion-col>
           <ion-col size="6" size-lg="3">
             <div class="box">Columna 2</div>
@@ -67,6 +73,31 @@
 
 <script setup lang="ts">
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol } from '@ionic/vue';
+import SparkLine from '@/components/SparkLine.vue';
+
+const salesChartOptions = {
+  chart: {
+    sparkline: { enabled: true },
+    toolbar: { show: false },
+  },
+  stroke: { curve: 'smooth', width: 3 },
+  tooltip: { enabled: false },
+  xaxis: {
+    labels: { show: false },
+    axisBorder: { show: false },
+    axisTicks: { show: false },
+  },
+  yaxis: { show: false },
+  grid: { show: false },
+  colors: ['#ffffff'],
+};
+
+const salesChartSeries = [
+  {
+    name: 'Ventas',
+    data: [12, 18, 14, 22, 19, 28, 26, 35],
+  },
+];
 </script>
 
 
@@ -105,5 +136,24 @@ ion-col {
   .ion-row-3{height: 40%; max-height: 40%;}
 }
 
+@container box (width >= 324px) {
+  .details{
+    flex-direction: row;
+    justify-content: space-start;
+    align-items: start;
+    gap: 16px;
+  }
+
+
+  .details > span {
+    font-size: 6cqmax;
+  }
+  .details > div > ion-icon{
+    font-size: 4cqmax;
+  }
+  .details > div > span{
+    font-size: 2cqmax;
+  }
+}
 
 </style>
