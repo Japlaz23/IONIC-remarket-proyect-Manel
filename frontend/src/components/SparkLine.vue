@@ -7,7 +7,7 @@
       </div>
       <span>{{value}}</span>
     </div>
-    <vapexChart 
+    <Vapexchart 
       class="sparkline-chart"
       :height="chartHeight" 
       :options="chartOptions"

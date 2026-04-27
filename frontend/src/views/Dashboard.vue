@@ -77,7 +77,6 @@ watch(() => route.path, updateSelectedIndex, { immediate: true });
 
 </script>
 
-
 <style scoped>
 
 
