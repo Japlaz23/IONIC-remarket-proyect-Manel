@@ -1,5 +1,5 @@
 <template>
-  <div :class="['box-sparkline', bgColor, textColor]">
+  <div :class="['box-sparkline', goalReached ? 'gradient-success' : bgColor, textColor]">
     <div class="details">
       <div>
         <ion-icon :name="iconName"></ion-icon>
@@ -18,6 +18,8 @@
 
 
 <script setup lang="ts">
+
+
 import { IonIcon } from '@ionic/vue';
 import { addIcons } from 'ionicons';
 import { navigateOutline, logoIonic, eyeOutline, peopleOutline, cashOutline } from 'ionicons/icons';
@@ -36,7 +38,7 @@ addIcons({
 
 
 // 📌 Definir Props para datos dinámicos
-defineProps({
+const props = defineProps({
   title: { type: String, default: 'Metrica',  },
   value: { type: String, default: '#Value',   },
   chartOptions: {type: Object, required: true, }, // Se espera un objeto de configuración de ApexCharts
@@ -44,15 +46,10 @@ defineProps({
   bgColor: { type: String, default: '', },
   textColor: { type: String, default: '', },
   iconName: { type: String, default: 'logo-ionic', },
+  goalReached: { type: Boolean, default: false, }, // Indica si se alcanzó la meta
 });
 
-
-
-
-
-
 /******* Control altura gráfico según ancho ********************/
-
 
 const chartHeight = ref("50%");
 
@@ -86,12 +83,10 @@ onUnmounted(() => {
 
 </script>
 
-
 <style scoped>
 
 
 /* Mobile first */
-
 
 .box-sparkline{
   display: flex;
@@ -122,13 +117,12 @@ onUnmounted(() => {
 
 
 .details > div > ion-icon{
-  font-size: 2rem;
-  --ionicon-stroke-width: 24px;
+  font-size: 1.5rem;
+  --ionicon-stroke-width: 16px;
 }
 
-
-.details > div > span{ font-size: .8rem; }
-.details > span{ font-size: 2.9rem; }
+.details > div > span{ font-size: .7rem; }
+.details > span{ font-size: 2rem; }
 
 
 .sparkline-chart {
@@ -150,13 +144,13 @@ onUnmounted(() => {
 
 
   .details > span {
-    font-size: 6cqmax;
-  }
-  .details > div > ion-icon{
     font-size: 4cqmax;
   }
+  .details > div > ion-icon{
+    font-size: 3cqmax;
+  }
   .details > div > span{
-    font-size: 2cqmax;
+    font-size: 1.5cqmax;
   }
 }
 
@@ -173,13 +167,13 @@ onUnmounted(() => {
     }
    /* Para anchos de contenedores muy pequeños */
     .details > span {
-      font-size: max(1.7rem, 16cqw);
+      font-size: max(1.4rem, 12cqw);
     }
     .details > div > ion-icon{
-      font-size: max(1.7rem, 5cqw);
+      font-size: max(1.3rem, 4cqw);
     }
     .details > div > span{
-      font-size: max(0.8rem, 5cqw);
+      font-size: max(0.7rem, 3.5cqw);
     }
   }
 }
@@ -190,6 +184,13 @@ onUnmounted(() => {
 .gradient-green {background-image: linear-gradient( 135deg, #054d43 10%, #6be084 100%);}
 .gradient-orange {background-image: linear-gradient( 135deg, #f31b4a 10%, #e78f30 100%);}
 .gradient-pink {background-image: linear-gradient( 135deg, #383ead 10%, #EE9AE5 100%);}
+.gradient-purple {background-image: linear-gradient( 135deg, #4a148c 10%, #9c27b0 100%);}
+.gradient-success {background-image: linear-gradient( 135deg, #1b5e20 10%, #4caf50 100%);}
+
+/* 🎨 Colores de texto */
+.black{ color: black }
+.white{ color: white; }
+.red{ color: #ff4444; }
 
 
 .black{ color: black }

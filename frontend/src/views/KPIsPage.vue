@@ -18,51 +18,8 @@
       </ion-header>
 
 
-      <h1 class="ion-padding">🚀 KPIs de Negocio</h1>
-      <div class="sparkline-dashboard">
-        <SparkLine
-          title="Visitas"
-          value="1,500"
-          :chartOptions="{
-            chart: { sparkline: { enabled: true } },
-            stroke: { curve: 'smooth', width: 2 },
-            colors: ['#0396FF'],
-            tooltip: { enabled: false },
-          }"
-          :chartSeries="[{ data: [1000, 1100, 1200, 1300, 1400, 1500] }]"
-          bgColor="gradient-blue"
-          textColor="white"
-          iconName="eye-outline"
-        />
-        <SparkLine
-          title="Ventas"
-          value="€240,000"
-          :chartOptions="{
-            chart: { sparkline: { enabled: true } },
-            stroke: { curve: 'smooth', width: 2 },
-            colors: ['#6be084'],
-            tooltip: { enabled: false },
-          }"
-          :chartSeries="[{ data: [200000, 210000, 220000, 230000, 240000] }]"
-          bgColor="gradient-green"
-          textColor="white"
-          iconName="cash-outline"
-        />
-        <SparkLine
-          title="Leads"
-          value="3,000"
-          :chartOptions="{
-            chart: { sparkline: { enabled: true } },
-            stroke: { curve: 'smooth', width: 2 },
-            colors: ['#e78f30'],
-            tooltip: { enabled: false },
-          }"
-          :chartSeries="[{ data: [300, 800, 1500, 2200, 3000] }]"
-          bgColor="gradient-orange"
-          textColor="white"
-          iconName="people-outline"
-        />
-      </div>
+      <h1 class="ion-padding">📈 KPIs de Negocio</h1>
+
       <ion-accordion-group expand="inset" :multiple="true">
         <ion-accordion v-for="item in smartGoals" :key="item.id" :value="item.id.toString()">
           <ion-item slot="header">
@@ -79,7 +36,7 @@
         </ion-accordion>
       </ion-accordion-group>
       <br>
-      <h1 class="ion-padding">📈 KPIs Técnicos</h1>
+      <h1 class="ion-padding">⚙️ KPIs Técnicos</h1>
       <ion-accordion-group expand="inset" :multiple="true">
         <ion-accordion v-for="item in smartGoals" :key="item.id" :value="item.id.toString()">
           <ion-item slot="header">
@@ -102,7 +59,6 @@
 
 <script setup lang="ts">
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonList } from '@ionic/vue';
-import SparkLine from '@/components/SparkLine.vue';
 import { ref } from 'vue';
 
 
