@@ -98,13 +98,15 @@
 	--ion-color-danger-contrast-rgb: 255,255,255;
 	--ion-color-danger-shade: #ad000d;
 	--ion-color-danger-tint: #cb1a27;
+  --background-color: #0f1115;
+  --ion-text-color: #f4f6f8;
   /* Swiper theme color */
   --swiper-theme-color: #1a7f34 !important;
 }
 
 body, html {
   background-color: var(--ion-background-color) !important;
-  color: var(--ion-color-primary);
+  color: var(--ion-text-color);
 }
 
 /* Utilidades para texto y fondo verde/white */
@@ -149,7 +151,7 @@ html, body {
 .swal2-remarket-popup {
   border-radius: 18px;
   border: 2px solid #1a7f34;
-  background: #f8fafc;
+  background: #151922;
 }
 
 .swal2-remarket-confirm {
@@ -162,8 +164,8 @@ html, body {
 }
 
 .swal2-remarket-cancel {
-  background: #e6ebf2 !important;
-  color: #1a7f34 !important;
+  background: #242a36 !important;
+  color: #f4f6f8 !important;
   border-radius: 8px !important;
   font-weight: 700;
   padding: 8px 24px !important;
@@ -171,12 +173,17 @@ html, body {
 }
 
 ion-header, .ion-header, body {
-  background: #fff !important;
+  background: #0f1115 !important;
   box-shadow: none !important;
   border-bottom: none !important;
   /* Fallback font-family ya está en :root arriba */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+ion-app, ion-content, ion-toolbar, ion-menu ion-content {
+  background: var(--background-color) !important;
+  color: var(--ion-text-color);
 }
 
 .auth-alert .alert-wrapper {

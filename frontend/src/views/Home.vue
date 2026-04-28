@@ -102,14 +102,27 @@
               <div class="carousel-row">
                 <Swiper
                   :loop="true"
-                  :navigation="{ nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }"
-                  :pagination="false"
+                  :autoplay="{
+                    delay: 4000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true
+                  }"
+                  :navigation="{ 
+                    nextEl: '.swiper-button-next', 
+                    prevEl: '.swiper-button-prev' 
+                  }"
+                  :pagination="{ 
+                    clickable: true,
+                    dynamicBullets: true 
+                  }"
                   :modules="modules"
                   :breakpoints="{
-                    0: { slidesPerView: 2, spaceBetween: 10 },
-                    480: { slidesPerView: 2, spaceBetween: 20 },
-                    768: { slidesPerView: 2, spaceBetween: 30 },
-                    1024: { slidesPerView: 4, spaceBetween: 30 },
+                    0: { slidesPerView: 1.2, spaceBetween: 10 },
+                    380: { slidesPerView: 1.5, spaceBetween: 12 },
+                    480: { slidesPerView: 2, spaceBetween: 16 },
+                    768: { slidesPerView: 3, spaceBetween: 20 },
+                    1024: { slidesPerView: 4, spaceBetween: 24 },
+                    1280: { slidesPerView: 5, spaceBetween: 24 },
                   }"
                   class="product-swiper"
                 >
@@ -318,12 +331,14 @@
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
+import 'swiper/css/autoplay'
+import 'swiper/css/effect-fade'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
-import { Navigation, Pagination } from 'swiper/modules'
+import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules'
 
-  const modules = [Pagination, Navigation];
+  const modules = [Navigation, Pagination, Autoplay];
 
 /* Componentes */
 import CategoriesMenu from '@/components/CategoriesMenu.vue'
@@ -1156,8 +1171,74 @@ watch(
 }
 .carousel-wrapper {
   position: relative;
-  padding: 0 44px; /* espacio reservado para las flechas */
-  padding-bottom: 30px;
+  padding: 0 50px; /* espacio reservado para las flechas */
+  padding-bottom: 40px;
+}
+
+/* Estilos para el carrusel con flechas laterales */
+.carousel-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+}
+
+.product-swiper {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Botones de navegación profesionales */
+:deep(.swiper-button-prev),
+:deep(.swiper-button-next) {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+:deep(.swiper-button-prev:hover),
+:deep(.swiper-button-next:hover) {
+  background: #fff;
+  box-shadow: 0 5px 20px rgba(26, 127, 52, 0.25);
+  transform: scale(1.1);
+}
+
+:deep(.swiper-button-prev:after),
+:deep(.swiper-button-next:after) {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1a7f34;
+}
+
+:deep(.swiper-button-prev) {
+  left: 5px;
+}
+
+:deep(.swiper-button-next) {
+  right: 5px;
+}
+
+/* Paginación elegante */
+:deep(.swiper-pagination) {
+  bottom: 0 !important;
+}
+
+:deep(.swiper-pagination-bullet) {
+  width: 8px;
+  height: 8px;
+  background: #cbd5e1;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+:deep(.swiper-pagination-bullet-active) {
+  background: #1a7f34;
+  width: 24px;
+  border-radius: 4px;
 }
 
 

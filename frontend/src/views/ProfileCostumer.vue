@@ -40,6 +40,10 @@
           <ion-label>Configuración</ion-label>
           <ion-icon :icon="chevronForwardOutline" slot="end"></ion-icon>
         </ion-item>
+         <ion-item class="profile-item" button @click="goToDashboard">
+          <ion-label>Dashboard</ion-label>
+          <ion-icon :icon="chevronForwardOutline" slot="end"></ion-icon>
+        </ion-item>
         <ion-item class="profile-section">
           <ion-label>Transacciones</ion-label>
         </ion-item>
@@ -155,6 +159,9 @@ const profileAvatar = computed(() => {
   return profile.value?.avatarUrl || '/placeholder.svg'
 })
 
+const goToDashboard = () => {
+  router.push('/dashboard')
+}
 
 const goToSettings = () => {
   router.push('/settings')
