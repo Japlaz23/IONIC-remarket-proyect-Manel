@@ -244,9 +244,9 @@
             :key="product.id"
             size="6"
             size-xs="6"
-            size-sm="6"
-            size-md="4"
-            size-lg="3"
+            size-sm="4"
+            size-md="3"
+            size-lg="2"
             class="product-col"
           >
             <ion-card
@@ -278,14 +278,14 @@
             </ion-card>
           </ion-col>
           <ion-col
-            v-if="visibleProducts.length % 3 !== 0"
-            v-for="n in (3 - (visibleProducts.length % 3))"
+            v-if="visibleProducts.length % 5 !== 0"
+            v-for="n in (5 - (visibleProducts.length % 5))"
             :key="'empty-' + n"
             size="6"
             size-xs="6"
-            size-sm="6"
-            size-md="4"
-            size-lg="3"
+            size-sm="4"
+            size-md="3"
+            size-lg="2"
             class="product-col empty-col"
           >
           </ion-col>
@@ -1000,19 +1000,19 @@ watch(
 }
 .product-row {
    display: flex;
-  gap: 24px; 
+  gap: 10px; 
   justify-content: center;
 }
 .center-row {
   justify-content: center !important;
 }
 .product-col {
-  margin-bottom: 24px;
+  margin-bottom: 10px;
 }
 .product-card {
   width: 100%;
-  max-width: 340px;
-  min-width: 220px;
+  max-width: 240px;
+  min-width: 160px;
 }
 @media (max-width: 600px) {
   .product-row {
@@ -1054,15 +1054,16 @@ watch(
 ========================= */
 .product-card {
   background: #fff;
-  border-radius: 18px;
+  border-radius: 12px;
   border: 1px solid #e6ebf2;
-  box-shadow: 0 6px 24px rgba(26, 127, 52, 0.08);
+  box-shadow: 0 3px 12px rgba(26, 127, 52, 0.08);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: box-shadow 0.2s, transform 0.2s;
   cursor: pointer;
   position: relative;
+  margin: 0;
 }
 
 .product-card:hover {
@@ -1073,7 +1074,7 @@ watch(
 
 .product-image-container {
   width: 100%;
-  height: 160px;
+  height: 120px;
   background: #f8fafc;
   display: flex;
   align-items: center;
@@ -1094,41 +1095,41 @@ watch(
 
 .product-title {
   padding-left: 8px;
-  font-size: 1.1rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #000000;
   margin: 0;
-  min-height: 2.4em;
+  min-height: 2em;
   line-height: 1.2;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
 }
 
 .product-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.98em;
+  font-size: 0.78em;
   color: #64748b;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .product-price {
   color: #1a7f34;
   font-weight: 800;
-  font-size: 1.08em;
+  font-size: 0.95em;
 }
 
 .product-location {
   color: #94a3b8;
-  font-size: 0.97em;
+  font-size: 0.85em;
 }
 
 .favorite-btn {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 40px;
-  height: 40px;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: none;
   background: rgba(255,255,255,0.92);
