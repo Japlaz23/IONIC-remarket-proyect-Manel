@@ -14,7 +14,7 @@ import Purchases from '@/views/Purchases.vue'
 import Sales from '@/views/Sales.vue'
 import Settings from '@/views/Settings.vue'
 import PaymentCheck from '@/views/PaymentCheck.vue'
-import Dashboard from '@/views/Dashboard.vue'
+
 
 const routes: RouteRecordRaw[] = [
     {
@@ -133,51 +133,13 @@ const routes: RouteRecordRaw[] = [
     name: 'Settings',
     component: Settings,
   },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
-    children: [
-      {
-        path: '',
-        redirect: '/dashboard/negocio',
-      },
-      {
-        path: 'negocio',
-        name: 'DashboardNegocio',
-        component: () => import('../views/NegocioPage.vue'),
-      },
-      {
-        path: 'tecnico',
-        name: 'DashboardTecnico',
-        component: () => import('../views/TecnicoPage.vue'),
-      },
-      {
-        path: 'kpis',
-        name: 'DashboardKPIs',
-        component: () => import('../views/KPIsPage.vue'),
-      },
-    ],
-  },
+
   {
     path: '/profile',
     redirect: '/tabs/profile',
   },
 
-  {
-    path: '/negocio',
-    redirect: '/dashboard/negocio',
-  }, 
 
-  {
-    path: '/tecnico',
-    redirect: '/dashboard/tecnico',
-  },
-
-  {
-    path: '/kpis',
-    redirect: '/dashboard/kpis'
-  }
  
 ]
 
@@ -195,16 +157,14 @@ const requiresAuth = (path: string) => {
     path === '/sales' ||
     path === '/purchases' ||
     path === '/settings' ||
-    path.startsWith('/dashboard') ||
+
     path === '/profile' ||
     path === '/payment' ||
     path.startsWith('/chat')
   )
 }
 
-const requiresAdmin = (path: string) => {
-  return path.startsWith('/dashboard')
-}
+
 
 const isAdminUser = () => {
   const rawUser = localStorage.getItem('user')
