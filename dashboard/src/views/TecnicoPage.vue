@@ -63,11 +63,11 @@ import ApexMixedChart from '@/components/ApexMixedChart.vue';
 .dashboard-grid {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding-bottom: 16px;
+  gap: 12px;
+  padding-bottom: 12px;
 }
 
-.row { display: flex; gap: 16px; }
+.row { display: flex; gap: 12px; }
 .row-1 { flex: 1; }
 .row-2 { flex: 2; }
 .row-3 { flex: 1; }
@@ -79,6 +79,6 @@ import ApexMixedChart from '@/components/ApexMixedChart.vue';
 
 @media (max-width: 767px) {
   .row-1, .row-2, .row-3 { flex-direction: column; }
-  .col { min-height: 350px; }
+  .col { min-height: 280px; }
 }
 </style>

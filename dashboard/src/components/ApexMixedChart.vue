@@ -48,8 +48,8 @@ const series = computed<ApexCharts.ApexOptions['series']>(() => props.series ?? 
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 290px;
+      min-height: 220px;
     width: 100%;
-    padding: 16px;
+      padding: 10px;
   }
 </style>

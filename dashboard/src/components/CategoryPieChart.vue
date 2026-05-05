@@ -86,21 +86,21 @@ onBeforeUnmount(() => {
   background: #1E1E1E;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 16px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 350px;
+  min-height: 280px;
   overflow: hidden;
 }
 
 .pie-header {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .pie-header h3 {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #8C8C8C;
   text-align: center;

@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .echarts-map-container {
   width: 100%;
-  height: 500px;
+  height: 360px;
   background: #0a0e27;
   border-radius: 12px;
   overflow: hidden;
@@ -138,6 +138,6 @@ onBeforeUnmount(() => {
   z-index: 10;
 }
 
-@media (max-width: 768px) { .echarts-map-container { height: 350px; } }
-@media (max-width: 576px) { .echarts-map-container { height: 280px; } }
+@media (max-width: 768px) { .echarts-map-container { height: 300px; } }
+@media (max-width: 576px) { .echarts-map-container { height: 250px; } }
 </style>

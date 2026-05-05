@@ -106,16 +106,16 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 360px;
-  padding: 18px;
-  border-radius: 24px;
+  min-height: 300px;
+  padding: 14px;
+  border-radius: 20px;
   background: linear-gradient(180deg, rgba(15, 23, 42, 0.94) 0%, rgba(8, 15, 31, 0.98) 100%);
   border: 1px solid rgba(148, 163, 184, 0.16);
   box-shadow: 0 18px 50px rgba(15, 23, 42, 0.3);
 }
 
 .chart-copy {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .eyebrow {
@@ -130,21 +130,21 @@ onBeforeUnmount(() => {
 h3 {
   margin: 0;
   color: #f8fafc;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.2;
 }
 
 .description {
-  margin: 6px 0 0;
+  margin: 4px 0 0;
   color: #9fb2cc;
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .chart-shell {
   position: relative;
   flex: 1;
-  min-height: 280px;
+  min-height: 220px;
 }
 
 canvas {

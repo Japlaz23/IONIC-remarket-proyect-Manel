@@ -42,11 +42,11 @@ const createSparklineOptions = (): any => ({
 });
 
 const businessMetrics = ref([
-  { title: 'Aumentar Visitas', value: '1,400', iconName: 'eye-outline', bgColor: 'gradient-blue', textColor: 'white', targetValue: 1400, currentValue: 1000, unit: 'visitas', goal: '40%', chartOptions: createSparklineOptions(), chartSeries: [{ name: 'Visitas', data: [800, 850, 900, 950, 1000, 1100, 1200, 1300, 1400] }] },
-  { title: 'Aumentar Ventas', value: '€240k', iconName: 'cash-outline', bgColor: 'gradient-green', textColor: 'white', targetValue: 240000, currentValue: 200000, unit: 'EUR', goal: '20%', chartOptions: createSparklineOptions(), chartSeries: [{ name: 'Ventas', data: [150, 160, 170, 180, 190, 200, 215, 230, 240] }] },
-  { title: 'Retención de Clientes', value: '85%', iconName: 'people-outline', bgColor: 'gradient-pink', textColor: 'white', targetValue: 85, currentValue: 70, unit: '%', goal: '+15%', chartOptions: createSparklineOptions(), chartSeries: [{ name: 'Retención', data: [60, 62, 65, 68, 70, 75, 80, 82, 85] }] },
-  { title: 'Leads Calificados', value: '250', iconName: 'navigate-outline', bgColor: 'gradient-orange', textColor: 'white', targetValue: 250, currentValue: 200, unit: 'leads', goal: '+25%', chartOptions: createSparklineOptions(), chartSeries: [{ name: 'Leads', data: [140, 155, 165, 175, 185, 200, 215, 235, 250] }] },
-  { title: 'Productos Vendidos', value: '1,200', iconName: 'logo-ionic', bgColor: 'gradient-teal', textColor: 'white', targetValue: 1500, currentValue: 1200, unit: 'unidades', goal: '80%', chartOptions: createSparklineOptions(), chartSeries: [{ name: 'Productos', data: [200, 300, 350, 400, 450, 600, 800, 1000, 1200] }] },
+  { title: 'Aumentar Visitas', value: '500', iconName: 'eye-outline', bgColor: 'gradient-blue', textColor: 'white', targetValue: 1400, currentValue: 500, unit: 'visitas', goal: '40%', chartOptions: createSparklineOptions(), chartSeries: [{ name: 'Visitas', data: [800, 850, 900, 950, 1000, 1100, 1200, 1300, 1400] }] },
+  { title: 'Aumentar Ventas', value: '€150k', iconName: 'cash-outline', bgColor: 'gradient-green', textColor: 'white', targetValue: 240000, currentValue: 15000, unit: 'EUR', goal: '20%', chartOptions: createSparklineOptions(), chartSeries: [{ name: 'Ventas', data: [150, 160, 170, 180, 190, 200, 215, 230, 240] }] },
+  { title: 'Retención de Clientes', value: '50%', iconName: 'people-outline', bgColor: 'gradient-pink', textColor: 'white', targetValue: 85, currentValue: 50, unit: '%', goal: '+15%', chartOptions: createSparklineOptions(), chartSeries: [{ name: 'Retención', data: [60, 62, 65, 68, 70, 75, 80, 82, 85] }] },
+  { title: 'Leads Calificados', value: '100', iconName: 'navigate-outline', bgColor: 'gradient-orange', textColor: 'white', targetValue: 250, currentValue: 100, unit: 'leads', goal: '+25%', chartOptions: createSparklineOptions(), chartSeries: [{ name: 'Leads', data: [140, 155, 165, 175, 185, 200, 215, 235, 250] }] },
+  { title: 'Productos Vendidos', value: '1,000', iconName: 'logo-ionic', bgColor: 'gradient-teal', textColor: 'white', targetValue: 1500, currentValue: 1000, unit: 'unidades', goal: '80%', chartOptions: createSparklineOptions(), chartSeries: [{ name: 'Productos', data: [200, 300, 350, 400, 450, 600, 800, 1000, 1200] }] },
 ]);
 
 const chartRefs = ref<(HTMLElement | null)[]>([]);
@@ -157,9 +157,9 @@ onUnmounted(() => {
 .sparklines-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  padding: 8px;
+  padding: 4px;
   max-width: 100%;
   margin: 0 auto;
   justify-content: center;
@@ -177,9 +177,9 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 220px;
+  height: 190px;
   width: 100%;
-  padding: 8px;
+  padding: 6px;
   border-radius: 8px;
   container: box / inline-size;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
@@ -187,21 +187,21 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-@media (min-width: 1200px) { .box-sparkline { height: 350px; padding: 24px; } }
-@media (min-width: 1920px) { .box-sparkline { height: 380px; } }
+@media (min-width: 1200px) { .box-sparkline { height: 250px; padding: 12px; } }
+@media (min-width: 1920px) { .box-sparkline { height: 270px; } }
 
 .box-sparkline:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); }
 
-.details { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 8px; }
+.details { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 6px; }
 .details > div { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .details > div > ion-icon { font-size: 1.6rem; --ionicon-stroke-width: 18px; }
 .details > div > span { font-size: 0.82rem; font-weight: 600; }
-.details > span { font-size: 1.9rem; font-weight: 700; }
+.details > span { font-size: 1.6rem; font-weight: 700; }
 
-@media (min-width: 1200px) { .details > div > span { font-size: 0.86rem; } .details > span { font-size: 2.1rem; } }
-@media (min-width: 1920px) { .details > div > span { font-size: 0.9rem; } .details > span { font-size: 2.2rem; } }
+@media (min-width: 1200px) { .details > div > span { font-size: 0.84rem; } .details > span { font-size: 1.8rem; } }
+@media (min-width: 1920px) { .details > div > span { font-size: 0.88rem; } .details > span { font-size: 1.9rem; } }
 
-.progress-info { font-size: 0.8rem; opacity: 0.95; margin-bottom: 8px; font-weight: 500; }
+.progress-info { font-size: 0.76rem; opacity: 0.95; margin-bottom: 6px; font-weight: 500; }
 
 .sparkline-chart { min-width: 50px; width: 100%; flex-grow: 1; }
 

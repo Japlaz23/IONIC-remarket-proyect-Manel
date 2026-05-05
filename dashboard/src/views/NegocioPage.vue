@@ -56,11 +56,11 @@ import TopProductsBarChart from '@/components/TopProductsBarChart.vue';
 .dashboard-grid {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding-bottom: 16px;
+  gap: 12px;
+  padding-bottom: 12px;
 }
 
-.row { display: flex; gap: 16px; }
+.row { display: flex; gap: 12px; }
 .row-1 { flex: 1; }
 .row-2 { flex: 2; }
 .row-3 { flex: 2; }
@@ -72,7 +72,7 @@ import TopProductsBarChart from '@/components/TopProductsBarChart.vue';
 
 @media (max-width: 767px) {
   .row-2, .row-3 { flex-direction: column; }
-  .col-side { min-height: 400px; }
-  .col-half { min-height: 350px; }
+  .col-side { min-height: 320px; }
+  .col-half { min-height: 280px; }
 }
 </style>
