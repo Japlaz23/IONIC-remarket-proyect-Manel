@@ -32,10 +32,10 @@
 
         <div class="row row-3">
           <div class="col col-half">
-            <ApexMixedChart />
+            <RadarCategoryChart />
           </div>
           <div class="col col-half">
-            <ApexMixedChart />
+            <TopProductsBarChart />
           </div>
         </div>
       </div>
@@ -48,7 +48,8 @@ import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, Io
 import SparkLine from '@/components/SparkLine.vue';
 import EchartsMap from '@/components/EchartsMap.vue';
 import CategoryPieChart from '@/components/CategoryPieChart.vue';
-import ApexMixedChart from '@/components/ApexMixedChart.vue';
+import RadarCategoryChart from '@/components/RadarCategoryChart.vue';
+import TopProductsBarChart from '@/components/TopProductsBarChart.vue';
 </script>
 
 <style scoped>
