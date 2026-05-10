@@ -96,7 +96,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardHeader, IonCardContent, IonSegment, IonSegmentButton } from '@ionic/vue';
-import 'leaflet/dist/leaflet.css';
 import { useRoute } from 'vue-router';
 import { useProductStore } from '@/stores/productStore';
 import { useSellerStore } from '@/stores/sellerStore';

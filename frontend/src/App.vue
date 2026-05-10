@@ -37,5 +37,8 @@ const globalTransition = (_: HTMLElement, opts: { direction?: 'forward' | 'back'
 <style>
 ion-app {
   --ion-background-color: var(--background-color);
+  background: var(--background-color);
+  color: var(--ion-text-color);
+  color-scheme: dark;
 }
 </style>

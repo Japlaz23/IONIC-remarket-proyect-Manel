@@ -14,7 +14,7 @@ import Purchases from '@/views/Purchases.vue'
 import Sales from '@/views/Sales.vue'
 import Settings from '@/views/Settings.vue'
 import PaymentCheck from '@/views/PaymentCheck.vue'
-import Dashboard from '@/views/Dashboard.vue'
+
 
 const routes: RouteRecordRaw[] = [
     {
@@ -133,15 +133,13 @@ const routes: RouteRecordRaw[] = [
     name: 'Settings',
     component: Settings,
   },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
-  },
+
   {
     path: '/profile',
     redirect: '/tabs/profile',
   },
+
+
  
 ]
 
@@ -159,16 +157,14 @@ const requiresAuth = (path: string) => {
     path === '/sales' ||
     path === '/purchases' ||
     path === '/settings' ||
-    path === '/dashboard' ||
+
     path === '/profile' ||
     path === '/payment' ||
     path.startsWith('/chat')
   )
 }
 
-const requiresAdmin = (path: string) => {
-  return path === '/dashboard'
-}
+
 
 const isAdminUser = () => {
   const rawUser = localStorage.getItem('user')

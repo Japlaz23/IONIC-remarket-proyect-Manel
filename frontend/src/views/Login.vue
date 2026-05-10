@@ -293,7 +293,7 @@ const handleLogin = async () => {
   })
   await toast.present()
 
-  router.push(isAdmin ? '/dashboard' : '/tabs/home')
+  router.push('/tabs/home')
 }
 
 const goHome = () => {
