@@ -18,35 +18,32 @@
 
       <div class="dashboard-grid">
         <div class="row row-1">
-          <div class="col col-third">
-            <ApexMixedChart />
+          <div class="col col-half">
+            <Errores />
           </div>
-          <div class="col col-third">
-            <ApexMixedChart />
-          </div>
-          <div class="col col-third">
-            <ApexMixedChart />
+          <div class="col col-half">
+            <TiempodeCarga />
           </div>
         </div>
 
         <div class="row row-2">
-          <div class="col col-side-small">
-            <ApexMixedChart />
+          <div class="col col-half">
+            <UsuariosSctivos />
           </div>
-          <div class="col col-side-big">
-            <ApexMixedChart />
+          <div class="col col-half">
+            <UsuariosSimultaneos />
           </div>
         </div>
 
         <div class="row row-3">
-          <div class="col col-third">
-            <ApexMixedChart />
+          <div class="col col-full">
+            <EchartsMap />
           </div>
-          <div class="col col-third">
-            <ApexMixedChart />
-          </div>
-          <div class="col col-third">
-            <ApexMixedChart />
+        </div>
+
+        <div class="row row-4">
+          <div class="col col-full">
+            <RadarCategoryChart />
           </div>
         </div>
       </div>
@@ -56,7 +53,12 @@
 
 <script setup lang="ts">
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-import ApexMixedChart from '@/components/ApexMixedChart.vue';
+import Errores from '@/components/Errores.vue';
+import TiempodeCarga from '@/components/TiempodeCarga.vue';
+import UsuariosSctivos from '@/components/UsuariosSctivos.vue';
+import UsuariosSimultaneos from '@/components/UsuariosSimultaneos.vue';
+import EchartsMap from '@/components/EchartsMap.vue';
+import RadarCategoryChart from '@/components/RadarCategoryChart.vue';
 </script>
 
 <style scoped>
@@ -69,16 +71,20 @@ import ApexMixedChart from '@/components/ApexMixedChart.vue';
 
 .row { display: flex; gap: 12px; }
 .row-1 { flex: 1; }
-.row-2 { flex: 2; }
-.row-3 { flex: 1; }
+.row-2 { flex: 1; }
+.row-3 { flex: 2; }
+.row-4 { flex: 1.5; }
 
 .col { display: flex; flex-direction: column; min-width: 0; }
-.col-third { flex: 1; }
-.col-side-small { flex: 1; }
-.col-side-big { flex: 3; }
+.col-half { flex: 1; min-width: 0; }
+.col-full { flex: 1; width: 100%; }
 
 @media (max-width: 767px) {
-  .row-1, .row-2, .row-3 { flex-direction: column; }
-  .col { min-height: 280px; }
+  .row-1, .row-2, .row-3, .row-4 { flex-direction: column; }
+  .col { min-height: 250px; }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .row-1, .row-2 { flex-direction: column; }
 }
 </style>

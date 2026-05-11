@@ -5,7 +5,7 @@
         <ion-title class="title">Todas las categorías</ion-title>
         <ion-buttons slot="end">
           <ion-button class="menu-close-button" @click="closeCategoriesMenu">
-            <ion-icon :icon="closeOutline"></ion-icon>
+            <ion-icon icon="close-outline"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -27,7 +27,6 @@
 
 <script setup lang="ts">
 import { IonMenu, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonList, IonItem } from '@ionic/vue'
-import { closeOutline } from 'ionicons/icons'
 
 const props = defineProps({
   categories: Array,
