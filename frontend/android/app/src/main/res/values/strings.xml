@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">frontendtabs</string>
-    <string name="title_activity_main">frontendtabs</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">ReMarket</string>
+    <string name="title_activity_main">ReMarket</string>
+    <string name="package_name">com.remarket.app</string>
+    <string name="custom_url_scheme">com.remarket.app</string>
 </resources>

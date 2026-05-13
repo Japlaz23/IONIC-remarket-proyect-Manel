@@ -733,6 +733,7 @@ const resetForm = () => {
   left: 0;
   right: 0;
   z-index: 20;
+  box-sizing: border-box;
   background: #f5f7fa;
   padding: 12px 16px 10px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.06);
@@ -1196,7 +1197,68 @@ const resetForm = () => {
 /* Responsive */
 @media (max-width: 480px) {
   .sell-container {
-    padding: 12px;
+    padding: 116px 10px 12px;
+  }
+
+  .progress-fixed {
+    padding: 8px 10px;
+  }
+
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 2px;
+    overflow: hidden;
+    margin-bottom: 6px;
+    padding: 2px 0;
+  }
+
+  .step-dot-wrap {
+    min-width: 0;
+    gap: 2px;
+  }
+
+  .step-dot {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+    border-width: 1px;
+  }
+
+  .step-dot ion-icon {
+    font-size: 15px;
+  }
+
+  .step-label {
+    width: 100%;
+    max-width: 44px;
+    font-size: 8px;
+    line-height: 1.1;
+    white-space: normal;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .progress-text {
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+
+  .progress-status {
+    min-width: 0;
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .progress-pct {
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .progress-bar {
+    height: 5px;
   }
 
   .section {
