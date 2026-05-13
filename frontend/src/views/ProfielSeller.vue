@@ -9,19 +9,34 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding">
-      <ion-card v-if="seller">
+    <ion-content class="ion-padding seller-content">
+      <ion-card v-if="seller" class="seller-profile-card">
         <ion-card-header class="seller-profile-header">
           <div class="seller-profile-row">
-            <img v-if="seller?.avatar" :src="seller.avatar" alt="Foto de perfil" class="seller-avatar-large" />
+            <div class="seller-avatar-wrap">
+              <img v-if="seller?.avatar" :src="seller.avatar" alt="Foto de perfil" class="seller-avatar-large" />
+              <div v-else class="seller-avatar-fallback">{{ sellerInitials }}</div>
+            </div>
             <div class="seller-profile-info">
               <h2>{{ seller.name }}</h2>
+              <p class="seller-subtitle">Perfil de vendedor</p>
               <div class="seller-rating">
                 <span v-html="stars"></span>
                 <span>{{ averageRating }} ({{ reviewsCount }})</span>
               </div>
-              <div class="seller-meta">
-                <span>{{ salesCount }} ventas · {{ purchasesCount }} compras</span>
+              <div class="seller-meta-grid">
+                <div class="seller-stat-box">
+                  <strong>{{ salesCount }}</strong>
+                  <span>Ventas</span>
+                </div>
+                <div class="seller-stat-box">
+                  <strong>{{ reviewsCount }}</strong>
+                  <span>Valoraciones</span>
+                </div>
+                <div class="seller-stat-box">
+                  <strong>{{ purchasesCount }}</strong>
+                  <span>Compras</span>
+                </div>
               </div>
             </div>
           </div>
@@ -35,13 +50,14 @@
 
           <div v-if="activeTab === 'productos'" class="tab-content">
             <div v-if="sellerProducts.length > 0" class="products-grid">
-              <ion-card v-for="product in sellerProducts" :key="product.id" class="product-card product-card-compact">
-                <div class="product-card-row">
-                  <img :src="product.image" :alt="product.title" class="product-img-compact" />
-                  <div class="product-info-compact">
-                    <div class="product-title-compact">{{ product.title }}</div>
-                    <div class="product-price-compact">{{ product.price }}€</div>
-                  </div>
+              <ion-card v-for="product in sellerProducts" :key="product.id" class="seller-product-card">
+                <div class="seller-product-image-container">
+                  <img :src="product.image" :alt="product.title" class="seller-product-image" />
+                </div>
+                <div class="seller-product-title">{{ product.title }}</div>
+                <div class="seller-product-meta">
+                  <span class="seller-product-price">{{ product.price }}€</span>
+                  <span class="seller-product-location">{{ product.location }}</span>
                 </div>
               </ion-card>
             </div>
@@ -94,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardHeader, IonCardContent, IonSegment, IonSegmentButton } from '@ionic/vue';
 import { useRoute } from 'vue-router';
 import { useProductStore } from '@/stores/productStore';
@@ -129,6 +145,17 @@ const averageRating = computed(() =>
 )
 const reviewsCount = computed(() => reviews.value.length)
 const stars = computed(() => reviewStore.ratingToStars(Number(averageRating.value)))
+const sellerInitials = computed(() => {
+  const name = seller.value?.name?.trim() || ''
+  if (!name) {
+    return 'RV'
+  }
+  const parts = name.split(' ').filter(Boolean)
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toUpperCase()
+  }
+  return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
+})
 
 const sellerProducts = computed(() =>
   store.products.filter(p => String(p.sellerId) === String(sellerId.value))
@@ -136,167 +163,366 @@ const sellerProducts = computed(() =>
 const salesCount = computed(() => sellerProducts.value.length)
 const purchasesCount = computed(() => 25) // Simulado, pon aquí el dato real si lo tienes
 
-const mapUrl = computed(() =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(seller.value?.location || '')}`
+const mapCoords = ref({
+  lat: 40.4168,
+  lon: -3.7038,
+})
+
+const sellerLocation = computed(() => seller.value?.location?.trim() || 'Madrid')
+
+const geocodeSellerLocation = async (location: string) => {
+  if (!location) {
+    return
+  }
+
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(location)}`,
+      {
+        headers: {
+          'Accept-Language': 'es',
+        },
+      },
+    )
+
+    if (!response.ok) {
+      return
+    }
+
+    const results = await response.json()
+    const first = results?.[0]
+
+    if (!first) {
+      return
+    }
+
+    const lat = Number.parseFloat(first.lat)
+    const lon = Number.parseFloat(first.lon)
+
+    if (Number.isFinite(lat) && Number.isFinite(lon)) {
+      mapCoords.value = { lat, lon }
+    }
+  } catch {
+    // Keep default coords when geocoding fails.
+  }
+}
+
+watch(
+  sellerLocation,
+  (location) => {
+    geocodeSellerLocation(location)
+  },
+  { immediate: true },
 )
+
+const mapUrl = computed(() => {
+  const { lat, lon } = mapCoords.value
+  const delta = 0.03
+  const left = (lon - delta).toFixed(6)
+  const bottom = (lat - delta).toFixed(6)
+  const right = (lon + delta).toFixed(6)
+  const top = (lat + delta).toFixed(6)
+  return `https://www.openstreetmap.org/export/embed.html?bbox=${left}%2C${bottom}%2C${right}%2C${top}&layer=mapnik&marker=${lat.toFixed(6)}%2C${lon.toFixed(6)}`
+})
 </script>
 
 <style scoped>
-.seller-profile-header {
-  padding: 0 0 8px 0;
+.seller-content {
+  --background: linear-gradient(180deg, #f3f7fb 0%, #eef3f8 100%);
 }
+
+.seller-profile-card {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+}
+
+.seller-profile-header {
+  padding: 18px 18px 12px;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf5f0 100%);
+  border-bottom: 1px solid #e2e8f0;
+}
+
 .seller-profile-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   gap: 18px;
 }
+
+.seller-avatar-wrap {
+  flex: 0 0 auto;
+}
+
 .seller-avatar-large {
-  width: 96px;
-  height: 96px;
+  width: 104px;
+  height: 104px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 18px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-  border: 2px solid #e5e7eb;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18);
+  border: 3px solid #ffffff;
 }
+
+.seller-avatar-fallback {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1a7f34 0%, #0f5223 100%);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18);
+  border: 3px solid #ffffff;
+}
+
 .seller-profile-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
+
+.seller-profile-info h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+}
+
+.seller-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
 .seller-rating {
-  font-size: 1em;
+  font-size: 0.98rem;
   color: #f5b301;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.seller-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.seller-stat-box {
+  background: #ffffff;
+  border: 1px solid #dbe5ef;
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.seller-stat-box strong {
+  color: #1a7f34;
+  font-size: 1rem;
   line-height: 1.1;
 }
-.seller-meta {
-  font-size: 0.85em;
-  color: #666;
-  line-height: 1.1;
+
+.seller-stat-box span {
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
+
 .seller-location {
   font-size: 0.9em;
   color: #222;
 }
+
 .ion-card-header {
   padding: 12px 16px 8px 16px !important;
 }
+
 .ion-card-content {
-  padding: 10px 14px 14px 14px !important;
+  padding: 14px !important;
 }
+
 .seller-segment {
-  margin: 10px 0 6px 0;
-}
-.tab-content {
-  margin-top: 6px;
-}
-.products-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.product-card {
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-  padding: 0;
-  margin: 0;
-}
-.product-card-compact {
+  margin: 4px 0 10px;
+  --background: #f1f5f9;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(15,23,42,0.07);
+  padding: 4px;
+}
+
+.tab-content {
+  margin-top: 8px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.seller-product-card {
   padding: 0;
   margin: 0;
-  background: linear-gradient(90deg, #f8fafc 80%, #e6f4ea 100%);
-  transition: box-shadow 0.18s, transform 0.18s;
-  cursor: pointer;
-  border: 1px solid #e3e8ef;
-}
-.product-card-compact:hover {
-  box-shadow: 0 6px 18px rgba(26,127,52,0.10);
-  transform: translateY(-2px) scale(1.012);
-  background: linear-gradient(90deg, #e6f4ea 60%, #f8fafc 100%);
-}
-.product-card-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 16px;
-}
-.product-img {
-  height: 90px;
-  object-fit: cover;
-  border-bottom: 1px solid #eee;
-}
-.product-img-compact {
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 2px solid #e6f4ea;
-  box-shadow: 0 2px 8px rgba(15,23,42,0.06);
   background: #fff;
-}
-.product-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.product-title {
-  font-size: 1em;
-  font-weight: 600;
-  color: #222;
-  line-height: 1.1;
-}
-.product-price {
-  font-size: 1em;
-  margin-top: 2px;
-}
-.product-price-compact {
-  color: #1a7f34;
-  font-weight: 700;
-  font-size: 1em;
-  margin-top: 2px;
-  letter-spacing: 0.5px;
-}
-.empty-state {
-  padding: 12px 0;
-}
-.review-item {
-  border-radius: 7px;
-  padding: 8px 10px;
-  border: 1px solid #e5e7eb;
-}
-.review-header {
-  margin-bottom: 2px;
-}
-.info-section {
-  gap: 6px;
-  margin-top: 2px;
-}
-.info-row {
-  gap: 4px;
-  align-items: center;
-}
-.info-label {
-  min-width: 70px;
-  font-size: 0.97em;
-}
-.info-value {
-  color: #334155;
-}
-.map-frame {
-  margin-top: 8px;
-  border-radius: 8px;
+  border-radius: 10px;
+  border: 1px solid #e6ebf2;
+  box-shadow: 0 3px 12px rgba(26, 127, 52, 0.08);
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
 }
-.map-embed {
+
+.seller-product-card:hover {
+  box-shadow: 0 12px 32px rgba(26, 127, 52, 0.18);
+  transform: translateY(-4px) scale(1.02);
+  border-color: #1a7f34;
+}
+
+.seller-product-image-container {
   width: 100%;
   height: 120px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.seller-product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.seller-product-card:hover .seller-product-image {
+  transform: scale(1.06);
+}
+
+.seller-product-title {
+  padding: 10px 10px 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #000000;
+  margin: 0;
+  min-height: 2em;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+
+.seller-product-meta {
+  padding: 8px 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78em;
+  color: #64748b;
+}
+
+.seller-product-price {
+  color: #1a7f34;
+  font-weight: 800;
+  font-size: 0.95em;
+}
+
+.seller-product-location {
+  color: #94a3b8;
+  font-size: 0.85em;
+}
+.empty-state {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px dashed #c9d7e8;
+  background: #f8fbff;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.review-item {
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  margin-bottom: 8px;
+}
+
+.review-header {
+  margin-bottom: 4px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.info-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.info-label {
+  min-width: 78px;
+  font-size: 0.92rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.info-value {
+  color: #334155;
+  font-weight: 600;
+}
+
+.map-frame {
+  margin-top: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #dbe5ef;
+}
+
+.map-embed {
+  width: 100%;
+  height: 180px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 12px;
+}
+
+@media (max-width: 720px) {
+  .seller-profile-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .seller-profile-info {
+    width: 100%;
+  }
+
+  .seller-meta-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .review-header {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
 }
 </style>

@@ -164,6 +164,10 @@ const requiresAuth = (path: string) => {
   )
 }
 
+const requiresAdmin = (_path: string) => {
+  return false
+}
+
 
 
 const isAdminUser = () => {
