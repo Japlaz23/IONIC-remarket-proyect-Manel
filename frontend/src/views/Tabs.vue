@@ -10,11 +10,9 @@
           <ion-label>Inicio</ion-label>
         </ion-tab-button>
 
-
-        <ion-tab-button tab="favorites" href="/tabs/favorites">
-          <ion-icon :icon="heartOutline"></ion-icon>
-          <ion-label>Favoritos</ion-label>
-          <ion-badge color="danger" v-if="favoriteCount > 0" class="tab-badge">{{ favoriteCount }}</ion-badge>
+        <ion-tab-button tab="purchases" href="/tabs/purchases">
+          <ion-icon :icon="cartOutline"></ion-icon>
+          <ion-label>Compras</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="sell" href="/tabs/sell">
@@ -27,13 +25,6 @@
           <ion-label>Chat</ion-label>
           <ion-badge color="danger" v-if="unreadCount > 0" class="tab-badge">{{ unreadCount }}</ion-badge>
         </ion-tab-button>
-
-        <ion-tab-button tab="purchases" href="/tabs/purchases">
-          <ion-icon :icon="cartOutline"></ion-icon>
-          <ion-label>Compras</ion-label>
-        </ion-tab-button>
-
-
 
         <ion-tab-button tab="profile" href="/tabs/profile">
           <ion-icon :icon="personCircleOutline"></ion-icon>
