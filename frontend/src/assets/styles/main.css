@@ -183,7 +183,7 @@ ion-header, .ion-header, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-ion-app, ion-content, ion-toolbar, ion-menu ion-content {
+ion-app, ion-content, ion-menu ion-content {
   background: var(--background-color) !important;
   color: var(--ion-text-color);
 }
