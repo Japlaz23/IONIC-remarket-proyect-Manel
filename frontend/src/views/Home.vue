@@ -347,6 +347,12 @@
           </ion-col>
             </ion-row>
           </ion-grid>
+
+          <div v-if="filteredProducts.length > visibleCount" class="load-more-wrap">
+            <button class="load-more-btn" @click="showAllProducts">
+              Ver todos los productos ({{ filteredProducts.length }})
+            </button>
+          </div>
         </div>
       </div>
 
@@ -463,6 +469,10 @@ const selectedCategory = computed({
 
 const itemsPerPage = 8
 const visibleCount = ref(itemsPerPage)
+
+const showAllProducts = () => {
+  visibleCount.value = filteredProducts.value.length
+}
 
 const filters = reactive({
   minPrice: '',
@@ -704,6 +714,30 @@ watch(
 </script>
 
 <style scoped>
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 4px;
+}
+
+.load-more-btn {
+  background: transparent;
+  border: 2px solid #1a7f34;
+  color: #1a7f34;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 10px 28px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.load-more-btn:hover {
+  background: #1a7f34;
+  color: #fff;
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;

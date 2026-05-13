@@ -14,8 +14,8 @@
         <ion-card-header class="seller-profile-header">
           <div class="seller-profile-row">
             <div class="seller-avatar-wrap">
-              <img v-if="seller?.avatar" :src="seller.avatar" alt="Foto de perfil" class="seller-avatar-large" />
-              <div v-else class="seller-avatar-fallback">{{ sellerInitials }}</div>
+              <img :src="seller?.avatar || defaultAvatar" alt="" class="seller-avatar-large" @error="onAvatarError" />
+              <div v-if="avatarError" class="seller-avatar-fallback">{{ sellerInitials }}</div>
             </div>
             <div class="seller-profile-info">
               <h2>{{ seller.name }}</h2>
@@ -49,16 +49,41 @@
           </ion-segment>
 
           <div v-if="activeTab === 'productos'" class="tab-content">
-            <div v-if="sellerProducts.length > 0" class="products-grid">
-              <ion-card v-for="product in sellerProducts" :key="product.id" class="seller-product-card">
-                <div class="seller-product-image-container">
-                  <img :src="product.image" :alt="product.title" class="seller-product-image" />
-                </div>
-                <div class="seller-product-title">{{ product.title }}</div>
-                <div class="seller-product-meta">
-                  <span class="seller-product-price">{{ product.price }}€</span>
-                  <span class="seller-product-location">{{ product.location }}</span>
-                </div>
+            <div class="tab-header">
+              <span class="tab-header-count">{{ sellerProducts.length }} productos</span>
+              <ion-buttons class="compact-toggle">
+                <ion-button :class="{ active: !compactView }" size="small" @click="compactView = false">
+                  <ion-icon :icon="gridOutline" />
+                </ion-button>
+                <ion-button :class="{ active: compactView }" size="small" @click="compactView = true">
+                  <ion-icon :icon="listOutline" />
+                </ion-button>
+              </ion-buttons>
+            </div>
+            <div v-if="sellerProducts.length > 0" :class="compactView ? 'products-list' : 'products-grid'">
+              <ion-card v-for="product in sellerProducts" :key="product.id" :class="compactView ? 'seller-product-card-compact' : 'seller-product-card'">
+                <template v-if="compactView">
+                  <div class="compact-image-container">
+                    <img :src="product.image" :alt="product.title" class="compact-image" />
+                  </div>
+                  <div class="compact-info">
+                    <div class="compact-title">{{ product.title }}</div>
+                    <div class="compact-meta">
+                      <span class="seller-product-price">{{ product.price }}€</span>
+                      <span class="seller-product-location">{{ product.location }}</span>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="seller-product-image-container">
+                    <img :src="product.image" :alt="product.title" class="seller-product-image" />
+                  </div>
+                  <div class="seller-product-title">{{ product.title }}</div>
+                  <div class="seller-product-meta">
+                    <span class="seller-product-price">{{ product.price }}€</span>
+                    <span class="seller-product-location">{{ product.location }}</span>
+                  </div>
+                </template>
               </ion-card>
             </div>
             <div v-else class="empty-state">Este vendedor no tiene productos publicados.</div>
@@ -111,8 +136,10 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardHeader, IonCardContent, IonSegment, IonSegmentButton } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardHeader, IonCardContent, IonSegment, IonSegmentButton, IonIcon, IonButton } from '@ionic/vue';
 import { useRoute } from 'vue-router';
+import { gridOutline, listOutline } from 'ionicons/icons';
+import defaultAvatar from '@/assets/img/profilesSellers/profileSeller1.jpg';
 import { useProductStore } from '@/stores/productStore';
 import { useSellerStore } from '@/stores/sellerStore';
 import { useReviewStore } from '@/stores/reviewStore';
@@ -120,6 +147,9 @@ import { useReviewStore } from '@/stores/reviewStore';
 
 const route = useRoute()
 const activeTab = ref('productos')
+const compactView = ref(false)
+const avatarError = ref(false)
+const onAvatarError = () => { avatarError.value = true }
 // Si se llega desde un producto, se pasa el productId por query
 const backHref = computed(() => {
   const productId = route.query.productId;
@@ -434,6 +464,98 @@ const mapUrl = computed(() => {
 .seller-product-location {
   color: #94a3b8;
   font-size: 0.85em;
+}
+.tab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.tab-header-count {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+}
+.compact-toggle {
+  gap: 4px;
+}
+.compact-toggle ion-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --border-radius: 8px;
+  --color: #94a3b8;
+  font-size: 1.1rem;
+  min-height: 32px;
+}
+.compact-toggle ion-button.active {
+  --color: #1a7f34;
+  --background: #e8f5e9;
+}
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.seller-product-card-compact {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e6ebf2;
+  box-shadow: 0 2px 8px rgba(26, 127, 52, 0.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+  overflow: hidden;
+  gap: 12px;
+}
+.seller-product-card-compact:hover {
+  box-shadow: 0 8px 24px rgba(26, 127, 52, 0.14);
+  transform: translateY(-2px);
+  border-color: #1a7f34;
+}
+.compact-image-container {
+  flex: 0 0 72px;
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+.compact-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+.seller-product-card-compact:hover .compact-image {
+  transform: scale(1.08);
+}
+.compact-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 10px 10px 0;
+  min-width: 0;
+}
+.compact-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #000000;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.compact-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.78em;
+  color: #64748b;
 }
 .empty-state {
   padding: 16px;

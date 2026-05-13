@@ -3,221 +3,194 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-back-button default-href="/profile"></ion-back-button>
+          <ion-back-button default-href="/profile" />
         </ion-buttons>
-        <ion-title>Configuración</ion-title>
+        <ion-title>Ajustes</ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="settings-content">
-      <div class="settings-container">
-        <!-- Sección de perfil -->
-        <div class="settings-section">
-          <h2 class="section-title">
-            <ion-icon :icon="personCircleOutline"></ion-icon>
-            Mi Perfil
-          </h2>
+    <ion-content class="settings-content" :class="{ 'dark-theme': settings.darkMode }">
+      <div class="settings-shell">
 
-          <ion-item class="settings-item">
-            <ion-label position="floating" style="padding-bottom: 2px;">Nombre completo</ion-label>
-            <ion-input v-model="profile.fullName" placeholder="Juan Pérez" style="padding-top: 30px;"></ion-input>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label position="floating">Email</ion-label>
-            <ion-input v-model="profile.email" type="email" placeholder="correo@ejemplo.com"></ion-input>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label position="floating">Teléfono</ion-label>
-            <ion-input v-model="profile.phone" type="tel" placeholder="+34 600 00 00 00"></ion-input>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label position="floating">Descripción del perfil</ion-label>
-            <ion-textarea v-model="profile.bio" placeholder="Cuéntanos sobre ti..." :rows="3"></ion-textarea>
-          </ion-item>
+        <!-- Perfil -->
+        <div class="group">
+          <div class="group-label">PERFIL</div>
+          <div class="group-card">
+            <div class="row" @click="editField('fullName')">
+              <div class="row-icon"><ion-icon :icon="personOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Nombre completo</span>
+                <span class="row-value">{{ profile.fullName || 'No establecido' }}</span>
+              </div>
+              <ion-icon :icon="chevronForwardOutline" class="chevron" />
+            </div>
+            <div class="divider" />
+            <div class="row" @click="editField('email')">
+              <div class="row-icon"><ion-icon :icon="mailOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Correo electrónico</span>
+                <span class="row-value">{{ profile.email || 'No establecido' }}</span>
+              </div>
+              <ion-icon :icon="chevronForwardOutline" class="chevron" />
+            </div>
+            <div class="divider" />
+            <div class="row" @click="editField('phone')">
+              <div class="row-icon"><ion-icon :icon="callOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Teléfono</span>
+                <span class="row-value">{{ profile.phone || 'No establecido' }}</span>
+              </div>
+              <ion-icon :icon="chevronForwardOutline" class="chevron" />
+            </div>
+            <div class="divider" />
+            <div class="row" @click="editField('bio')">
+              <div class="row-icon"><ion-icon :icon="documentTextOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Biografía</span>
+                <span class="row-value">{{ profile.bio || 'Añade una descripción' }}</span>
+              </div>
+              <ion-icon :icon="chevronForwardOutline" class="chevron" />
+            </div>
+          </div>
         </div>
 
         <!-- Dirección -->
-        <div class="settings-section">
-          <h2 class="section-title">
-            <ion-icon :icon="locationOutline"></ion-icon>
-            Dirección de Envío
-          </h2>
-
-          <ion-item class="settings-item">
-            <ion-label position="floating">Calle y número</ion-label>
-            <ion-input v-model="address.street" placeholder="Calle Principal, 123"></ion-input>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label position="floating">Ciudad</ion-label>
-            <ion-input v-model="address.city" placeholder="Madrid"></ion-input>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label position="floating">Código Postal</ion-label>
-            <ion-input v-model="address.zipCode" placeholder="28001"></ion-input>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label position="floating">País</ion-label>
-            <ion-input v-model="address.country" placeholder="España"></ion-input>
-          </ion-item>
-        </div>
-
-        <!-- Métodos de pago -->
-        <div class="settings-section">
-          <div class="section-header">
-            <h2 class="section-title">
-              <ion-icon :icon="cardOutline"></ion-icon>
-              Métodos de Pago
-            </h2>
-            <ion-button size="small" fill="outline" @click="addPaymentMethod">
-              <ion-icon slot="start" :icon="addCircleOutline"></ion-icon>
-              Añadir
-            </ion-button>
-          </div>
-
-          <div v-if="paymentMethods.length === 0" class="empty-payment">
-            <p>No hay métodos de pago registrados</p>
-          </div>
-
-          <div v-for="(method, idx) in paymentMethods" :key="idx" class="payment-method-card">
-            <div class="payment-header">
-              <div class="payment-info">
-                <ion-icon :icon="method.type === 'card' ? cardOutline : walletOutline"></ion-icon>
-                <span class="payment-label">{{ method.label }}</span>
-                <span class="payment-number">{{ method.number }}</span>
+        <div class="group">
+          <div class="group-label">DIRECCIÓN</div>
+          <div class="group-card">
+            <div class="row" @click="editAddress">
+              <div class="row-icon"><ion-icon :icon="locationOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Dirección de envío</span>
+                <span class="row-value">{{ addressSummary }}</span>
               </div>
-              <ion-button fill="clear" size="small" @click="removePaymentMethod(idx)">
-                <ion-icon :icon="trashOutline"></ion-icon>
-              </ion-button>
+              <ion-icon :icon="chevronForwardOutline" class="chevron" />
             </div>
-            <p class="payment-expiry" v-if="method.expiry">Vence: {{ method.expiry }}</p>
           </div>
         </div>
 
         <!-- Notificaciones -->
-        <div class="settings-section">
-          <h2 class="section-title">
-            <ion-icon :icon="notificationsOutline"></ion-icon>
-            Notificaciones
-          </h2>
-
-          <ion-item class="settings-item">
-            <ion-label>Notificaciones por email</ion-label>
-            <ion-toggle v-model="settings.emailNotifications" slot="end"></ion-toggle>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label>Nuevos mensajes</ion-label>
-            <ion-toggle v-model="settings.messageNotifications" slot="end"></ion-toggle>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label>Ofertas y promociones</ion-label>
-            <ion-toggle v-model="settings.promotionNotifications" slot="end"></ion-toggle>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label>Cambios en tus compras</ion-label>
-            <ion-toggle v-model="settings.orderNotifications" slot="end"></ion-toggle>
-          </ion-item>
+        <div class="group">
+          <div class="group-label">NOTIFICACIONES</div>
+          <div class="group-card">
+            <div class="row">
+              <div class="row-icon"><ion-icon :icon="mailOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Notificaciones por email</span>
+              </div>
+              <ion-toggle v-model="settings.emailNotifications" @ionChange="saveToStorage" />
+            </div>
+            <div class="divider" />
+            <div class="row">
+              <div class="row-icon"><ion-icon :icon="chatbubbleOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Mensajes nuevos</span>
+              </div>
+              <ion-toggle v-model="settings.messageNotifications" @ionChange="saveToStorage" />
+            </div>
+            <div class="divider" />
+            <div class="row">
+              <div class="row-icon"><ion-icon :icon="pricetagOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Ofertas y promociones</span>
+              </div>
+              <ion-toggle v-model="settings.promotionNotifications" @ionChange="saveToStorage" />
+            </div>
+            <div class="divider" />
+            <div class="row">
+              <div class="row-icon"><ion-icon :icon="cartOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Cambios en tus compras</span>
+              </div>
+              <ion-toggle v-model="settings.orderNotifications" @ionChange="saveToStorage" />
+            </div>
+          </div>
         </div>
 
-        <!-- Privacidad y seguridad -->
-        <div class="settings-section">
-          <h2 class="section-title">
-            <ion-icon :icon="shieldCheckmarkOutline"></ion-icon>
-            Privacidad y Seguridad
-          </h2>
-
-          <ion-item class="settings-item" button @click="changePassword">
-            <ion-label>Cambiar contraseña</ion-label>
-            <ion-icon :icon="chevronForwardOutline" slot="end"></ion-icon>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label>Perfil público</ion-label>
-            <ion-toggle v-model="settings.publicProfile" slot="end"></ion-toggle>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label>Mostrar calificación de vendedor</ion-label>
-            <ion-toggle v-model="settings.showRating" slot="end"></ion-toggle>
-          </ion-item>
-
-          <ion-item class="settings-item" button @click="manageBlocked">
-            <ion-label>Usuarios bloqueados ({{ blockedUsers.length }})</ion-label>
-            <ion-icon :icon="chevronForwardOutline" slot="end"></ion-icon>
-          </ion-item>
+        <!-- Privacidad -->
+        <div class="group">
+          <div class="group-label">PRIVACIDAD</div>
+          <div class="group-card">
+            <div class="row" @click="changePassword">
+              <div class="row-icon"><ion-icon :icon="lockClosedOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Cambiar contraseña</span>
+              </div>
+              <ion-icon :icon="chevronForwardOutline" class="chevron" />
+            </div>
+            <div class="divider" />
+            <div class="row">
+              <div class="row-icon"><ion-icon :icon="globeOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Perfil público</span>
+              </div>
+              <ion-toggle v-model="settings.publicProfile" @ionChange="saveToStorage" />
+            </div>
+            <div class="divider" />
+            <div class="row">
+              <div class="row-icon"><ion-icon :icon="starOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Mostrar calificación</span>
+              </div>
+              <ion-toggle v-model="settings.showRating" @ionChange="saveToStorage" />
+            </div>
+          </div>
         </div>
 
-        <!-- Preferencias -->
-        <div class="settings-section">
-          <h2 class="section-title">
-            <ion-icon :icon="settingsOutline"></ion-icon>
-            Preferencias
-          </h2>
-
-          <ion-item class="settings-item">
-            <ion-label>Tema oscuro</ion-label>
-            <ion-toggle v-model="settings.darkMode" slot="end"></ion-toggle>
-          </ion-item>
-
-          <ion-item class="settings-item">
-            <ion-label>Idioma</ion-label>
-            <ion-select v-model="settings.language" slot="end">
-              <ion-select-option value="es">Español</ion-select-option>
-              <ion-select-option value="en">Ingles</ion-select-option>
-              <ion-select-option value="fr">Francés</ion-select-option>
-              <ion-select-option value="de">Alemán</ion-select-option>
-              <ion-select-option value="it">Italiano</ion-select-option>
-              <ion-select-option value="pt">Portugués</ion-select-option>
-            </ion-select>
-          </ion-item>
+        <!-- Apariencia -->
+        <div class="group">
+          <div class="group-label">APARIENCIA</div>
+          <div class="group-card">
+            <div class="row">
+              <div class="row-icon"><ion-icon :icon="moonOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Modo oscuro</span>
+              </div>
+              <ion-toggle v-model="settings.darkMode" @ionChange="onDarkModeChange" />
+            </div>
+            <div class="divider" />
+            <div class="row" @click="pickLanguage">
+              <div class="row-icon"><ion-icon :icon="languageOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Idioma</span>
+                <span class="row-value">{{ languageLabel }}</span>
+              </div>
+              <ion-icon :icon="chevronForwardOutline" class="chevron" />
+            </div>
+          </div>
         </div>
 
-        <!-- Acciones de cuenta -->
-        <div class="settings-section">
-          <h2 class="section-title">
-            <ion-icon :icon="warningOutline"></ion-icon>
-            Zona de Peligro
-          </h2>
-
-          <ion-button expand="block" fill="outline" color="warning" @click="downloadData">
-            <ion-icon slot="start" :icon="downloadOutline"></ion-icon>
-            Descargar mis datos
-          </ion-button>
-
-          <ion-button expand="block" fill="outline" color="danger" @click="deleteAccount">
-            <ion-icon slot="start" :icon="trashOutline"></ion-icon>
-            Eliminar cuenta
-          </ion-button>
+        <!-- Cuenta -->
+        <div class="group">
+          <div class="group-label">CUENTA</div>
+          <div class="group-card">
+            <div class="row" @click="downloadData">
+              <div class="row-icon"><ion-icon :icon="downloadOutline" /></div>
+              <div class="row-body">
+                <span class="row-label">Descargar mis datos</span>
+              </div>
+              <ion-icon :icon="chevronForwardOutline" class="chevron" />
+            </div>
+          </div>
+          <div class="group-card danger-card">
+            <div class="row" @click="deleteAccount">
+              <div class="row-icon danger-icon"><ion-icon :icon="trashOutline" /></div>
+              <div class="row-body">
+                <span class="row-label danger-text">Eliminar cuenta</span>
+              </div>
+              <ion-icon :icon="chevronForwardOutline" class="chevron chevron-danger" />
+            </div>
+          </div>
         </div>
 
-        <!-- Botones de guardado -->
-        <div class="action-buttons">
-          <ion-button expand="block" fill="outline" @click="resetSettings">
-            <ion-icon slot="start" :icon="refreshOutline"></ion-icon>
-            Descartar cambios
-          </ion-button>
-
-          <ion-button expand="block" color="success" @click="saveSettings">
-            <ion-icon slot="start" :icon="checkmarkDoneOutline"></ion-icon>
-            Guardar cambios
-          </ion-button>
-        </div>
+        <p class="version">ReMarket v1.0.0</p>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { reactive, computed, onMounted } from 'vue'
 import {
   IonPage,
   IonHeader,
@@ -226,55 +199,30 @@ import {
   IonContent,
   IonButtons,
   IonBackButton,
-  IonButton,
   IonIcon,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonTextarea,
   IonToggle,
-  IonSelect,
-  IonSelectOption,
+  alertController,
   toastController,
 } from '@ionic/vue'
-import Swal from 'sweetalert2'
 import {
-  personCircleOutline,
+  personOutline,
+  mailOutline,
+  callOutline,
+  documentTextOutline,
   locationOutline,
-  cardOutline,
-  walletOutline,
-  addCircleOutline,
-  trashOutline,
-  notificationsOutline,
-  shieldCheckmarkOutline,
-  chevronForwardOutline,
-  settingsOutline,
-  warningOutline,
+  chatbubbleOutline,
+  pricetagOutline,
+  cartOutline,
+  lockClosedOutline,
+  globeOutline,
+  starOutline,
+  moonOutline,
+  languageOutline,
   downloadOutline,
-  refreshOutline,
-  checkmarkDoneOutline,
+  trashOutline,
+  chevronForwardOutline,
 } from 'ionicons/icons'
-
-interface PaymentMethod {
-  type: 'card' | 'bank'
-  label: string
-  number: string
-  expiry?: string
-}
-
-interface Address {
-  street: string
-  city: string
-  zipCode: string
-  country: string
-}
-
-interface ProfileData {
-  fullName: string
-  email: string
-  phone: string
-  bio: string
-}
+import Swal from 'sweetalert2'
 
 interface Settings {
   emailNotifications: boolean
@@ -287,27 +235,6 @@ interface Settings {
   language: string
 }
 
-const router = useRouter()
-
-const profile = reactive<ProfileData>({
-  fullName: 'Juan Pérez García',
-  email: 'juan@ejemplo.com',
-  phone: '+34 612345678',
-  bio: 'Comprador y vendedor activo',
-})
-
-const address = reactive<Address>({
-  street: 'Calle Principal, 123',
-  city: 'Madrid',
-  zipCode: '28001',
-  country: 'España',
-})
-
-const paymentMethods = ref<PaymentMethod[]>([
-  { type: 'card', label: 'Visa', number: '**** **** **** 1234', expiry: '12/25' },
-  { type: 'bank', label: 'Banco Popular', number: 'ES9121000418450200051332' },
-])
-
 const settings = reactive<Settings>({
   emailNotifications: true,
   messageNotifications: true,
@@ -319,60 +246,178 @@ const settings = reactive<Settings>({
   language: 'es',
 })
 
-const blockedUsers = ref([
-  { id: 1, name: 'Usuario X', blockedDate: '2026-01-15' },
-])
+const profile = reactive({
+  fullName: 'Juan Pérez García',
+  email: 'juan@ejemplo.com',
+  phone: '+34 612 345 678',
+  bio: 'Comprador y vendedor activo en ReMarket',
+})
 
-const addPaymentMethod = async () => {
-  const toast = await toastController.create({
-    message: 'Abriendo formulario de pago...',
-    duration: 2000,
-  })
-  await toast.present()
+const address = reactive({
+  street: 'Calle Principal, 123',
+  city: 'Madrid',
+  zip: '28001',
+  country: 'España',
+})
+
+const STORAGE_KEY = 'remarket_settings'
+
+const loadFromStorage = () => {
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (!saved) return
+  try {
+    const data = JSON.parse(saved)
+    Object.assign(settings, data)
+  } catch { /* ignore */ }
 }
 
-const removePaymentMethod = async (idx: number) => {
-  const result = await Swal.fire({
-    icon: 'warning',
-    title: 'Eliminar método de pago',
-    text: '¿Seguro de que quieres eliminar este método de pago?',
-    showCancelButton: true,
-    confirmButtonText: 'Eliminar',
-    cancelButtonText: 'Cancelar',
-    customClass: {
-      popup: 'swal2-remarket-popup',
-      confirmButton: 'swal2-remarket-confirm',
-      cancelButton: 'swal2-remarket-cancel',
-      container: 'swal2-ionic-container-fix',
-    },
-    heightAuto: false,
-    target: document.body,
-  })
+const saveToStorage = () => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...settings }))
+}
 
-  if (result.isConfirmed) {
-    paymentMethods.value.splice(idx, 1)
+const languages: Record<string, string> = {
+  es: 'Español', en: 'English', fr: 'Français',
+  de: 'Deutsch', it: 'Italiano', pt: 'Português',
+}
+
+const languageLabel = computed(() => languages[settings.language] || 'Español')
+
+const addressSummary = computed(() => {
+  const parts = [address.street, address.city, address.country].filter(Boolean)
+  return parts.length ? parts.join(', ') : 'No establecida'
+})
+
+onMounted(() => {
+  loadFromStorage()
+  applyDarkMode(settings.darkMode)
+})
+
+const applyDarkMode = (enabled: boolean) => {
+  document.body.classList.toggle('dark', enabled)
+}
+
+const onDarkModeChange = (ev: CustomEvent) => {
+  applyDarkMode(ev.detail.checked)
+  saveToStorage()
+}
+
+const editField = async (field: string) => {
+  const labels: Record<string, string> = {
+    fullName: 'Nombre completo',
+    email: 'Correo electrónico',
+    phone: 'Teléfono',
+    bio: 'Biografía',
   }
+  const inputType = field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text'
+
+  const alert = await alertController.create({
+    header: labels[field],
+    inputs: [
+      {
+        name: 'value',
+        type: inputType,
+        placeholder: labels[field],
+        value: profile[field as keyof typeof profile],
+      },
+    ],
+    buttons: [
+      { text: 'Cancelar', role: 'cancel' },
+      {
+        text: 'Guardar',
+        handler: (data) => {
+          if (field === 'fullName' || field === 'email' || field === 'phone' || field === 'bio') {
+            (profile as Record<string, string>)[field] = data.value
+          }
+        },
+      },
+    ],
+  })
+  await alert.present()
+}
+
+const editAddress = async () => {
+  const alert = await alertController.create({
+    header: 'Dirección de envío',
+    inputs: [
+      { name: 'street', type: 'text', placeholder: 'Calle y número', value: address.street },
+      { name: 'city', type: 'text', placeholder: 'Ciudad', value: address.city },
+      { name: 'zip', type: 'text', placeholder: 'Código Postal', value: address.zip },
+      { name: 'country', type: 'text', placeholder: 'País', value: address.country },
+    ],
+    buttons: [
+      { text: 'Cancelar', role: 'cancel' },
+      {
+        text: 'Guardar',
+        handler: (data) => {
+          address.street = data.street
+          address.city = data.city
+          address.zip = data.zip
+          address.country = data.country
+        },
+      },
+    ],
+  })
+  await alert.present()
 }
 
 const changePassword = async () => {
-  const toast = await toastController.create({
-    message: 'Redireccionar a cambio de contraseña',
-    duration: 2000,
+  const alert = await alertController.create({
+    header: 'Cambiar contraseña',
+    inputs: [
+      { name: 'current', type: 'password', placeholder: 'Contraseña actual' },
+      { name: 'newPass', type: 'password', placeholder: 'Nueva contraseña' },
+      { name: 'confirm', type: 'password', placeholder: 'Confirmar contraseña' },
+    ],
+    buttons: [
+      { text: 'Cancelar', role: 'cancel' },
+      { text: 'Cambiar', handler: () => true },
+    ],
   })
-  await toast.present()
+  await alert.present()
 }
 
-const manageBlocked = async () => {
-  const toast = await toastController.create({
-    message: `${blockedUsers.value.length} usuario(s) bloqueado(s)`,
-    duration: 2000,
+const pickLanguage = async () => {
+  const alert = await alertController.create({
+    header: 'Idioma',
+    inputs: Object.entries(languages).map(([value, label]) => ({
+      type: 'radio' as const,
+      label,
+      value,
+      checked: value === settings.language,
+    })),
+    buttons: [
+      { text: 'Cancelar', role: 'cancel' },
+      {
+        text: 'Seleccionar',
+        handler: (value: string) => {
+          if (value) {
+            settings.language = value
+            saveToStorage()
+          }
+        },
+      },
+    ],
   })
-  await toast.present()
+  await alert.present()
 }
 
 const downloadData = async () => {
+  const data = {
+    profile: { ...profile },
+    address: { ...address },
+    settings: { ...settings },
+    exportedAt: new Date().toISOString(),
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `remarket-data-${Date.now()}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+
   const toast = await toastController.create({
-    message: '✓ Descargando tus datos...',
+    message: '✓ Datos descargados',
     duration: 2000,
     color: 'success',
   })
@@ -396,10 +441,7 @@ const deleteAccount = async () => {
     heightAuto: false,
     target: document.body,
   })
-
-  if (!result.isConfirmed) {
-    return
-  }
+  if (!result.isConfirmed) return
 
   const toast = await toastController.create({
     message: 'Cuenta eliminada. Redirigiendo...',
@@ -407,161 +449,205 @@ const deleteAccount = async () => {
     duration: 2000,
   })
   await toast.present()
-  setTimeout(() => router.push('/login'), 2000)
-}
-
-const saveSettings = async () => {
-  const toast = await toastController.create({
-    message: '✓ Cambios guardados correctamente',
-    duration: 2000,
-    color: 'success',
-  })
-  await toast.present()
-}
-
-const resetSettings = async () => {
-  const toast = await toastController.create({
-    message: 'Cambios descartados',
-    duration: 2000,
-  })
-  await toast.present()
+  setTimeout(() => window.location.href = '/login', 2000)
 }
 </script>
 
 <style scoped>
 .settings-content {
-  --background: #f5f7fa;
+  --background: #f1f5f9;
 }
 
-.settings-container {
-  padding: 16px;
+.settings-shell {
   max-width: 600px;
   margin: 0 auto;
-}
-
-.settings-section {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.section-header {
+  padding: 16px 16px 32px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Groups */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.group-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.08em;
+  padding-left: 4px;
+}
+
+.group-card {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+.danger-card {
+  border: 1px solid #fecaca;
+}
+
+/* Rows */
+.row {
+  display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  min-height: 48px;
 }
 
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 12px 0;
+.row:hover {
+  background: #f8fafc;
 }
 
-.section-title ion-icon {
-  color: #1a7f34;
-  font-size: 20px;
+.row-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: #64748b;
+  font-size: 1.05rem;
 }
 
-.settings-item {
-  --padding-start: 0;
-  --padding-end: 0;
-  --inner-padding-end: 0;
-  margin-bottom: 12px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-}
-
-.settings-item:last-child {
-  margin-bottom: 0;
-}
-
-.empty-payment {
-  text-align: center;
-  padding: 20px;
-  color: #999;
-  font-size: 14px;
-}
-
-.payment-method-card {
-  background: #f8f8f8;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.payment-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 8px;
-}
-
-.payment-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.row-body {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.payment-info ion-icon {
-  color: #1a7f34;
-  font-size: 20px;
-}
-
-.payment-label {
+.row-label {
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #0f172a;
 }
 
-.payment-number {
-  color: #999;
-  font-size: 13px;
+.row-value {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.payment-expiry {
-  font-size: 11px;
-  color: #999;
-  margin: 4px 0 0 30px;
+.chevron {
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  flex: 0 0 auto;
 }
 
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid #e5e5e5;
+.divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 0 16px;
 }
 
-.action-buttons ion-button {
-  flex: 1;
+/* Danger overrides */
+.danger-icon {
+  background: #fef2f2;
+  color: #ef4444;
 }
 
-/* Responsive */
+.danger-text {
+  color: #ef4444;
+}
+
+.chevron-danger {
+  color: #fca5a5;
+}
+
+/* Toggle styling */
+ion-toggle {
+  --handle-width: 24px;
+  --handle-height: 24px;
+  --handle-spacing: 3px;
+  --handle-background: #fff;
+  --handle-background-checked: #fff;
+  --track-background: #cbd5e1;
+  --track-background-checked: #1a7f34;
+}
+
+/* Version */
+.version {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 8px 0 0;
+}
+
+/* Dark theme overrides */
+:global(.dark) .settings-content {
+  --background: #0f172a;
+}
+
+:global(.dark) .group-card {
+  background: #1e293b;
+}
+
+:global(.dark) .group-label {
+  color: #64748b;
+}
+
+:global(.dark) .row:hover {
+  background: #1a2332;
+}
+
+:global(.dark) .row-label {
+  color: #e2e8f0;
+}
+
+:global(.dark) .row-value {
+  color: #64748b;
+}
+
+:global(.dark) .row-icon {
+  background: #334155;
+  color: #94a3b8;
+}
+
+:global(.dark) .divider {
+  background: #334155;
+}
+
+:global(.dark) .chevron {
+  color: #475569;
+}
+
+:global(.dark) .danger-card {
+  border-color: #7f1d1d;
+  background: #1e293b;
+}
+
+:global(.dark) .danger-icon {
+  background: #450a0a;
+  color: #ef4444;
+}
+
+:global(.dark) .version {
+  color: #475569;
+}
+
 @media (max-width: 480px) {
-  .settings-container {
-    padding: 12px;
+  .settings-shell {
+    padding: 12px 12px 24px;
+    gap: 16px;
   }
 
-  .settings-section {
-    padding: 12px;
-    margin-bottom: 12px;
-  }
-
-  .action-buttons {
-    flex-direction: column;
+  .row {
+    padding: 12px 14px;
+    min-height: 44px;
   }
 }
 </style>
