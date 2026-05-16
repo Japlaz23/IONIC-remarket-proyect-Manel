@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import type { ApexOptions } from 'apexcharts';
 import ApexChart from 'vue3-apexcharts';
 
 defineOptions({ name: 'ErroresHeatmap' });
@@ -37,7 +38,7 @@ function generateHeatmapData() {
 
 const series = ref(generateHeatmapData());
 
-const chartOptions = ref({
+const chartOptions = ref<ApexOptions>({
   chart: { toolbar: { show: false } },
   dataLabels: { enabled: false },
   title: { text: '' },
@@ -47,7 +48,7 @@ const chartOptions = ref({
     },
   },
   xaxis: { 
-    type: 'category',
+    type: 'category' as const,
     categories: hours,
     labels: {
       style: {

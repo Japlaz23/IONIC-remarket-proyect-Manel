@@ -33,7 +33,15 @@ const monthGroups: string[][] = [
 function randLoggedIn() { return Math.floor(Math.random() * 101) + 700; }
 function randNotLoggedIn() { return Math.floor(Math.random() * 121) + 80; }
 
-const charts = ref(monthGroups.map((group) => {
+type ChartItem = {
+  title: string;
+  categories: string[];
+  series: Array<{ name: string; data: number[] }>;
+  options: ApexOptions;
+  activeIndex: number;
+};
+
+const charts = ref<ChartItem[]>(monthGroups.map((group) => {
   const loggedInData = group.map(() => randLoggedIn());
   const notLoggedInData = group.map(() => randNotLoggedIn());
   const options: ApexOptions = {
@@ -54,6 +62,7 @@ const charts = ref(monthGroups.map((group) => {
   };
   return {
     title: `${group.join(' / ')}`,
+    categories: group,
     series: [
       { name: 'Usuarios logueados', data: loggedInData },
       { name: 'Usuarios no logueados', data: notLoggedInData },
@@ -73,7 +82,7 @@ onMounted(() => {
       const notLoggedInValue = randNotLoggedIn();
       c.series[0].data[c.activeIndex] = loggedInValue;
       c.series[1].data[c.activeIndex] = notLoggedInValue;
-      c.title = `${c.options.xaxis.categories[c.activeIndex]}: acceso actualizado`;
+      c.title = `${c.categories[c.activeIndex]}: acceso actualizado`;
     });
   }, 2000);
 });
