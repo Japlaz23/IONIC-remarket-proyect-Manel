@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import type { ApexOptions } from 'apexcharts';
 import ApexChart from 'vue3-apexcharts';
 
 const allMonths = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -32,31 +33,32 @@ const monthGroups: string[][] = [
 function randLoggedIn() { return Math.floor(Math.random() * 101) + 700; }
 function randNotLoggedIn() { return Math.floor(Math.random() * 121) + 80; }
 
-const charts = ref(monthGroups.map((group, i) => {
+const charts = ref(monthGroups.map((group) => {
   const loggedInData = group.map(() => randLoggedIn());
   const notLoggedInData = group.map(() => randNotLoggedIn());
+  const options: ApexOptions = {
+    chart: { type: 'line', toolbar: { show: false } },
+    dataLabels: { enabled: false },
+    stroke: { curve: 'smooth', width: [3, 3] },
+    colors: ['#38bdf8', '#f59e0b'],
+    legend: {
+      position: 'top',
+      labels: { colors: '#d7e2f1' },
+    },
+    xaxis: { categories: group },
+    yaxis: { min: 0, max: 850 },
+    grid: { show: true },
+    tooltip: {
+      theme: 'dark',
+    },
+  };
   return {
     title: `${group.join(' / ')}`,
     series: [
       { name: 'Usuarios logueados', data: loggedInData },
       { name: 'Usuarios no logueados', data: notLoggedInData },
     ],
-    options: {
-      chart: { type: 'line', toolbar: { show: false } },
-      dataLabels: { enabled: false },
-      stroke: { curve: 'smooth', width: [3, 3] },
-      colors: ['#38bdf8', '#f59e0b'],
-      legend: {
-        position: 'top',
-        labels: { colors: '#d7e2f1' },
-      },
-      xaxis: { categories: group },
-      yaxis: { min: 0, max: 850 },
-      grid: { show: true },
-      tooltip: {
-        theme: 'dark',
-      },
-    },
+    options,
     activeIndex: 0
   };
 }));

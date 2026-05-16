@@ -1,7 +1,7 @@
 <template>
   <div class="errores-heatmap">
     <div class="heatmap-header">
-      <div class="title-left">Mapa Calor Errores: Mensual</div>
+      <div class="title-left">Mapa Calor Errores</div>
     </div>
     <ApexChart
       :options="chartOptions"
@@ -16,12 +16,10 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import ApexChart from 'vue3-apexcharts';
 
-const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+defineOptions({ name: 'ErroresHeatmap' });
+
 const days = ['Domingo', 'Sábado', 'Viernes', 'Jueves', 'Miércoles', 'Martes', 'Lunes'];
 const hours = Array.from({ length: 12 }).map((_, i) => `${String(i * 2).padStart(2, '0')}:00`);
-
-let currentMonthIndex = 0;
-const currentMonth = ref(months[currentMonthIndex]);
 
 function rand(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -97,8 +95,6 @@ let intervalId: ReturnType<typeof setInterval> | null = null;
 onMounted(() => {
   intervalId = setInterval(() => {
     series.value = generateHeatmapData();
-    currentMonthIndex = (currentMonthIndex + 1) % months.length;
-    currentMonth.value = months[currentMonthIndex];
   }, 2000);
 });
 
@@ -120,8 +116,4 @@ onBeforeUnmount(() => {
   font-weight: 600;
   color: #e5e7eb;
 }
-</style>
-
-<style scoped>
-.errores-heatmap { width: 100%; }
 </style>
