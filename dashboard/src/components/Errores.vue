@@ -2,7 +2,6 @@
   <div class="errores-heatmap">
     <div class="heatmap-header">
       <div class="title-left">Mapa Calor Errores: Mensual</div>
-      <div class="month-display">{{ currentMonth }}</div>
     </div>
     <ApexChart
       :options="chartOptions"
@@ -44,12 +43,32 @@ const chartOptions = ref({
   chart: { toolbar: { show: false } },
   dataLabels: { enabled: false },
   title: { text: '' },
+  legend: {
+    labels: {
+      colors: '#e5e7eb',
+    },
+  },
   xaxis: { 
     type: 'category',
     categories: hours,
+    labels: {
+      style: {
+        colors: '#cbd5e1',
+      },
+    },
   },
   yaxis: {
-    title: { text: 'Día de la Semana' },
+    title: {
+      text: 'Día de la Semana',
+      style: {
+        color: '#e5e7eb',
+      },
+    },
+    labels: {
+      style: {
+        colors: '#cbd5e1',
+      },
+    },
   },
   plotOptions: {
     heatmap: {
@@ -99,12 +118,7 @@ onBeforeUnmount(() => {
 .title-left {
   font-size: 14px;
   font-weight: 600;
-  color: #8c8c8c;
-}
-.month-display {
-  font-size: 16px;
-  font-weight: bold;
-  color: #8c8c8c;
+  color: #e5e7eb;
 }
 </style>
 

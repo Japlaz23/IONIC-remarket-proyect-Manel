@@ -1,5 +1,11 @@
 <template>
   <div class="usuarios-chart">
+    <div class="chart-copy">
+      <p class="eyebrow">Seguridad</p>
+      <h3>Accesos de usuarios</h3>
+      <p class="description">Seguimiento de usuarios que inician sesión frente a intentos sin acceso autenticado.</p>
+    </div>
+
     <div class="grid">
       <div class="chart-card" v-for="(c, idx) in charts" :key="idx">
         <div class="card-title">{{ c.title }}</div>
@@ -23,20 +29,33 @@ const monthGroups: string[][] = [
   allMonths.slice(9,12)
 ];
 
-function rand700to800() { return Math.floor(Math.random() * 101) + 700; }
+function randLoggedIn() { return Math.floor(Math.random() * 101) + 700; }
+function randNotLoggedIn() { return Math.floor(Math.random() * 121) + 80; }
 
 const charts = ref(monthGroups.map((group, i) => {
-  const data = group.map(() => rand700to800());
+  const loggedInData = group.map(() => randLoggedIn());
+  const notLoggedInData = group.map(() => randNotLoggedIn());
   return {
     title: `${group.join(' / ')}`,
-    series: [{ name: 'Usuarios', data }],
+    series: [
+      { name: 'Usuarios logueados', data: loggedInData },
+      { name: 'Usuarios no logueados', data: notLoggedInData },
+    ],
     options: {
       chart: { type: 'line', toolbar: { show: false } },
       dataLabels: { enabled: false },
-      stroke: { curve: 'smooth' },
+      stroke: { curve: 'smooth', width: [3, 3] },
+      colors: ['#38bdf8', '#f59e0b'],
+      legend: {
+        position: 'top',
+        labels: { colors: '#d7e2f1' },
+      },
       xaxis: { categories: group },
-      yaxis: { min: 650, max: 820 },
-      grid: { show: true }
+      yaxis: { min: 0, max: 850 },
+      grid: { show: true },
+      tooltip: {
+        theme: 'dark',
+      },
     },
     activeIndex: 0
   };
@@ -46,13 +65,13 @@ let intervalId: number | null = null;
 
 onMounted(() => {
   intervalId = window.setInterval(() => {
-    // update each chart advancing its activeIndex
     charts.value.forEach(c => {
       c.activeIndex = (c.activeIndex + 1) % c.series[0].data.length;
-      const val = rand700to800();
-      c.series[0].data[c.activeIndex] = val;
-      // update title to include most recent value
-      c.title = `${c.options.xaxis.categories[c.activeIndex]}: ${val}`;
+      const loggedInValue = randLoggedIn();
+      const notLoggedInValue = randNotLoggedIn();
+      c.series[0].data[c.activeIndex] = loggedInValue;
+      c.series[1].data[c.activeIndex] = notLoggedInValue;
+      c.title = `${c.options.xaxis.categories[c.activeIndex]}: acceso actualizado`;
     });
   }, 2000);
 });
@@ -62,6 +81,27 @@ onBeforeUnmount(() => { if (intervalId) window.clearInterval(intervalId); });
 
 <style scoped>
 .usuarios-chart{ width:100%; height:100%; }
+.chart-copy{ margin-bottom: 10px; }
+.eyebrow {
+  margin: 0 0 6px;
+  color: #60a5fa;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+h3 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 16px;
+  line-height: 1.2;
+}
+.description {
+  margin: 4px 0 0;
+  color: #9fb2cc;
+  font-size: 12px;
+  line-height: 1.35;
+}
 .grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; align-items:start; padding-bottom:6px }
 .chart-card{ background:var(--ion-item-background, #fff); padding:8px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,.04) }
 .card-title{ font-weight:600; margin-bottom:6px; font-size:14px }

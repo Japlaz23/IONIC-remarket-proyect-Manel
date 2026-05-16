@@ -18,36 +18,24 @@
 
       <div class="dashboard-grid">
         <div class="row row-1">
-          <div class="col col-full">
-            <PlaceholderCard title="Usuarios Activos">
-              <UsuariosActivosApexChart />
-            </PlaceholderCard>
-          </div>
+          <SparkLine />
         </div>
 
         <div class="row row-2">
           <div class="col col-main">
-            <PlaceholderCard>
-              <Errores />
-            </PlaceholderCard>
+            <EchartsMap />
           </div>
           <div class="col col-side">
-            <PlaceholderCard>
-              <!-- placeholder content -->
-            </PlaceholderCard>
+            <CategoryPieChart />
           </div>
         </div>
 
         <div class="row row-3">
           <div class="col col-half">
-            <PlaceholderCard>
-              <!-- placeholder content -->
-            </PlaceholderCard>
+            <RadarCategoryChart />
           </div>
           <div class="col col-half">
-            <PlaceholderCard>
-              <!-- placeholder content -->
-            </PlaceholderCard>
+            <TopProductsBarChart />
           </div>
         </div>
       </div>
@@ -57,9 +45,11 @@
 
 <script setup lang="ts">
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-import PlaceholderCard from '@/components/PlaceholderCard.vue';
-import UsuariosActivosApexChart from '@/components/UsuariosActivosApexChart.vue';
-import Errores from '@/components/Errores.vue';
+import SparkLine from '@/components/SparkLine.vue';
+import EchartsMap from '@/components/EchartsMap.vue';
+import CategoryPieChart from '@/components/CategoryPieChart.vue';
+import RadarCategoryChart from '@/components/RadarCategoryChart.vue';
+import TopProductsBarChart from '@/components/TopProductsBarChart.vue';
 </script>
 
 <style scoped>

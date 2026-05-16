@@ -5,50 +5,51 @@
         <ion-buttons slot="start">
           <ion-menu-button color="primary"></ion-menu-button>
         </ion-buttons>
-
-        <ion-title>Técnico</ion-title>
+        <ion-title>Tecnico</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="true" class="ion-padding">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Técnico</ion-title>
+          <ion-title size="large">Tecnico</ion-title>
         </ion-toolbar>
       </ion-header>
 
       <div class="dashboard-grid">
-
-        <!-- FILA 1 -->
         <div class="row row-1">
           <div class="col col-full">
-            <PlaceholderCard title="Usuarios Activos">
+            <PlaceholderCard title="Seguridad de acceso">
               <UsuariosActivosApexChart />
             </PlaceholderCard>
           </div>
         </div>
 
         <div class="row row-2">
-          <div class="col col-side-small">
-            <ApexMixedChart />
+          <div class="col col-main">
+            <PlaceholderCard>
+              <Errores />
+            </PlaceholderCard>
           </div>
-          <div class="col col-side-big">
-            <ApexMixedChart />
+          <div class="col col-side">
+            <PlaceholderCard title="Velocidad de carga">
+              <VelocidadCargaSimpleGauge />
+            </PlaceholderCard>
           </div>
         </div>
 
         <div class="row row-3">
-          <div class="col col-third">
-            <ApexMixedChart />
+          <div class="col col-half">
+            <PlaceholderCard title="Capacidad de almacenamiento">
+              <AlmacenamientoRingGauge />
+            </PlaceholderCard>
           </div>
-          <div class="col col-third">
-            <ApexMixedChart />
-          </div>
-          <div class="col col-third">
-            <ApexMixedChart />
+          <div class="col col-half">
+            <PlaceholderCard title="Mensajes enviados">
+              <MensajesEnviadosChart />
+            </PlaceholderCard>
           </div>
         </div>
-
       </div>
     </ion-content>
   </ion-page>
@@ -56,46 +57,34 @@
 
 <script setup lang="ts">
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-import ApexMixedChart from '@/components/ApexMixedChart.vue';
+import UsuariosActivosApexChart from '@/components/UsuariosActivosApexChart.vue';
+import Errores from '@/components/Errores.vue';
+import VelocidadCargaSimpleGauge from '@/components/VelocidadCargaSimpleGauge.vue';
+import AlmacenamientoRingGauge from '@/components/AlmacenamientoRingGauge.vue';
+import MensajesEnviadosChart from '@/components/MensajesEnviadosChart.vue';
 </script>
 
 <style scoped>
-.dashboard-shell {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding-bottom: 16px;
-}
-
-.dashboard-heading h2 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.dashboard-heading p {
-  margin: 6px 0 0;
-  color: var(--ion-color-medium);
-}
-
 .dashboard-grid {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+  padding-bottom: 12px;
 }
 
 .row { display: flex; gap: 12px; }
 .row-1 { flex: 1; }
 .row-2 { flex: 2; }
-.row-3 { flex: 1; }
+.row-3 { flex: 2; }
 
-.col { display: flex; flex-direction: column; min-width: 0; }
-.col-third { flex: 1; }
-.col-side-small { flex: 1; }
-.col-side-big { flex: 3; }
+.col { display: flex; flex-direction: column; }
+.col-main { flex: 3; min-width: 0; }
+.col-side { flex: 1; min-width: 0; }
+.col-half { flex: 1; min-width: 0; }
 
 @media (max-width: 767px) {
-  .row-1, .row-2, .row-3 { flex-direction: column; }
-  .col { min-height: 280px; }
+  .row-2, .row-3 { flex-direction: column; }
+  .col-side { min-height: 320px; }
+  .col-half { min-height: 280px; }
 }
 </style>
