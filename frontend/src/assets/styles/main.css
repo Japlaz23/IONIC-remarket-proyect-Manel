@@ -1,4 +1,6 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap');
+
 /* Utilidades responsive para uso global */
 @media (max-width: 768px) {
   .responsive-hide-md {
@@ -98,8 +100,8 @@
 	--ion-color-danger-contrast-rgb: 255,255,255;
 	--ion-color-danger-shade: #ad000d;
 	--ion-color-danger-tint: #cb1a27;
-  --background-color: #0f1115;
-  --ion-text-color: #f4f6f8;
+  --background-color: #ffffff;
+  --ion-text-color: #111827;
   /* Swiper theme color */
   --swiper-theme-color: #1a7f34 !important;
 }
@@ -173,7 +175,7 @@ html, body {
 }
 
 ion-header, .ion-header, body {
-  background: #0f1115 !important;
+  background: #ffffff !important;
   box-shadow: none !important;
   border-bottom: none !important;
   /* Fallback font-family ya está en :root arriba */
@@ -181,7 +183,7 @@ ion-header, .ion-header, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-ion-app, ion-content, ion-toolbar, ion-menu ion-content {
+ion-app, ion-content, ion-menu ion-content {
   background: var(--background-color) !important;
   color: var(--ion-text-color);
 }

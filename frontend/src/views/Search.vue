@@ -569,15 +569,51 @@ onBeforeUnmount(() => {
   font-size: 13px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 873px) {
   .search-hero {
-    margin: 12px 0 10px;
-    padding: 20px 18px;
+    margin: 10px 0 8px;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .search-hero-glow,
+  .search-hero-content,
+  .search-actions,
+  .context-filter-box,
+  .search-clear {
+    display: none;
   }
 
   .search-bar {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .search-content {
+    --background: #f8fafc;
+  }
+
+  .search-shell {
+    padding: 0 12px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .search-bar {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .results-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 
   .search-clear {

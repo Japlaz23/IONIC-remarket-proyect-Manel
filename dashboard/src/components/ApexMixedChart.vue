@@ -1,6 +1,6 @@
 <template>
 <div class="box-mixedChart">
-    <vueApexCharts type="line" height="100%" :options="options" :series="series"/>
+  <vueApexCharts type="line" height="320" :options="options" :series="series"/>
 </div>
 </template>
 
@@ -47,8 +47,8 @@ const series = computed<ApexCharts.ApexOptions['series']>(() => props.series ?? 
   .box-mixedChart{
     display: flex;
     flex-direction: column;
-    height: 100%;
-      min-height: 220px;
+    height: 320px;
+    min-height: 320px;
     width: 100%;
       padding: 10px;
   }

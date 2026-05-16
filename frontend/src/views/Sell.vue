@@ -10,17 +10,38 @@
     </ion-header>
 
     <ion-content class="sell-content">
-      <div class="sell-container">
-        <!-- Progreso -->
+      <!-- Progreso fijo (siempre visible) -->
+      <div slot="fixed" class="progress-fixed">
+        <div class="stepper">
+          <div
+            v-for="(step, i) in steps"
+            :key="i"
+            class="step-dot-wrap"
+            :class="{ 'step-done': step.done, 'step-current': i === firstIncomplete && !step.done }"
+          >
+            <div class="step-dot">
+              <ion-icon v-if="step.done" :icon="checkmarkOutline" />
+              <span v-else>{{ i + 1 }}</span>
+            </div>
+            <span class="step-label">{{ step.label }}</span>
+          </div>
+        </div>
+        <div class="progress-text">
+          <span class="progress-status">{{ completedStepsText }}</span>
+          <span class="progress-pct">{{ progressPercent }}%</span>
+        </div>
         <div class="progress-bar">
           <div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
         </div>
+      </div>
 
+      <div class="sell-container">
         <!-- Sección de imágenes -->
-        <div class="section">
+        <div class="section" :class="{ 'section-done': steps[0].done }">
           <h3 class="section-title">
             <ion-icon :icon="imagesOutline"></ion-icon>
             Fotos del producto
+            <span class="section-badge" :class="steps[0].done ? 'badge-done' : 'badge-pending'">{{ steps[0].done ? 'Listo' : 'Pendiente' }}</span>
           </h3>
           <div class="images-grid">
             <div v-for="(img, idx) in uploadedImages" :key="idx" class="image-item">
@@ -39,10 +60,11 @@
         </div>
 
         <!-- Información básica -->
-        <div class="section">
+        <div class="section" :class="{ 'section-done': steps[1].done }">
           <h3 class="section-title">
             <ion-icon :icon="documentTextOutline"></ion-icon>
             Información Básica
+            <span class="section-badge" :class="steps[1].done ? 'badge-done' : 'badge-pending'">{{ steps[1].done ? 'Listo' : 'Pendiente' }}</span>
           </h3>
 
           <ion-item class="custom-item">
@@ -72,34 +94,35 @@
         </div>
 
         <!-- Categoría y detalles -->
-        <div class="section">
+        <div class="section" :class="{ 'section-done': steps[2].done }">
           <h3 class="section-title">
             <ion-icon :icon="pricetag"></ion-icon>
             Categoría y Detalles
+            <span class="section-badge" :class="steps[2].done ? 'badge-done' : 'badge-pending'">{{ steps[2].done ? 'Listo' : 'Pendiente' }}</span>
           </h3>
 
           <ion-item class="custom-item">
             <ion-label>Categoría *</ion-label>
             <ion-select v-model="formData.category" @ionChange="updateProgress">
-              <ion-select-option value="Electrónica">📱 Electrónica</ion-select-option>
-              <ion-select-option value="Deportes">⚽ Deportes</ion-select-option>
-              <ion-select-option value="Moda">👕 Moda</ion-select-option>
-              <ion-select-option value="Hogar">🏠 Hogar</ion-select-option>
-              <ion-select-option value="Libros">📚 Libros</ion-select-option>
-              <ion-select-option value="Vehículos">🚗 Vehículos</ion-select-option>
-              <ion-select-option value="Juguetes">🎮 Juguetes</ion-select-option>
-              <ion-select-option value="Otro">📦 Otro</ion-select-option>
+              <ion-select-option value="Electrónica">Electrónica</ion-select-option>
+              <ion-select-option value="Deportes">Deportes</ion-select-option>
+              <ion-select-option value="Moda">Moda</ion-select-option>
+              <ion-select-option value="Hogar">Hogar</ion-select-option>
+              <ion-select-option value="Libros">Libros</ion-select-option>
+              <ion-select-option value="Vehículos">Vehículos</ion-select-option>
+              <ion-select-option value="Juguetes">Juguetes</ion-select-option>
+              <ion-select-option value="Otro">Otro</ion-select-option>
             </ion-select>
           </ion-item>
 
           <ion-item class="custom-item">
             <ion-label>Condición *</ion-label>
             <ion-select v-model="formData.condition" @ionChange="updateProgress">
-              <ion-select-option value="Nuevo">✨ Nuevo sin usar</ion-select-option>
-              <ion-select-option value="Como nuevo">🆕 Como nuevo</ion-select-option>
-              <ion-select-option value="Muy bueno">👍 Muy bueno</ion-select-option>
-              <ion-select-option value="Bueno">✓ Bueno</ion-select-option>
-              <ion-select-option value="Aceptable">⚠️ Aceptable</ion-select-option>
+              <ion-select-option value="Nuevo">Nuevo sin usar</ion-select-option>
+              <ion-select-option value="Como nuevo">Como nuevo</ion-select-option>
+              <ion-select-option value="Muy bueno">Muy bueno</ion-select-option>
+              <ion-select-option value="Bueno">Bueno</ion-select-option>
+              <ion-select-option value="Aceptable">Aceptable</ion-select-option>
             </ion-select>
           </ion-item>
 
@@ -216,10 +239,11 @@
         </div>
 
         <!-- Precio y ubicación -->
-        <div class="section">
+        <div class="section" :class="{ 'section-done': steps[3].done }">
           <h3 class="section-title">
             <ion-icon :icon="locationOutline"></ion-icon>
             Precio y Ubicación
+            <span class="section-badge" :class="steps[3].done ? 'badge-done' : 'badge-pending'">{{ steps[3].done ? 'Listo' : 'Pendiente' }}</span>
           </h3>
 
           <div class="price-input-group">
@@ -257,10 +281,11 @@
         </div>
 
         <!-- Etiquetas -->
-        <div class="section">
+        <div class="section" :class="{ 'section-done': steps[4].done }">
           <h3 class="section-title">
             <ion-icon :icon="pricetag"></ion-icon>
             Etiquetas y Visibilidad
+            <span class="section-badge" :class="steps[4].done ? 'badge-done' : 'badge-pending'">{{ steps[4].done ? 'Listo' : 'Opcional' }}</span>
           </h3>
 
           <div class="tags-input-group">
@@ -290,10 +315,11 @@
         </div>
 
         <!-- Seguridad y preferencias -->
-        <div class="section">
+        <div class="section" :class="{ 'section-done': steps[5].done }">
           <h3 class="section-title">
             <ion-icon :icon="shieldCheckmarkOutline"></ion-icon>
             Seguridad y Preferencias
+            <span class="section-badge" :class="steps[5].done ? 'badge-done' : 'badge-pending'">{{ steps[5].done ? 'Listo' : 'Opcional' }}</span>
           </h3>
 
           <ion-item class="custom-item">
@@ -387,6 +413,7 @@ import {
   locationOutline,
   refreshOutline,
   checkmarkDoneOutline,
+  checkmarkOutline,
   informationCircleOutline,
   sparklesOutline,
   shieldCheckmarkOutline,
@@ -477,19 +504,34 @@ const isFormValid = computed(() => {
   )
 })
 
+// Pasos del formulario
+const steps = computed(() => [
+  { label: 'Fotos', done: uploadedImages.value.length > 0 },
+  { label: 'Título y descripción', done: formData.value.title.length > 5 && formData.value.description.length > 10 },
+  { label: 'Categoría', done: formData.value.category !== '' },
+  { label: 'Precio y ubicación', done: !!formData.value.price && parseFloat(formData.value.price) > 0 && formData.value.location.length > 0 },
+  { label: 'Etiquetas', done: formData.value.tags.length > 0 },
+  { label: 'Preferencias', done: formData.value.transactionType !== '' },
+])
+
+const completedSteps = computed(() => steps.value.filter(s => s.done).length)
+
+const firstIncomplete = computed(() => {
+  const idx = steps.value.findIndex(s => !s.done)
+  return idx === -1 ? -1 : idx
+})
+
+const completedStepsText = computed(() => {
+  const total = steps.value.length
+  const done = completedSteps.value
+  if (done === total) return '¡Todos los pasos completados!'
+  const current = firstIncomplete.value + 1
+  return `Paso ${current} de ${total}: ${steps.value[current - 1]?.label || 'Finalizado'}`
+})
+
 // Calcular progreso
 const updateProgress = () => {
-  let completed = 0
-  const total = 6
-  
-  if (formData.value.title.length > 5) completed++
-  if (formData.value.description.length > 10) completed++
-  if (formData.value.price && parseFloat(formData.value.price) > 0) completed++
-  if (formData.value.location.length > 0) completed++
-  if (formData.value.location.length > 0) completed++
-  if (uploadedImages.value.length > 0) completed++
-  
-  progressPercent.value = (completed / total) * 100
+  progressPercent.value = Math.round((completedSteps.value / steps.value.length) * 100)
 }
 
 // Manejo de carga de imágenes
@@ -681,24 +723,124 @@ const resetForm = () => {
 .sell-container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 140px 16px 16px;
 }
 
-/* Barra de progreso */
+/* Progreso fijo siempre visible */
+.progress-fixed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  background: #f5f7fa;
+  padding: 12px 16px 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.stepper {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 10px;
+  overflow-x: auto;
+  padding: 4px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.step-dot-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 56px;
+  flex-shrink: 0;
+}
+
+.step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  background: #e8ecf0;
+  color: #94a3b8;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.step-dot ion-icon {
+  font-size: 18px;
+}
+
+.step-done .step-dot {
+  background: #1a7f34;
+  color: #fff;
+  border-color: #1a7f34;
+}
+
+.step-current .step-dot {
+  border-color: #1a7f34;
+  background: #e8f5e9;
+  color: #1a7f34;
+  box-shadow: 0 0 0 3px rgba(26, 127, 52, 0.15);
+}
+
+.step-label {
+  font-size: 10px;
+  color: #94a3b8;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.step-done .step-label {
+  color: #1a7f34;
+}
+
+.step-current .step-label {
+  color: #1a7f34;
+  font-weight: 700;
+}
+
+/* Texto de progreso */
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.progress-status {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.progress-pct {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a7f34;
+}
+
 .progress-bar {
   width: 100%;
-  height: 4px;
-  background: #e0e0e0;
-  border-radius: 2px;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
   overflow: hidden;
-  margin-bottom: 20px;
 }
 
 .progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #1a7f34 0%, #2ea043 100%);
-  transition: width 0.3s ease;
-  border-radius: 2px;
+  transition: width 0.4s ease;
+  border-radius: 3px;
 }
 
 /* Secciones */
@@ -714,6 +856,7 @@ const resetForm = () => {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
   font-size: 16px;
   font-weight: 700;
   margin: 0 0 12px 0;
@@ -723,6 +866,30 @@ const resetForm = () => {
 .section-title ion-icon {
   color: #1a7f34;
   font-size: 20px;
+}
+
+.section-badge {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-pending {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.badge-done {
+  background: #e8f5e9;
+  color: #1a7f34;
+}
+
+.section-done {
+  border-left: 3px solid #1a7f34;
 }
 
 /* Galería de imágenes */
@@ -1030,7 +1197,68 @@ const resetForm = () => {
 /* Responsive */
 @media (max-width: 480px) {
   .sell-container {
-    padding: 12px;
+    padding: 116px 10px 12px;
+  }
+
+  .progress-fixed {
+    padding: 8px 10px;
+  }
+
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 2px;
+    overflow: hidden;
+    margin-bottom: 6px;
+    padding: 2px 0;
+  }
+
+  .step-dot-wrap {
+    min-width: 0;
+    gap: 2px;
+  }
+
+  .step-dot {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+    border-width: 1px;
+  }
+
+  .step-dot ion-icon {
+    font-size: 15px;
+  }
+
+  .step-label {
+    width: 100%;
+    max-width: 44px;
+    font-size: 8px;
+    line-height: 1.1;
+    white-space: normal;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .progress-text {
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+
+  .progress-status {
+    min-width: 0;
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .progress-pct {
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .progress-bar {
+    height: 5px;
   }
 
   .section {

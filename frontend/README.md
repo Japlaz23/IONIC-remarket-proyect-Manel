@@ -1,8 +1,8 @@
-# 🛍️ Remarket - Frontend
+#  Remarket - Frontend
 
 Aplicación móvil de marketplace construida con **Ionic + Vue 3 + TypeScript**.
 
-## 🚀 Tecnologías
+##  Tecnologías
 
 - **Ionic 8.7.17** - Framework UI para aplicaciones móviles
 - **Vue 3.5.25** - Framework JavaScript progresivo
@@ -14,14 +14,14 @@ Aplicación móvil de marketplace construida con **Ionic + Vue 3 + TypeScript**.
 - **Tailwind CSS 4.1.18** - Framework CSS utility-first
 - **Ionicons 8.0.0** - Librería de iconos
 
-## 📦 Instalación
+##  Instalación
 
 ```bash
 # Instalar dependencias
 npm install
 ```
 
-## 🏃 Ejecutar el proyecto
+##  Ejecutar el proyecto
 
 ```bash
 # Modo desarrollo con Vite (http://localhost:5173)
@@ -40,7 +40,7 @@ npm run preview
 npm run type-check
 ```
 
-## 📱 Estructura del Proyecto
+##  Estructura del Proyecto
 
 ```
 frontend/
@@ -95,22 +95,22 @@ frontend/
 └── postcss.config.js              # Configuración de PostCSS
 ```
 
-## 🎨 Características Principales
+##  Características Principales
 
-### ✨ Funcionalidades Destacadas
+###  Funcionalidades Destacadas
 
-- **🎠 Carousel Infinito**: Desplazamiento continuo de productos destacados en Home
-- **🔍 Búsqueda Avanzada**: Filtros multicapa (categoría, precio, estado, ubicación, ordenamiento)
-- **💬 Sistema de Chat**: Mensajería en tiempo real para comprador/vendedor/soporte
-- **⭐ Reviews y Valoraciones**: Sistema completo de reseñas con fotos y verificación de compra
-- **❤️ Favoritos**: Gestión de productos guardados con sincronización
-- **📱 Responsive**: Optimizado para móvil (tabs) y desktop (FAB flotante)
-- **🛒 Gestión Completa**: Ventas activas, historial de compras, configuración de usuario
-- **🔐 Autenticación Avanzada**: Login, registro, recuperación de contraseña en 3 pasos
-- **📝 Formulario Profesional**: Crear anuncios con campos dinámicos por categoría
-- **🎯 17 Vistas**: Cobertura completa del flujo comprador-vendedor
+- ** Carousel Infinito**: Desplazamiento continuo de productos destacados en Home
+- ** Búsqueda Avanzada**: Filtros multicapa (categoría, precio, estado, ubicación, ordenamiento)
+- ** Sistema de Chat**: Mensajería en tiempo real para comprador/vendedor/soporte
+- ** Reviews y Valoraciones**: Sistema completo de reseñas con fotos y verificación de compra
+- ** Favoritos**: Gestión de productos guardados con sincronización
+- ** Responsive**: Optimizado para móvil (tabs) y desktop (FAB flotante)
+- ** Gestión Completa**: Ventas activas, historial de compras, configuración de usuario
+- ** Autenticación Avanzada**: Login, registro, recuperación de contraseña en 3 pasos
+- ** Formulario Profesional**: Crear anuncios con campos dinámicos por categoría
+- ** 17 Vistas**: Cobertura completa del flujo comprador-vendedor
 
-### 🔐 Autenticación Avanzada
+###  Autenticación Avanzada
 
 - **Login.vue**: Diseño moderno con:
   - Fondo animado con formas flotantes
@@ -131,7 +131,7 @@ frontend/
   2. Código de confirmación
   3. Nueva contraseña con indicador de fortaleza
 
-### 🏠 Home - Vista Principal
+###  Home - Vista Principal
 
 **Características únicas:**
 - **Carousel Infinito**: Desplazamiento horizontal continuo de productos destacados
@@ -182,7 +182,7 @@ frontend/
 - Notificaciones de cambios de precio
 - Eliminación con confirmación
 
-### 💬 Sistema de Mensajería
+###  Sistema de Mensajería
 
 #### **Chat.vue**
 - Lista de conversaciones activas
@@ -198,7 +198,7 @@ frontend/
 - Envío de imágenes
 - Información del producto en contexto
 
-### 👤 Perfiles y Gestión de Usuario
+###  Perfiles y Gestión de Usuario
 
 #### **ProfileCostumer.vue**
 - Información del usuario (avatar, nombre, valoración)
@@ -248,7 +248,7 @@ frontend/
   7. **Zona de Peligro**: Descargar datos, eliminar cuenta
   - Botones: Guardar cambios, Restablecer configuración
 
-### 📊 Sistema de Reviews
+###  Sistema de Reviews
 
 - Valoración por estrellas (1-5 ⭐)
 - Comentarios de texto
@@ -258,7 +258,7 @@ frontend/
 - Verificación de compra
 - Reporte de reviews inapropiadas
 
-## 🎯 Rutas Disponibles (19 rutas)
+##  Rutas Disponibles (19 rutas)
 
 | Ruta                    | Componente          | Auth | Descripción                         |
 |-------------------------|---------------------|------|-------------------------------------|
@@ -284,7 +284,7 @@ frontend/
 
 **Rutas Protegidas**: Las rutas marcadas con Auth=Sí requieren autenticación y redirigen a `/login` si el usuario no está logueado.
 
-## 🔧 Configuración
+##  Configuración
 
 ### Variables de Entorno
 
@@ -313,7 +313,7 @@ import { useRouter } from 'vue-router'
 import Home from '@/views/Home.vue'
 ```
 
-## 📝 Scripts Disponibles
+##  Scripts Disponibles
 
 | Comando              | Descripción                                |
 |----------------------|--------------------------------------------|
@@ -323,7 +323,7 @@ import Home from '@/views/Home.vue'
 | `npm run preview`    | Preview del build                         |
 | `npm run type-check` | Verifica tipos TypeScript                 |
 
-## 🎨 Guía de Estilos
+##  Guía de Estilos
 
 ### Componentes Ionic
 
@@ -373,7 +373,7 @@ const products = await productService.getAll()
 const newProduct = await productService.create(productData)
 ```
 
-## 🌐 Integración con Backend
+##  Integración con Backend
 
 El frontend está configurado para conectarse al backend en `http://localhost:3000/api`.
 
@@ -418,7 +418,7 @@ El frontend está configurado para conectarse al backend en `http://localhost:30
 - `reviewService` - Valoraciones y comentarios
 - `sellerService` - Información de vendedores
 
-## 🔒 Autenticación
+##  Autenticación
 
 El token JWT se almacena en `localStorage` y se inyecta automáticamente en las peticiones HTTP mediante interceptores de Axios.
 
@@ -434,7 +434,7 @@ axios.interceptors.request.use((config) => {
 })
 ```
 
-## 📱 Responsive Design
+##  Responsive Design
 
 ### Breakpoints Principales
 
@@ -445,7 +445,7 @@ axios.interceptors.request.use((config) => {
 
 ### Diferencias Móvil vs Desktop
 
-#### 📱 **En Móvil (< 1024px)**
+####  **En Móvil (< 1024px)**
 
 1. **Navegación por Tabs**:
    - Tab bar inferior con 5 secciones
@@ -470,7 +470,7 @@ axios.interceptors.request.use((config) => {
    - Campos de formulario apilados
    - Teclado virtual optimizado por tipo de input
 
-#### 💻 **En Desktop (> 1024px)**
+####  **En Desktop (> 1024px)**
 
 1. **Navegación de Escritorio**:
    - Header fijo con logo, búsqueda y menú
@@ -548,7 +548,7 @@ axios.interceptors.request.use((config) => {
 }
 ```
 
-## 🐛 Debugging
+##  Debugging
 
 ### Errores Comunes
 
@@ -561,13 +561,13 @@ axios.interceptors.request.use((config) => {
 
 3. **Routing no funciona**: El proyecto usa `createWebHashHistory` para compatibilidad
 
-## 📄 Licencia
+##  Licencia
 
 Este proyecto es parte de **Remarket** - Marketplace de segunda mano.
 
 ---
 
-## 👨‍💻 Desarrollo
+##  Desarrollo
 
 Para contribuir al proyecto:
 
@@ -579,6 +579,4 @@ Para contribuir al proyecto:
 
 ---
 
-**¿Preguntas o problemas?** Abre un issue en el repositorio.
 
-🚀 **¡Happy coding!**

@@ -151,7 +151,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'MacBook Air M2 sin usar',
       images: [MacBookAirM21, MacBookAirM22, MacBookAirM23],
       brand: 'apple',
-      sellerAvatar: './assets/img/profilesSellers/profileSeller2.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 3,
@@ -169,7 +169,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'Galaxy S22 con caja y cargador.',
       images: [SamsungGalaxyS221, SamsungGalaxyS222, SamsungGalaxyS223],
       brand: 'samsung',
-      sellerAvatar: './assets/img/profilesSellers/profileSeller3.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 4,
@@ -186,7 +186,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Con funda y dos mandos extra.',
       images: [NintendoSwitchOLED1, NintendoSwitchOLED2, NintendoSwitchOLED3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller4.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 5,
@@ -204,7 +204,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'Cancelacion de ruido y estuche.',
       images: [AuricularesSony1, AuricularesSony2, AuricularesSony3],
       brand: 'sony',
-      sellerAvatar: './assets/img/profilesSellers/profileSeller5.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 6,
@@ -222,7 +222,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'ITV al dia, 120.000 km.',
       images: [SeatIbiza20161, SeatIbiza20162, SeatIbiza20163],
       brand: 'seat',
-      sellerAvatar: './assets/img/profilesSellers/profileSeller6.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 7,
@@ -239,7 +239,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Ideal ciudad, frenos revisados.',
       images: [BicicletaurbanaOrbea1, BicicletaurbanaOrbea2, BicicletaurbanaOrbea3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller7.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 8,
@@ -256,7 +256,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Bateria con buena autonomia.',
       images: [PatineteXiaomiPro21, PatineteXiaomiPro22, PatineteXiaomiPro23],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller8.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 9,
@@ -273,7 +273,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Revision reciente y neumáticos nuevos.',
       images: [MotoYamahaMT071, MotoYamahaMT072, MotoYamahaMT073],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller9.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 10,
@@ -290,7 +290,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Un solo dueño, historial completo.',
       images: [RenaultClio20181, RenaultClio20182, RenaultClio20183],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller10.jpg',
+      sellerAvatar: ProfileSeller,
       
     },
     {
@@ -308,7 +308,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Talla M, poco uso.',
       images: [Chaquetadecuero1, Chaquetadecuero2, Chaquetadecuero3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller11.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 12,
@@ -326,7 +326,7 @@ export const useProductStore = defineStore('product', () => {
       description: 'Talla 42, con caja.',
       images: [ZapatillasNikeAirMax1, ZapatillasNikeAirMax2, ZapatillasNikeAirMax3],
       brand: 'nike',
-      sellerAvatar: './assets/img/profilesSellers/profileSeller12.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 13,
@@ -343,7 +343,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Cuero natural, acabado premium.',
       images: [Bolsopielartesanal1, Bolsopielartesanal2, Bolsopielartesanal3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller13.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 14,
@@ -360,7 +360,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Talla S, ideal invierno.',
       images: [Abrigolanalargo1, Abrigolanalargo2, Abrigolanalargo3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller14.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 15,
@@ -377,7 +377,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Correa intercambiable.',
       images: [Relojminimalista1, Relojminimalista2, Relojminimalista3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller15.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 16,
@@ -394,7 +394,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Tapizado limpio y sin manchas.',
       images: [Sofatresplazas1, Sofatresplazas2, Sofatresplazas3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller16.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 17,
@@ -411,7 +411,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Madera maciza, incluye 6 sillas.',
       images: [Mesacomedorextensible1, Mesacomedorextensible2, Mesacomedorextensible3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller17.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 18,
@@ -428,7 +428,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Acabado metalico, luz calida.',
       images: [Lamparadepienordica1, Lamparadepienordica2, Lamparadepienordica3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller18.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 19,
@@ -445,7 +445,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Incluye accesorios y manual.',
       images: [Cafeteraespresso1, Cafeteraespresso2, Cafeteraespresso3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller19.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 20,
@@ -462,7 +462,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Porcelana blanca, sin roturas.',
       images: [Setvajilla24piezas1, Setvajilla24piezas2, Setvajilla24piezas3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller20.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 21,
@@ -479,7 +479,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Suspension delantera y frenos disco.',
       images: [Bicicletademontaña1, Bicicletademontaña2, Bicicletademontaña3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller21.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 22,
@@ -496,7 +496,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Incluye barras y discos.',
       images: [Setmancuernas20kg1, Setmancuernas20kg2, Setmancuernas20kg3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller22.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 23,
@@ -513,7 +513,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Incluye funda y leash.',
       images: [Tabladesurf641, Tabladesurf642, Tabladesurf643],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller23.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 24,
@@ -530,7 +530,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Wilson Pro Staff, encordada.',
       images: [Raquetadetenis1, Raquetadetenis2, Raquetadetenis3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller24.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 25,
@@ -547,7 +547,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Talla M, ventilado.',
       images: [Cascociclismo1, Cascociclismo2, Cascociclismo3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller25.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 26,
@@ -564,7 +564,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Soporte lumbar ajustable.',
       images: [Sillaergonomica1, Sillaergonomica2, Sillaergonomica3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller26.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 27,
@@ -581,7 +581,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Full HD, panel IPS.',
       images: [Monitor27pulgadas1, Monitor27pulgadas2, Monitor27pulgadas3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller27.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 28,
@@ -598,7 +598,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Switches rojos, retroiluminado.',
       images: [Tecladomecanico1, Tecladomecanico2, Tecladomecanico3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller28.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 29,
@@ -615,7 +615,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Altura regulable, 120x60.',
       images: [Escritorioelevable1, Escritorioelevable2, Escritorioelevable3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller29.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 30,
@@ -632,7 +632,7 @@ export const useProductStore = defineStore('product', () => {
       isFavorite: false,
       description: 'Incluye toner extra.',
       images: [Impresoralaser1, Impresoralaser2, Impresoralaser3],
-      sellerAvatar: './assets/img/profilesSellers/profileSeller30.jpg',
+      sellerAvatar: ProfileSeller,
     },
     {
       id: 31,
@@ -642,7 +642,7 @@ export const useProductStore = defineStore('product', () => {
       category: 'Musica',
       seller: 'Manuel Herrera',
       sellerEmail: 'manuel.herrera@example.com',
-      sellerAvatar: './assets/img/profilesSellers/profileSeller31.jpg',
+      sellerAvatar: ProfileSeller,
       sellerId: 31,
       condition: 'Usado - Buen estado',
       location: 'Cordoba',
