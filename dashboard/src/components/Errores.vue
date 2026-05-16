@@ -1,52 +1,113 @@
 <template>
-  <div ref="chart" class="chart-container"></div>
+  <div class="errores-heatmap">
+    <div class="heatmap-header">
+      <div class="title-left">Mapa Calor Errores: Mensual</div>
+      <div class="month-display">{{ currentMonth }}</div>
+    </div>
+    <ApexChart
+      :options="chartOptions"
+      :series="series"
+      type="heatmap"
+      height="420"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
-import * as echarts from 'echarts';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import ApexChart from 'vue3-apexcharts';
 
-const chart = ref<HTMLElement | null>(null);
-let myChart: echarts.ECharts | null = null;
-let intervalId: ReturnType<typeof setInterval> | null = null;
+const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+const days = ['Domingo', 'Sábado', 'Viernes', 'Jueves', 'Miércoles', 'Martes', 'Lunes'];
+const hours = Array.from({ length: 12 }).map((_, i) => `${String(i * 2).padStart(2, '0')}:00`);
 
-const categories = ['Módulo A','Módulo B','Módulo C','Módulo D','Módulo E'];
-const seriesData = [
-  { name:'Errores críticos', data: categories.map(() => Math.floor(Math.random() * 5)), stack:'total' },
-  { name:'Errores menores', data: categories.map(() => Math.floor(Math.random() * 10)), stack:'total' },
-];
+let currentMonthIndex = 0;
+const currentMonth = ref(months[currentMonthIndex]);
 
-const option = {
-  title: { text: 'Errores del Sistema', textStyle:{ color:'#fff' } },
-  tooltip: { trigger:'axis', axisPointer:{ type:'shadow' } },
-  legend: { data:['Errores críticos','Errores menores'], textStyle:{ color:'#fff' } },
-  xAxis: { type:'value', axisLine:{ lineStyle:{ color:'#fff' } } },
-  yAxis: { type:'category', data: categories, axisLine:{ lineStyle:{ color:'#fff' } } },
-  series: seriesData.map(s => ({ ...s, type:'bar', emphasis:{ focus:'series' } }))
-};
+function rand(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-onMounted(() => {
-  if (chart.value) {
-    myChart = echarts.init(chart.value);
-    myChart.setOption(option);
+function generateHeatmapData() {
+  return days.map(day => ({
+    name: day,
+    data: hours.map(hour => ({
+      x: hour,
+      y: rand(0, 100),
+    })),
+  }));
+}
 
-    intervalId = setInterval(() => {
-      seriesData.forEach(s => { s.data = categories.map(() => Math.floor(Math.random() * 10)) });
-      myChart!.setOption({ series: seriesData });
-    }, 2000);
-  }
+const series = ref(generateHeatmapData());
+
+const chartOptions = ref({
+  chart: { toolbar: { show: false } },
+  dataLabels: { enabled: false },
+  title: { text: '' },
+  xaxis: { 
+    type: 'category',
+    categories: hours,
+  },
+  yaxis: {
+    title: { text: 'Día de la Semana' },
+  },
+  plotOptions: {
+    heatmap: {
+      shadeIntensity: 0.5,
+      radius: 2,
+      useFillColorAsStroke: true,
+      colorScale: {
+        ranges: [
+          { from: 0, to: 20, color: '#48c774', name: 'Bajo' },
+          { from: 21, to: 50, color: '#ffdd57', name: 'Medio' },
+          { from: 51, to: 80, color: '#ff7b25', name: 'Alto' },
+          { from: 81, to: 100, color: '#ff3860', name: 'Crítico' },
+        ],
+      },
+    },
+  },
+  tooltip: {
+    y: {
+      formatter: (val: number) => `${val} errores`,
+    },
+  },
 });
 
-onUnmounted(() => {
-  if (intervalId) {
-    clearInterval(intervalId);
-  }
-  if (myChart) {
-    myChart.dispose();
-  }
+let intervalId: ReturnType<typeof setInterval> | null = null;
+
+onMounted(() => {
+  intervalId = setInterval(() => {
+    series.value = generateHeatmapData();
+    currentMonthIndex = (currentMonthIndex + 1) % months.length;
+    currentMonth.value = months[currentMonthIndex];
+  }, 2000);
+});
+
+onBeforeUnmount(() => {
+  if (intervalId) clearInterval(intervalId);
 });
 </script>
 
 <style scoped>
-.chart-container { width: 100%; height: 250px; }
+.errores-heatmap { width: 100%; }
+.heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.title-left {
+  font-size: 14px;
+  font-weight: 600;
+  color: #8c8c8c;
+}
+.month-display {
+  font-size: 16px;
+  font-weight: bold;
+  color: #8c8c8c;
+}
+</style>
+
+<style scoped>
+.errores-heatmap { width: 100%; }
 </style>
