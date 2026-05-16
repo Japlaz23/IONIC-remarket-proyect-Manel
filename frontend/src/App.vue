@@ -39,6 +39,6 @@ ion-app {
   --ion-background-color: var(--background-color);
   background: var(--background-color);
   color: var(--ion-text-color);
-  color-scheme: dark;
+  color-scheme: light;
 }
 </style>

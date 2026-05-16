@@ -28,41 +28,24 @@
           </div>
         </div>
 
-        <!-- FILA 2 -->
         <div class="row row-2">
-
-          <!-- MAPA DE ERRORES -->
-          <div class="col col-main">
-            <PlaceholderCard>
-
-              <!-- MES SOBRE LA LEYENDA-->
-              <div class="errores-month-container">
-                <span class="errores-month"></span>
-              </div>
-
-              <Errores />
-            </PlaceholderCard>
+          <div class="col col-side-small">
+            <ApexMixedChart />
           </div>
-
-          <!-- GAUGE -->
-          <div class="col col-side gauge-column">
-            <PlaceholderCard title="Tiempo Medio de Carga">
-              <div class="gauge-wrapper">
-                <TiempodeCarga />
-              </div>
-            </PlaceholderCard>
+          <div class="col col-side-big">
+            <ApexMixedChart />
           </div>
-
         </div>
 
-        <!-- FILA 3 -->
         <div class="row row-3">
-          <div class="col col-half">
-            <PlaceholderCard></PlaceholderCard>
+          <div class="col col-third">
+            <ApexMixedChart />
           </div>
-
-          <div class="col col-half">
-            <PlaceholderCard></PlaceholderCard>
+          <div class="col col-third">
+            <ApexMixedChart />
+          </div>
+          <div class="col col-third">
+            <ApexMixedChart />
           </div>
         </div>
 
@@ -72,112 +55,47 @@
 </template>
 
 <script setup lang="ts">
-import {
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonMenuButton,
-  IonPage,
-  IonTitle,
-  IonToolbar
-} from '@ionic/vue';
-
-import PlaceholderCard from '@/components/PlaceholderCard.vue';
-import UsuariosActivosApexChart from '@/components/UsuariosActivosApexChart.vue';
-import Errores from '@/components/Errores.vue';
-import TiempodeCarga from '@/components/TiempodeCarga.vue';
+import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import ApexMixedChart from '@/components/ApexMixedChart.vue';
 </script>
 
 <style scoped>
+.dashboard-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+.dashboard-heading h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.dashboard-heading p {
+  margin: 6px 0 0;
+  color: var(--ion-color-medium);
+}
+
 .dashboard-grid {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-bottom: 12px;
+  gap: 16px;
 }
 
-.row {
-  display: flex;
-  gap: 12px;
-}
+.row { display: flex; gap: 12px; }
+.row-1 { flex: 1; }
+.row-2 { flex: 2; }
+.row-3 { flex: 1; }
 
-.row-1 {
-  flex: 1;
-}
-
-.row-2 {
-  flex: 2;
-  align-items: stretch;
-}
-
-.row-3 {
-  flex: 2;
-}
-
-.col {
-  display: flex;
-  flex-direction: column;
-}
-
-.col-full {
-  width: 100%;
-}
-
-.col-main {
-  flex: 3;
-  min-width: 0;
-}
-
-.col-side {
-  flex: 1.4;
-  min-width: 320px;
-}
-
-.col-half {
-  flex: 1;
-  min-width: 0;
-}
-
-/* MES DEL MAPA DE CALOR */
-.errores-month-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 8px;
-}
-
-.errores-month {
-  font-size: 15px;
-  font-weight: 600;
-  color: #666;
-}
-
-/* GAUGE */
-.gauge-column {
-  display: flex;
-}
-
-.gauge-wrapper {
-  width: 100%;
-  height: 100%;
-  min-height: 420px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.col { display: flex; flex-direction: column; min-width: 0; }
+.col-third { flex: 1; }
+.col-side-small { flex: 1; }
+.col-side-big { flex: 3; }
 
 @media (max-width: 767px) {
-  .row-2,
-  .row-3 {
-    flex-direction: column;
-  }
-
-  .col-side {
-    min-width: 0;
-  }
-
-  .gauge-wrapper {
-    min-height: 360px;
-  }
+  .row-1, .row-2, .row-3 { flex-direction: column; }
+  .col { min-height: 280px; }
 }
 </style>

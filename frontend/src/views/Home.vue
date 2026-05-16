@@ -1,11 +1,89 @@
 <template>
   <ion-page>
-    <!-- CategoriesMenu para menú lateral -->
-    <CategoriesMenu
-      :categories="categories"
-      @closeCategoriesMenu="closeCategoriesMenu"
-      @selectCategoriesFromMenu="selectCategoriesFromMenu"
-    />
+  <!-- Menú hamburguesa sidebar para móvil -->
+  <div class="mobile-menu-overlay" v-if="isMobileMenuOpen" @click="closeMobileMenu"></div>
+  <aside class="mobile-menu" :class="{ open: isMobileMenuOpen }">
+    <div class="mobile-menu-header">
+      <h2>Categorías</h2>
+      <button type="button" class="mobile-menu-close" @click="closeMobileMenu" aria-label="Cerrar menú">
+        <ion-icon :icon="closeOutline"></ion-icon>
+      </button>
+    </div>
+    <div class="mobile-menu-content">
+      <button type="button" class="mobile-category-btn" @click="clearCategoryFiltersFromMenu">
+        Todas las categorías
+      </button>
+      <button 
+        v-for="cat in categories" 
+        :key="cat.id"
+        type="button"
+        class="mobile-category-btn"
+        :class="{ active: selectedCategory === cat.id }"
+        @click="selectCategoryFromMenu(cat.id)"
+      >
+        {{ cat.name }}
+      </button>
+    </div>
+  </aside>
+
+  <!-- Drawer de filtros para móvil -->
+  <div class="mobile-filters-overlay" v-if="isMobileFiltersOpen" @click="closeMobileFilters"></div>
+  <aside class="mobile-filters" :class="{ open: isMobileFiltersOpen }">
+    <div class="mobile-filters-header">
+      <h2>Filtros</h2>
+      <button type="button" class="mobile-filters-close" @click="closeMobileFilters" aria-label="Cerrar filtros">
+        <ion-icon :icon="closeOutline"></ion-icon>
+      </button>
+    </div>
+    <div class="mobile-filters-content">
+      <div class="sidebar-field">
+        <label>Filtrar resultados</label>
+        <ion-input
+          v-model="resultsFilterQuery"
+          placeholder="Titulo, marca, descripcion..."
+          class="sidebar-input"
+        ></ion-input>
+      </div>
+
+      <div class="sidebar-two-columns">
+        <div class="sidebar-field">
+          <label>Precio min</label>
+          <ion-input v-model="filters.minPrice" type="number" placeholder="0" class="sidebar-input"></ion-input>
+        </div>
+        <div class="sidebar-field">
+          <label>Precio max</label>
+          <ion-input v-model="filters.maxPrice" type="number" placeholder="1000" class="sidebar-input"></ion-input>
+        </div>
+      </div>
+
+      <div class="sidebar-field">
+        <label>Condicion</label>
+        <ion-select v-model="filters.condition" interface="popover" class="sidebar-select">
+          <ion-select-option value="all">Todas</ion-select-option>
+          <ion-select-option value="Nuevo">Nuevo</ion-select-option>
+          <ion-select-option value="Usado">Usado</ion-select-option>
+        </ion-select>
+      </div>
+
+      <div class="sidebar-field">
+        <label>Ubicacion</label>
+        <ion-input v-model="filters.location" placeholder="Ciudad" class="sidebar-input"></ion-input>
+      </div>
+
+      <div class="sidebar-field">
+        <label>Ordenar</label>
+        <ion-select v-model="filters.sort" interface="popover" class="sidebar-select">
+          <ion-select-option value="recent">Mas reciente</ion-select-option>
+          <ion-select-option value="price-asc">Precio mas bajo</ion-select-option>
+          <ion-select-option value="price-desc">Precio mas alto</ion-select-option>
+        </ion-select>
+      </div>
+
+      <button type="button" class="mobile-filters-apply" @click="closeMobileFilters">
+        Aplicar filtros
+      </button>
+    </div>
+  </aside>
 
   <ion-header>
     <ion-toolbar class="header-toolbar">
@@ -26,7 +104,7 @@
           ></ion-searchbar>
         </div>
 
-        <!-- -->
+        <!-- Botones de acción -->
         <div class="header-right">
           <ion-buttons class="actions-buttons">
 
@@ -40,7 +118,7 @@
             >
               <span>Iniciar sesión</span>
             </ion-button>
-            <ion-button class="icon-btn" @click="goToPurchases">
+            <ion-button class="icon-btn icon-btn-cart" @click="goToPurchases">
               <ion-icon :icon="cartOutline"></ion-icon>
             </ion-button>
             <ion-button class="icon-btn" @click="goToFavorites">
@@ -48,7 +126,7 @@
             </ion-button>
             <ion-button
               v-if="isLoggedIn"
-              class="icon-btn"
+              class="icon-btn icon-btn-profile"
               @click="goToProfileCustumer"
             >
               <ion-icon :icon="personCircle"></ion-icon>
@@ -58,18 +136,22 @@
       </div>
     </ion-toolbar>
     <ion-toolbar class="categories-menu">
-      <div style="display: flex; align-items: center;">
+      <div class="categories-menu-inner">
         <ion-buttons slot="start">
-          <ion-button @click="openCategoriesMenu" class="categories-menu-btn">
-            <ion-icon :icon="listOutline"></ion-icon>
-            <span class="ml-2">Categorías</span>
-          </ion-button>
+          <button type="button" class="mobile-hamburger-btn" @click="toggleMobileMenu" aria-label="Abrir menú">
+            <ion-icon :icon="menuOutline"></ion-icon>
+          </button>
         </ion-buttons>
-        <ion-segment style="margin-left: 8px;" v-model="store.selectedCategories" class="categories-segment">
+        <ion-segment v-model="selectedCategory" class="categories-segment" :scrollable="true">
           <ion-segment-button v-for="cat in categories" :key="cat.id" :value="cat.id">
             {{ cat.name }}
           </ion-segment-button>
         </ion-segment>
+        <ion-buttons slot="end">
+          <button type="button" class="mobile-filters-btn" @click="toggleMobileFilters" aria-label="Abrir filtros">
+            <ion-icon :icon="funnelOutline"></ion-icon>
+          </button>
+        </ion-buttons>
       </div>
     </ion-toolbar>
   </ion-header>
@@ -87,83 +169,71 @@
       </div>
 
       <!-- -->
-      <div v-else class="market-sections">
-        <section v-if="!showFiltersLayout">
-          <section v-for="section in carouselSections" :key="section.id" class="categories-section carousel-separated">
-            <div class="section-header">
-              <h2>{{ section.name }}</h2>
-            </div>
+      <div v-else-if="!showFiltersLayout" class="market-sections">
+        <section class="categories-section carousel-separated">
+          <div class="section-header">
+            <h2>Destacados</h2>
+          </div>
 
-            <div
-              class="carousel-wrapper"
- 
-            >
-              <!-- Carousel montado en Swiper.js -->
-              <div class="carousel-row">
-                <Swiper
-                  :loop="true"
-                  :autoplay="{
-                    delay: 4000,
-                    disableOnInteraction: false,
-                    pauseOnMouseEnter: true
-                  }"
-                  :navigation="{ 
-                    nextEl: '.swiper-button-next', 
-                    prevEl: '.swiper-button-prev' 
-                  }"
-                  :pagination="{ 
-                    clickable: true,
-                    dynamicBullets: true 
-                  }"
-                  :modules="modules"
-                  :breakpoints="{
-                    0: { slidesPerView: 1.2, spaceBetween: 10 },
-                    380: { slidesPerView: 1.5, spaceBetween: 12 },
-                    480: { slidesPerView: 2, spaceBetween: 16 },
-                    768: { slidesPerView: 3, spaceBetween: 20 },
-                    1024: { slidesPerView: 4, spaceBetween: 24 },
-                    1280: { slidesPerView: 5, spaceBetween: 24 },
-                  }"
-                  class="product-swiper"
+          <div class="carousel-wrapper">
+            <!-- Carousel montado en Swiper.js -->
+            <button class="home-swiper-nav home-swiper-prev" type="button" aria-label="Anterior" @click="carouselSwiper?.slidePrev()"></button>
+            <div class="carousel-frame">
+              <Swiper
+                @swiper="onSwiper"
+                :loop="true"
+                :autoplay="{
+                  delay: 4000,
+                  disableOnInteraction: false,
+                  pauseOnMouseEnter: true
+                }"
+                :modules="modules"
+                :breakpoints="{
+                  0: { slidesPerView: 1.2, spaceBetween: 10 },
+                  380: { slidesPerView: 1.5, spaceBetween: 12 },
+                  480: { slidesPerView: 2, spaceBetween: 16 },
+                  768: { slidesPerView: 3, spaceBetween: 20 },
+                  1024: { slidesPerView: 4, spaceBetween: 24 },
+                  1280: { slidesPerView: 5, spaceBetween: 24 },
+                }"
+                class="product-swiper"
+              >
+                <SwiperSlide
+                  v-for="(product, index) in carouselProducts"
+                  :key="`${product.id}-${index}`"
                 >
-                  <SwiperSlide
-                    v-for="(product, index) in section.items"
-                    :key="`${section.id}-${product.id}-${index}`"
+                  <ion-card
+                    class="product-card"
+                    @click="goToProduct(product.id)"
                   >
-                    <ion-card
-                      class="product-card"
-                      @click="goToProduct(product.id)"
-                    >
-                      <div class="product-image-container">
-                        <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
-                        <button 
-                          type="button"
-                          class="favorite-btn"
-                          :class="{ active: isFavoriteProduct(product.id) }"
-                          @click="toggleProductFavorite($event, product.id)"
-                        >
-                          <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
-                        </button>
+                    <div class="product-image-container">
+                      <ion-img :src="product.image" :alt="product.title" class="product-image"></ion-img>
+                      <button 
+                        type="button"
+                        class="favorite-btn"
+                        :class="{ active: isFavoriteProduct(product.id) }"
+                        @click="toggleProductFavorite($event, product.id)"
+                      >
+                        <ion-icon :icon="isFavoriteProduct(product.id) ? heart : heartOutline"></ion-icon>
+                      </button>
+                    </div>
+                    <ion-card-header>
+                      <ion-card-title class="product-title">
+                        {{ product.title }}
+                      </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <div class="product-meta">
+                        <span class="product-price">{{ product.price }}€</span>
+                        <span class="product-location">{{ product.location }}</span>
                       </div>
-                      <ion-card-header>
-                        <ion-card-title class="product-title">
-                          {{ product.title }}
-                        </ion-card-title>
-                      </ion-card-header>
-                      <ion-card-content>
-                        <div class="product-meta">
-                          <span class="product-price">{{ product.price }}€</span>
-                          <span class="product-location">{{ product.location }}</span>
-                        </div>
-                      </ion-card-content>
-                    </ion-card>
-                  </SwiperSlide>
-                </Swiper>
-                <button class=" swiper-button-prev" ></button>
-                <button class=" swiper-button-next" ></button>
-              </div>
-        </div>
-          </section>
+                    </ion-card-content>
+                  </ion-card>
+                </SwiperSlide>
+              </Swiper>
+            </div>
+            <button class="home-swiper-nav home-swiper-next" type="button" aria-label="Siguiente" @click="slideNext"></button>
+          </div>
         </section>
       </div>
       <!-- grid  -->
@@ -210,20 +280,6 @@
             <ion-input v-model="filters.location" placeholder="Ciudad" class="sidebar-input"></ion-input>
           </div>
 
-          <div class="sidebar-field" v-if="availableBrands.length > 0">
-            <label>Marca</label>
-            <ion-select v-model="filters.brand" interface="popover" class="sidebar-select">
-              <ion-select-option value="all">Todas</ion-select-option>
-              <ion-select-option
-                v-for="brand in availableBrands"
-                :key="(brand as any).value"
-                :value="(brand as any).value"
-              >
-                {{ (brand as any).label }}
-              </ion-select-option>
-            </ion-select>
-          </div>
-
           <div class="sidebar-field">
             <label>Ordenar</label>
             <ion-select v-model="filters.sort" interface="popover" class="sidebar-select">
@@ -244,9 +300,9 @@
             :key="product.id"
             size="6"
             size-xs="6"
-            size-sm="4"
+            size-sm="6"
             size-md="3"
-            size-lg="2"
+            size-lg="3"
             class="product-col"
           >
             <ion-card
@@ -278,19 +334,25 @@
             </ion-card>
           </ion-col>
           <ion-col
-            v-if="visibleProducts.length % 5 !== 0"
-            v-for="n in (5 - (visibleProducts.length % 5))"
+            v-if="visibleProducts.length % 4 !== 0"
+            v-for="n in (4 - (visibleProducts.length % 4))"
             :key="'empty-' + n"
             size="6"
             size-xs="6"
-            size-sm="4"
+            size-sm="6"
             size-md="3"
-            size-lg="2"
+            size-lg="3"
             class="product-col empty-col"
           >
           </ion-col>
             </ion-row>
           </ion-grid>
+
+          <div v-if="filteredProducts.length > visibleCount" class="load-more-wrap">
+            <button class="load-more-btn" @click="showAllProducts">
+              Ver todos los productos ({{ filteredProducts.length }})
+            </button>
+          </div>
         </div>
       </div>
 
@@ -299,29 +361,25 @@
       </div>
       
 <!-- ==================== FAB DE CHAT Y PUBLICAR ==================== -->
-
-        <ion-fab
-          horizontal="start"
-          vertical="bottom"
-          slot="fixed"
-          class="home-fab"
-          :activated="isChatFabOpen"
-        >
-        <ion-fab-button @click.stop="toggleChatFab">
+      <div class="home-fab" :class="{ open: isActionFabOpen }">
+        <div class="home-fab-actions">
+          <button type="button" class="home-fab-action" @click="goToSellFromFab">
+            <ion-icon :icon="storefrontOutline"></ion-icon>
+            <span>Vender</span>
+          </button>
+          <button type="button" class="home-fab-action" @click="goToChatList('support')">
+            <ion-icon :icon="paperPlane"></ion-icon>
+            <span>Soporte</span>
+          </button>
+          <button type="button" class="home-fab-action" @click="goToChatList('seller')">
+            <ion-icon :icon="personCircle"></ion-icon>
+            <span>Vendedor</span>
+          </button>
+        </div>
+        <button type="button" class="home-fab-main" @click.stop="toggleActionFab" aria-label="Abrir acciones rápidas">
           <ion-icon :icon="add"></ion-icon>
-        </ion-fab-button>
-          <ion-fab-list side="end">
-            <ion-fab-button @click="goToSellFromFab" style="margin-left: 12px;"> 
-              <ion-icon :icon="storefrontOutline"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button @click="goToChatList('support')" style="margin-left: 12px;">
-              <ion-icon :icon="paperPlane"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button @click="goToChatList('seller')" style="margin-left: 12px;">
-              <ion-icon :icon="personCircle"></ion-icon>
-            </ion-fab-button>
-          </ion-fab-list>
-        </ion-fab>
+        </button>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -331,22 +389,20 @@
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-import 'swiper/css/autoplay'
-import 'swiper/css/effect-fade'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
-import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules'
+import { Pagination, Autoplay } from 'swiper/modules'
 
-  const modules = [Navigation, Pagination, Autoplay];
+  const modules = [Pagination, Autoplay];
 
 /* Componentes */
-import CategoriesMenu from '@/components/CategoriesMenu.vue'
-import { HOME_CATEGORIES, BRANDS_BY_CATEGORIES } from '@/utils/constants'
-import { computed, ref, reactive, watch, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, reactive, watch } from 'vue'
 import { useProductStore } from '@/stores/productStore'
 import { useFavoriteStore } from '@/stores/favoriteStore'
 import { useRouter } from 'vue-router'
+import { HOME_CATEGORIES } from '@/utils/constants'
+import type { Swiper as SwiperInstance } from 'swiper'
 /* Ionic & Vue */
 import {
   IonHeader,
@@ -357,25 +413,20 @@ import {
   IonSearchbar,
   IonButtons,
   IonContent,
-  menuController,
   IonCard,
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
   IonImg,
-  onIonViewWillEnter,
-  IonAvatar,
   IonSegment,
   IonSegmentButton,
   IonGrid,
   IonRow,
   IonCol,
-  IonFab,
-  IonFabButton,
-  IonFabList,
   IonInput,
   IonSelect,
   IonSelectOption,
+  onIonViewWillEnter,
 
 } from '@ionic/vue'
 
@@ -385,11 +436,13 @@ import {
   personCircle,
   cartOutline,
   heartOutline,
-  listOutline,
   storefrontOutline,
   add,
   paperPlane,
   searchOutline,
+  menuOutline,
+  closeOutline,
+  funnelOutline,
 } from 'ionicons/icons'
 
 import Swal from 'sweetalert2'
@@ -400,11 +453,26 @@ const store = useProductStore()
 const favoriteStore = useFavoriteStore()
 
 const isLoggedIn = ref(false)
-const isChatFabOpen = ref(false)
+const isActionFabOpen = ref(false)
+const isMobileMenuOpen = ref(false)
+const isMobileFiltersOpen = ref(false)
 const resultsFilterQuery = ref('')
+const carouselSwiper = ref<SwiperInstance | null>(null)
+const categories = HOME_CATEGORIES
+
+const selectedCategory = computed({
+  get: () => store.selectedCategories,
+  set: (value: string) => {
+    store.selectedCategories = value
+  },
+})
 
 const itemsPerPage = 8
 const visibleCount = ref(itemsPerPage)
+
+const showAllProducts = () => {
+  visibleCount.value = filteredProducts.value.length
+}
 
 const filters = reactive({
   minPrice: '',
@@ -412,47 +480,11 @@ const filters = reactive({
   condition: 'all',
   location: '',
   sort: 'recent',
-  brand: 'all',
 })
 
 onIonViewWillEnter(() => {
   isLoggedIn.value = !!localStorage.getItem('user')
 })
-
-const categories = HOME_CATEGORIES
-
-const carouselcategoriesIds = new Set(['Electrónica'])
-
-const brandsBycategories = BRANDS_BY_CATEGORIES
-
-const selectedcategories = computed({
-  get: () => store.selectedCategories,
-  set: (value) => {
-    store.selectedCategories = value
-  },
-})
-
-const availableBrands = computed(() => {
-  if (!selectedcategories.value || !brandsBycategories[selectedcategories.value]) {
-    return []
-  }
-  return brandsBycategories[selectedcategories.value]
-})
-
-
-const openCategoriesMenu = async () => {
-  await menuController.open()
-}
-
-const closeCategoriesMenu = async () => {
-  await menuController.close()
-}
-
-const selectCategoriesFromMenu = async (categoriesId: string) => {
-  selectedcategories.value = categoriesId
-  await menuController.close()
-}
-
 
 const resetFilters = () => {
   filters.minPrice = ''
@@ -460,8 +492,46 @@ const resetFilters = () => {
   filters.condition = 'all'
   filters.location = ''
   filters.sort = 'recent'
-  filters.brand = 'all'
   resultsFilterQuery.value = ''
+}
+
+const clearCategoryFilters = () => {
+  resetFilters()
+  store.selectedCategories = ''
+}
+
+const toggleActionFab = () => {
+  isActionFabOpen.value = !isActionFabOpen.value
+}
+
+const closeActionFab = () => {
+  isActionFabOpen.value = false
+}
+
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+}
+
+const selectCategoryFromMenu = (categoryId: string) => {
+  store.selectedCategories = categoryId
+  closeMobileMenu()
+}
+
+const clearCategoryFiltersFromMenu = () => {
+  clearCategoryFilters()
+  closeMobileMenu()
+}
+
+const toggleMobileFilters = () => {
+  isMobileFiltersOpen.value = !isMobileFiltersOpen.value
+}
+
+const closeMobileFilters = () => {
+  isMobileFiltersOpen.value = false
 }
 
 const filteredProducts = computed(() => {
@@ -497,10 +567,6 @@ const filteredProducts = computed(() => {
     list = list.filter((product) => product.location.toLowerCase().includes(locationQuery))
   }
 
-  if (filters.brand !== 'all') {
-    list = list.filter((product) => product.brand?.toLowerCase() === filters.brand.toLowerCase())
-  }
-
   if (filters.sort === 'price-asc') {
     list.sort((a, b) => a.price - b.price)
   } else if (filters.sort === 'price-desc') {
@@ -512,60 +578,23 @@ const filteredProducts = computed(() => {
 })
 
 const visibleProducts = computed(() => filteredProducts.value.slice(0, visibleCount.value))
-const nonCarouselProducts = computed(() =>
-  filteredProducts.value.filter((product) => !carouselcategoriesIds.has(product.category)),
-)
-const visibleNonCarouselProducts = computed(() =>
-  nonCarouselProducts.value.slice(0, visibleCount.value),
-)
+const carouselProducts = computed(() => filteredProducts.value.slice(0, visibleCount.value))
+
+const onSwiper = (swiper: SwiperInstance) => {
+  carouselSwiper.value = swiper
+}
+
+const slideNext = () => {
+  carouselSwiper.value?.slideNext()
+}
 
 const showFiltersLayout = computed(() => {
-  return !!(store.selectedCategories || store.searchQuery.trim())
-})
-
-const carouselSections = computed(() => {
-  if (showFiltersLayout.value) {
-    return []
-  }
-  return categories
-    .filter((categories) => carouselcategoriesIds.has(categories.id))
-    .map((categories) => ({
-      ...categories,
-      items: filteredProducts.value.filter((product) => product.category === categories.id),
-    }))
-    .filter((section) => section.items.length > 0)
-})
-
-const categoriesections = computed(() => {
-  if (!showFiltersLayout.value) {
-    return []
-  }
-  
-  // Si hay búsqueda activa, mostrar todos los resultados en una sola sección
-  if (store.searchQuery.trim() && !store.selectedCategories) {
-    return [{
-      id: 'search-results',
-      name: 'Resultados de búsqueda',
-      items: visibleProducts.value,
-    }].filter((section) => section.items.length > 0)
-  }
-  
-  // Si hay categoría seleccionada, mostrar solo esa categoría
-  return categories
-    .filter((categories) => categories.id === store.selectedCategories)
-    .map((categories) => ({
-      ...categories,
-      items: visibleProducts.value.filter((product) => product.category === categories.id),
-    }))
-    .filter((section) => section.items.length > 0)
+  return !!(store.searchQuery.trim() || resultsFilterQuery.value.trim() || store.selectedCategories)
 })
 
 
 const hasContent = computed(() => {
-  if (showFiltersLayout.value) {
-    return categoriesections.value.length > 0
-  }
-  return carouselSections.value.length > 0 || visibleNonCarouselProducts.value.length > 0
+  return filteredProducts.value.length > 0
 })
 
 /* Función para alternar favorito de un producto */
@@ -619,7 +648,7 @@ const goToPurchases = () => {
 }
 
 const goToHomeWithCarousel = () => {
-  selectedcategories.value = ''
+  clearCategoryFilters()
   router.push('/tabs/home')
 }
 
@@ -627,34 +656,8 @@ const goToProduct = (id: number) => {
   router.push(`/product/${id}`)
 }
 
-let fabWasOpenOnPointerDown = false;
-const toggleChatFab = () => {
-  isChatFabOpen.value = !isChatFabOpen.value;
-}
-
-const handlePointerDown = (event: Event) => {
-  fabWasOpenOnPointerDown = isChatFabOpen.value;
-}
-
-const handlePointerUp = (event: Event) => {
-  if (!fabWasOpenOnPointerDown) return;
-  const target = event.target as HTMLElement | null;
-  if (target && target.closest('.home-fab')) return;
-  isChatFabOpen.value = false;
-}
-
-onMounted(() => {
-  document.addEventListener('pointerdown', handlePointerDown);
-  document.addEventListener('pointerup', handlePointerUp);
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('pointerdown', handlePointerDown);
-  document.removeEventListener('pointerup', handlePointerUp);
-})
-
 const goToSellFromFab = () => {
-  isChatFabOpen.value = false
+  closeActionFab()
   goToSell()
 }
 
@@ -685,7 +688,7 @@ const goToChatList = (type: 'support' | 'seller') => {
     confirmLogin()
     return
   }
-  isChatFabOpen.value = false
+  closeActionFab()
   if (type === 'support') {
     router.push('/tabs/chat')
     return
@@ -696,7 +699,6 @@ const goToChatList = (type: 'support' | 'seller') => {
 watch(
   () => [
     store.filteredProducts,
-    store.selectedCategories,
     store.searchQuery,
     resultsFilterQuery.value,
     filters.minPrice,
@@ -704,24 +706,38 @@ watch(
     filters.condition,
     filters.location,
     filters.sort,
-    filters.brand,
   ],
   () => {
     visibleCount.value = itemsPerPage
   },
 )
-
-watch(
-  () => [store.selectedCategories, store.searchQuery],
-  ([selectedCategory, query]) => {
-    if (!selectedCategory && !query.trim()) {
-      resultsFilterQuery.value = ''
-    }
-  },
-)
 </script>
 
 <style scoped>
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 4px;
+}
+
+.load-more-btn {
+  background: transparent;
+  border: 2px solid #1a7f34;
+  color: #1a7f34;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 10px 28px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.load-more-btn:hover {
+  background: #1a7f34;
+  color: #fff;
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -844,6 +860,12 @@ watch(
     position: static;
   }
 }
+
+@media (max-width: 873px) {
+  .filters-sidebar {
+    display: none !important;
+  }
+}
 /* =========================
    HEADER HOME
 ========================= */
@@ -881,9 +903,11 @@ watch(
   min-width: 0;
 }
 .logo-text {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 34px;
   font-weight: 800;
   color: #1a1a1a;
+  letter-spacing: -0.5px;
 }
 
 .home-searchbar {
@@ -1172,40 +1196,78 @@ watch(
 }
 .carousel-wrapper {
   position: relative;
-  padding: 0 50px; /* espacio reservado para las flechas */
-  padding-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 /* Estilos para el carrusel con flechas laterales */
-.carousel-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  position: relative;
-}
-
-.product-swiper {
+.carousel-frame {
   flex: 1;
   min-width: 0;
 }
 
-/* Botones de navegación profesionales */
-:deep(.swiper-button-prev),
-:deep(.swiper-button-next) {
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 50%;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+.product-swiper {
+  min-width: 0;
 }
 
-:deep(.swiper-button-prev:hover),
-:deep(.swiper-button-next:hover) {
+/* Botones de navegación externos */
+.home-swiper-nav {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 50%;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.12);
+  transition: all 0.3s ease;
+  flex: 0 0 auto;
+  cursor: pointer;
+  position: relative;
+}
+
+.home-swiper-nav:hover {
   background: #fff;
-  box-shadow: 0 5px 20px rgba(26, 127, 52, 0.25);
-  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(26, 127, 52, 0.18);
+  transform: translateY(-1px);
+}
+
+.home-swiper-nav::after {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid #1a7f34;
+  border-right: 2px solid #1a7f34;
+  margin: 0 auto;
+}
+
+.home-swiper-prev::after {
+  transform: rotate(-135deg);
+  margin-left: 15px;
+}
+
+.home-swiper-next::after {
+  transform: rotate(45deg);
+  margin-right: 15px;
+}
+
+@media (max-width: 900px) {
+  .carousel-wrapper {
+    gap: 8px;
+  }
+
+  .home-swiper-nav {
+    width: 34px;
+    height: 34px;
+  }
+
+  .home-swiper-prev::after {
+    margin-left: 12px;
+  }
+
+  .home-swiper-next::after {
+    margin-right: 12px;
+  }
 }
 
 :deep(.swiper-button-prev:after),
@@ -1213,69 +1275,6 @@ watch(
   font-size: 16px;
   font-weight: bold;
   color: #1a7f34;
-}
-
-:deep(.swiper-button-prev) {
-  left: 5px;
-}
-
-:deep(.swiper-button-next) {
-  right: 5px;
-}
-
-/* Paginación elegante */
-:deep(.swiper-pagination) {
-  bottom: 0 !important;
-}
-
-:deep(.swiper-pagination-bullet) {
-  width: 8px;
-  height: 8px;
-  background: #cbd5e1;
-  opacity: 1;
-  transition: all 0.3s ease;
-}
-
-:deep(.swiper-pagination-bullet-active) {
-  background: #1a7f34;
-  width: 24px;
-  border-radius: 4px;
-}
-
-
-:deep(.swiper-button-prev) {
-  left: -1px;
-  background-color: #fff !important;
-
-}
-
-:deep(.swiper-button-next) {
-  right: -1px;
-    background-color: #fff !important;
-
-}
-
-/* Estilos para el carrusel con flechas laterales */
-.carousel-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  
-}
-
-.product-swiper {
-  flex: 1;
-  min-width: 0;
-}
-
-
-.swiper-button-prev::before {
-  background-color: #fff !important;
-}
-.swiper-button-next::before {
-  background-color: #fff !important;
-
 }
 
 /* Agrandar iconos del header */
@@ -1288,17 +1287,40 @@ watch(
   --background: #f1f5f9;
 }
 
-.categories-menu-btn {
-  --background: #1a7f34;
-  --color: #ffffff;
+.categories-menu-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+  padding: 0;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
+.categories-menu-inner ion-buttons[slot="start"] {
+  flex: 0 0 auto;
+  margin: 0;
+  --margin-start: 0;
+  --margin-end: 0;
+}
+
+.categories-menu-inner ion-segment {
+  flex: 1 1 auto;
+  min-width: 0;
+  --margin-start: 0;
+  --margin-end: 0;
+}
+
+.categories-menu-inner ion-buttons[slot="end"] {
+  flex: 0 0 auto;
+  margin: 0;
+  --margin-start: 0;
+  --margin-end: 0;
+}
 
 /* Ocultar el menú lateral en pantallas grandes */
 @media (min-width: 992px) {
-  .categories-menu-btn {
-    display: none;
-  }
   .icon-btn-search {
     display: none;
   }
@@ -1316,15 +1338,444 @@ watch(
   .header-center {
     display: none;
   }
-  .home-fab{
-    display: none;
+
+  .icon-btn-cart,
+  .icon-btn-profile,
+  .login-btn {
+    display: none !important;
+  }
+
+  .home-fab {
+    display: none !important;
   }
 }
 
-ion-fab-button {
-  --border-radius: 15px;
-  --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+@media (min-width: 874px) {
+  .header-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    --background: #ffffff;
+  }
 
+  .categories-menu {
+    position: sticky;
+    top: 72px;
+    z-index: 39;
+    border-top: 1px solid #e6ebf2;
+    border-bottom: 1px solid #e6ebf2;
+  }
+
+  .mobile-hamburger-btn {
+    display: none !important;
+  }
+
+  .mobile-filters-btn {
+    display: none !important;
+  }
+
+  .categories-segment {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .categories-menu-inner {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .categories-menu-inner ion-buttons[slot="start"],
+  .categories-menu-inner ion-buttons[slot="end"] {
+    display: none;
+  }
+
+  .categories-segment {
+    width: 100%;
+  }
+
+  :deep(.categories-segment) {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  :deep(.categories-segment ion-segment-button) {
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 128px;
+    min-height: 44px;
+  }
+}
+
+.home-fab {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.home-fab-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.home-fab.open .home-fab-actions {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.home-fab-action,
+.home-fab-main {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.16);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.home-fab-action {
+  background: #ffffff;
+  color: #0f172a;
+  padding: 12px 14px;
+  min-width: 140px;
+  justify-content: flex-start;
+  font-weight: 600;
+}
+
+.home-fab-action ion-icon,
+.home-fab-main ion-icon {
+  font-size: 20px;
+}
+
+.home-fab-action:hover,
+.home-fab-main:hover {
+  transform: translateY(-1px);
+}
+
+.home-fab-main {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: #1a7f34;
+  color: #ffffff;
+}
+
+@media (max-width: 873px) {
+  .home-fab {
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .home-fab-action {
+    min-width: 132px;
+  }
+}
+
+/* ========================= */
+/* MOBILE HAMBURGER MENU */
+/* ========================= */
+.mobile-hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #0f172a;
+  font-size: 24px;
+  padding: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.mobile-hamburger-btn ion-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.mobile-menu-overlay {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.mobile-menu {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 280px;
+  height: 100vh;
+  background: #ffffff;
+  z-index: 1001;
+  flex-direction: column;
+  box-shadow: 2px 0 12px rgba(15, 23, 42, 0.12);
+  transition: left 0.3s ease-in-out;
+}
+
+.mobile-menu.open {
+  left: 0;
+}
+
+.mobile-menu.open ~ .mobile-menu-overlay {
+  display: block;
+}
+
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px;
+  border-bottom: 1px solid #e6ebf2;
+  background: #f8fafc;
+}
+
+.mobile-menu-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.mobile-menu-close {
+  background: none;
+  border: none;
+  color: #0f172a;
+  font-size: 24px;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-menu-close ion-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.mobile-menu-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.mobile-category-btn {
+  width: 100%;
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  border-left: 4px solid transparent;
+  text-align: left;
+  color: #334155;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.mobile-category-btn:hover {
+  background: #f1f5f9;
+  color: #1a7f34;
+}
+
+.mobile-category-btn.active {
+  background: #e6f5ed;
+  color: #1a7f34;
+  border-left-color: #1a7f34;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ========================= */
+/* MOBILE FILTERS DRAWER */
+/* ========================= */
+.mobile-filters-overlay {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.mobile-filters {
+  display: flex;
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 300px;
+  height: 100vh;
+  background: #ffffff;
+  z-index: 1001;
+  flex-direction: column;
+  box-shadow: -2px 0 12px rgba(15, 23, 42, 0.12);
+  transition: right 0.3s ease-in-out;
+}
+
+.mobile-filters.open {
+  right: 0;
+}
+
+.mobile-filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px;
+  border-bottom: 1px solid #e6ebf2;
+  background: #f8fafc;
+}
+
+.mobile-filters-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.mobile-filters-close {
+  background: none;
+  border: none;
+  color: #0f172a;
+  font-size: 24px;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-filters-close ion-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.mobile-filters-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 14px;
+}
+
+.mobile-filters-apply {
+  padding: 12px 16px;
+  background: #1a7f34;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 16px;
+  transition: background 0.2s ease;
+}
+
+.mobile-filters-apply:hover {
+  background: #156b2d;
+}
+
+.mobile-filters-btn {
+  background: none;
+  border: none;
+  color: #0f172a;
+  font-size: 24px;
+  padding: 8px;
+  cursor: pointer;
+  display: none;
+  flex-shrink: 0;
+}
+
+.mobile-filters-btn ion-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 873px) {
+  .mobile-hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-filters-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-menu-overlay {
+    display: block;
+  }
+
+  .mobile-menu {
+    display: flex;
+  }
+
+  .mobile-filters-overlay {
+    display: block;
+  }
+
+  .mobile-filters {
+    display: flex;
+  }
+}
+
+@media (min-width: 874px) {
+  .mobile-hamburger-btn {
+    display: none !important;
+  }
+
+  .mobile-filters-btn {
+    display: none !important;
+  }
+
+  .mobile-menu-overlay,
+  .mobile-menu,
+  .mobile-filters-overlay,
+  .mobile-filters {
+    display: none !important;
+  }
 }
 
 </style>

@@ -3,8 +3,8 @@ import { computed } from 'vue';
 import { useProductStore } from '@/stores/productStore';
 
 export interface Seller {
-  phone: string;
-  avatar: any;
+	phone: string;
+	avatar: string;
 	id: number;
 	name: string;
     email: string;
@@ -23,6 +23,8 @@ export const useSellerStore = defineStore('seller', () => {
 					id: p.sellerId,
 					name: p.seller,
 					email: p.sellerEmail || '', 
+					avatar: p.sellerAvatar || '',
+					phone: (p as { phone?: string }).phone || '',
 					location: p.location,
 				});
 			}
