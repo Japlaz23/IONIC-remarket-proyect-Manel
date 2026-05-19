@@ -126,6 +126,9 @@
                   title="Ubicación del vendedor"
                 ></iframe>
               </div>
+              <div class="info-actions">
+                <ion-button color="danger" expand="block" @click="logout">Cerrar sesión</ion-button>
+              </div>
             </div>
           </div>
         </ion-card-content>
@@ -137,7 +140,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardHeader, IonCardContent, IonSegment, IonSegmentButton, IonIcon, IonButton } from '@ionic/vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { toastController } from '@ionic/vue';
 import { gridOutline, listOutline } from 'ionicons/icons';
 import defaultAvatar from '@/assets/img/profilesSellers/profileSeller1.jpg';
 import { useProductStore } from '@/stores/productStore';
@@ -254,6 +258,24 @@ const mapUrl = computed(() => {
   const top = (lat + delta).toFixed(6)
   return `https://www.openstreetmap.org/export/embed.html?bbox=${left}%2C${bottom}%2C${right}%2C${top}&layer=mapnik&marker=${lat.toFixed(6)}%2C${lon.toFixed(6)}`
 })
+
+const router = useRouter()
+
+const logout = async () => {
+  try {
+    localStorage.removeItem('user')
+    localStorage.removeItem('favorites')
+    localStorage.removeItem('purchases')
+  } catch {}
+  const t = await toastController.create({
+    message: 'Sesión cerrada',
+    duration: 1400,
+    position: 'top',
+    color: 'primary',
+  })
+  await t.present()
+  router.push('/login')
+}
 </script>
 
 <style scoped>

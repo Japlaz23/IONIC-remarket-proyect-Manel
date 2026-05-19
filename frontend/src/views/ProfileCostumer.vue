@@ -115,6 +115,10 @@
                 <span>Configuración de la cuenta</span>
                 <ion-icon :icon="chevronForwardOutline" class="chevron" />
               </button>
+              <button class="settings-row logout-row" @click="logout">
+                <ion-icon :icon="powerOutline" />
+                <span>Cerrar sesión</span>
+              </button>
             </div>
           </div>
         </div>
@@ -136,6 +140,7 @@ import {
   IonContent,
   IonIcon,
 } from '@ionic/vue'
+import { toastController } from '@ionic/vue'
 import {
   heartOutline,
   cartOutline,
@@ -150,6 +155,7 @@ import {
   settingsOutline,
   optionsOutline,
   chevronForwardOutline,
+  powerOutline,
 } from 'ionicons/icons'
 import { useFavoriteStore } from '@/stores/favoriteStore'
 
@@ -228,6 +234,22 @@ const goTo = (path: string) => {
 
 const refreshUser = () => {
   loadUser()
+}
+
+const logout = async () => {
+  try {
+    localStorage.removeItem('user')
+    localStorage.removeItem('favorites')
+    localStorage.removeItem('purchases')
+  } catch {}
+  const t = await toastController.create({
+    message: 'Sesión cerrada',
+    duration: 1400,
+    position: 'top',
+    color: 'primary',
+  })
+  await t.present()
+  router.push('/login')
 }
 </script>
 
@@ -525,6 +547,14 @@ const refreshUser = () => {
 .settings-row ion-icon:first-child {
   color: #94a3b8;
   font-size: 1.15rem;
+}
+
+.logout-row {
+  color: #ef4444;
+}
+
+.logout-row ion-icon:first-child {
+  color: #ef4444;
 }
 
 .chevron {
